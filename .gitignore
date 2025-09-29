@@ -1,0 +1,89 @@
+*.log
+.DS_Store
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+/.fleet
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+Homestead.json
+Homestead.yaml
+Thumbs.db
+
+# --- Laravel / PHP ---
+/vendor/
+composer.phar
+.phpunit.result.cache
+/.phpunit.cache/
+/.php-cs-fixer.cache
+.env
+.env.*.local
+.env.backup
+/storage/*.key
+
+# Cache y artefactos de framework
+/bootstrap/cache/*.php
+# (mantén el placeholder .gitignore que viene en bootstrap/cache/)
+
+/storage/logs/*
+/storage/framework/cache/**
+/storage/framework/sessions/**
+/storage/framework/testing/**
+/storage/framework/views/**
+/storage/debugbar/*
+/public/storage
+# (mantén los .gitignore dentro de storage/ para preservar carpetas vacías)
+
+# --- Node / Vite ---
+/node_modules/
+/pnpm-lock.yaml
+# (o quita la línea de pnpm-lock si usas pnpm y quieres versionarlo)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+vite.config.ts.timestamp-*
+/public/hot
+/.vite/
+.eslintcache
+
+# --- Sail / Docker (archivos generados locales) ---
+/docker-compose.override.yml
+/.env.docker.local
+# (NO ignores docker-compose.yml que viene por defecto)
+
+# --- IDEs / editores ---
+/.idea/
+/.vscode/
+/.fleet/
+*.sublime-workspace
+*.sublime-project
+
+# --- macOS / SO ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# --- Otros comunes ---
+*.swp
+*.swm
+*.orig
+*.bak
+*.tmp
+
