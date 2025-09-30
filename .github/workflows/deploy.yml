@@ -56,7 +56,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /var/www/jpmb_app
-            echo "${{ secrets.ENV_FILE }}" > .env
+            echo "${{ vars.ENV_FILE }}" > .env
             php artisan migrate --force
             php artisan optimize:clear
             php artisan optimize
