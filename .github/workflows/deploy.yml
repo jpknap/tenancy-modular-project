@@ -61,5 +61,5 @@ jobs:
             php artisan optimize:clear
             php artisan optimize
             php artisan storage:link
-            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chown -R nginx:nginx storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
