@@ -57,6 +57,7 @@ jobs:
           script: |
             cd /var/www/jpmb_app
             echo "${{ vars.ENV_FILE }}" > .env
+            composer install
             php artisan migrate --force
             php artisan optimize:clear
             php artisan optimize
