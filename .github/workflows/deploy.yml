@@ -11,11 +11,11 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SSH_HOST: ${{ vars.SSH_HOST }}
-  SSH_USER: ${{ vars.SSH_USER }}
-  SSH_PORT: ${{ vars.SSH_PORT }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+  SSH_PORT: ${{ secrets.SSH_PORT }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
-  ENV_CONTENT: ${{ vars.ENV_CONTENT }}
+  ENV_CONTENT: ${{ vars.ENV_FILE }}
   DB_CONNECTION: sqlite
   DB_DATABASE: database/database.sqlite
 
