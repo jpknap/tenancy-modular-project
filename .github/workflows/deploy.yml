@@ -158,24 +158,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-
       - name: Deploy to server
-        env:
-          SSH_AUTH_SOCK: ${{ env.SSH_KEY }}
-        run: |
-          echo "${{ vars.ENV_FILE }}" > .env
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            'cd /var/www/your-project && \
-             git pull origin main && \
-             composer install --no-dev --optimize-autoloader && \
-             php artisan migrate --force && \
-             npm ci && \
-             npm run build && \
-             php artisan optimize:clear && \
-             php artisan config:cache && \
-             php artisan route:cache && \
-             php artisan view:cache'
+        uses: easingthemes/ssh-deploy@v5.0.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: ${{ secrets.SSH_PORT }}
+          SOURCE: "./"
+          TARGET: "/var/www/jpmb_app"
+          EXCLUDE: "/vendor/, /node_modules/, .git/, .github/"
+
+      - name: Run post-deployment commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /var/www/jpmb_app
+            echo "${{ vars.ENV_FILE }}" > .env
+            composer install
+            php artisan migrate --force
+            php artisan optimize:clear
+            php artisan optimize
+            php artisan storage:link
+            sudo chown -R nginx:nginx storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
