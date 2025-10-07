@@ -26,13 +26,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Setup PHP (enable coverage with PCOV)
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
           extensions: mbstring, xml, ctype, json, tokenizer, bcmath, pdo_sqlite
           tools: composer
-          coverage: none
+          coverage: pcov
+          ini-values: |
+            pcov.directory=${{ github.workspace }}
+            pcov.exclude="~vendor~|~tests~|~storage~|~bootstrap~"
 
       - name: Create database directory and file
         run: |
@@ -40,21 +43,30 @@ jobs:
           touch database/database.sqlite
           chmod 777 database/database.sqlite
 
-      - name: Copy .env for testing
+      - name: Prepare .env (testing)
         run: |
           cp .env.example .env
-          echo "APP_ENV=testing" >> .env
-          echo "DB_CONNECTION=sqlite" >> .env
-          echo "DB_DATABASE=database/database.sqlite" >> .env
-          echo "APP_DEBUG=true" >> .env
-          echo "APP_KEY=" >> .env
-          php artisan key:generate
+          {
+            echo "APP_ENV=testing"
+            echo "DB_CONNECTION=sqlite"
+            echo "DB_DATABASE=database/database.sqlite"
+            echo "APP_DEBUG=true"
+            echo "APP_KEY="
+          } >> .env
 
-      - name: Install dependencies
+      - name: Install PHP & Node deps
         run: |
           composer install --prefer-dist --no-progress --no-interaction
-          npm install
+          # Si NO necesitas assets para tests, puedes comentar las 2 líneas siguientes
+          npm ci
           npm run build
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      # (Opcional) Solo si tus tests no usan RefreshDatabase
+      # - name: Run migrations for tests
+      #   run: php artisan migrate --force
 
       - name: Run ECS (Easy Coding Standard)
         run: composer check-style
@@ -62,16 +74,30 @@ jobs:
       - name: Run PHPStan
         run: composer test-phpstan
 
-      - name: Run tests
+      - name: Run tests with coverage (Clover)
         run: |
           php artisan config:clear
           php artisan test --coverage-clover=coverage.xml
 
-      - name: Check coverage threshold
+      - name: Check coverage >= 80%
         run: |
-          vendor/bin/phpunit-coverage-check coverage.xml 80
+          php -r '
+          $x = simplexml_load_file("coverage.xml");
+          if (!$x) { fwrite(STDERR, "No se pudo leer coverage.xml\n"); exit(1); }
+          // Clover: project/metrics tiene statements y coveredstatements
+          $m = $x->project->metrics ?? null;
+          if (!$m) { fwrite(STDERR, "Formato Clover inesperado\n"); exit(1); }
+          $s  = (int)$m["statements"];
+          $cs = (int)$m["coveredstatements"];
+          if ($s === 0) { fwrite(STDERR, "0 statements: no se puede calcular cobertura\n"); exit(1); }
+          $p = ($cs * 100.0) / $s;
+          echo "Coverage: " . number_format($p, 2) . "%\n";
+          if ($p < 80) { fwrite(STDERR, "❌ Coverage por debajo de 80%\n"); exit(1); }
+          echo "✅ Coverage OK (>= 80%)\n";
+          '
 
-      - name: Upload coverage to Codecov
+      - name: Upload coverage to Codecov (optional)
+        if: always() # sube aunque falle el threshold, útil para inspección
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -82,7 +108,6 @@ jobs:
     needs: test
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -102,7 +127,7 @@ jobs:
              git pull origin main && \
              composer install --no-dev --optimize-autoloader && \
              php artisan migrate --force && \
-             npm install && \
+             npm ci && \
              npm run build && \
              php artisan optimize:clear && \
              php artisan config:cache && \
