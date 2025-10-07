@@ -104,7 +104,7 @@ jobs:
       - name: Run tests with coverage (Clover)
         run: |
           php artisan config:clear
-          php artisan test --coverage-clover=coverage.xml
+          php artisan test
 
       # -----------------------
       # 10. Validar cobertura >= 80%
