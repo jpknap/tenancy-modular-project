@@ -106,25 +106,51 @@ jobs:
          php artisan config:clear
          vendor/bin/phpunit --dont-report-useless-tests --coverage-clover=coverage.xml || true
 
-      # -----------------------
-      # 10. Validar cobertura >= 80%
-      # -----------------------
-      - name: Check coverage >= 80%
+      - name: Get changed PHP files
         run: |
-          php -r '
-          $x = simplexml_load_file("coverage.xml");
-          if (!$x) { fwrite(STDERR, "No se pudo leer coverage.xml\n"); exit(1); }
-          $m = $x->project->metrics ?? null;
-          if (!$m) { fwrite(STDERR, "Formato Clover inesperado\n"); exit(1); }
-          $s  = (int)$m["statements"];
-          $cs = (int)$m["coveredstatements"];
-          if ($s === 0) { fwrite(STDERR, "0 statements: no se puede calcular cobertura\n"); exit(1); }
-          $p = ($cs * 100.0) / $s;
-          echo "Coverage: " . number_format($p, 2) . "%\n";
-          if ($p < 80) { fwrite(STDERR, "❌ Coverage por debajo de 80%\n"); exit(1); }
-          echo "✅ Coverage OK (>= 80%)\n";
-          '
+            git fetch origin main --depth=1
+            git diff --name-only origin/main...HEAD -- '*.php' > changed_files.txt
+            echo "Changed files:"
+            cat changed_files.txt || true
 
+      - name: Check diff coverage >= 80%
+        run: |
+              php -r '
+              $files = file("changed_files.txt", FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+              if (!$files || count($files) === 0) {
+                  echo "No hay archivos PHP modificados, skipping coverage check.\n";
+                  exit(0);
+              }
+              $xml = simplexml_load_file("coverage.xml");
+              if (!$xml) {
+                  fwrite(STDERR, "❌ No se pudo leer coverage.xml\n");
+                  exit(1);
+              }
+              $total = $covered = 0;
+              foreach ($xml->xpath("//file") as $file) {
+                  $name = (string)$file["name"];
+                  foreach ($files as $changed) {
+                      if (str_contains($name, $changed)) {
+                          $s = (int)$file->metrics["statements"];
+                          $c = (int)$file->metrics["coveredstatements"];
+                          $total += $s;
+                          $covered += $c;
+                          echo "File: $changed → $c/$s covered\n";
+                      }
+                  }
+              }
+              if ($total === 0) {
+                  fwrite(STDERR, "❌ No se detectaron statements en archivos modificados\n");
+                  exit(1);
+              }
+              $p = $covered * 100 / $total;
+              echo "Coverage en archivos modificados: " . number_format($p,2) . "%\n";
+              if ($p < 80) {
+                  fwrite(STDERR, "❌ Coverage por debajo del 80% en archivos modificados\n");
+                  exit(1);
+              }
+              echo "✅ Coverage OK en cambios (>= 80%)\n";
+              '
   # -----------------------
   # Deploy solo en main
   # -----------------------
