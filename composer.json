@@ -20,7 +20,10 @@
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5.3"
+        "nunomaduro/larastan": "^3.7",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5.3",
+        "symplify/easy-coding-standard": "^12.6"
     },
     "autoload": {
         "psr-4": {
@@ -57,7 +60,14 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
-        ]
+        ],
+        "analyze": [
+            "@check-style",
+            "@test-phpstan"
+        ],
+        "check-style": "ecs check",
+        "fix-style": "ecs check --fix",
+        "test-phpstan": "phpstan analyse"
     },
     "extra": {
         "laravel": {

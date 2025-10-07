@@ -3,64 +3,104 @@ name: Deploy Laravel Project
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  SSH_HOST: ${{ vars.SSH_HOST }}
+  SSH_USER: ${{ vars.SSH_USER }}
+  SSH_PORT: ${{ vars.SSH_PORT }}
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+  ENV_CONTENT: ${{ vars.ENV_CONTENT }}
+  DB_CONNECTION: sqlite
+  DB_DATABASE: database/database.sqlite
+
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, ctype, json, tokenizer, bcmath, pdo_sqlite
+          tools: composer
+          coverage: none
+
+      - name: Create database directory and file
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+          chmod 777 database/database.sqlite
+
+      - name: Copy .env for testing
+        run: |
+          cp .env.example .env
+          echo "APP_ENV=testing" >> .env
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=database/database.sqlite" >> .env
+          echo "APP_DEBUG=true" >> .env
+          echo "APP_KEY=" >> .env
+          php artisan key:generate
+
+      - name: Install dependencies
+        run: |
+          composer install --prefer-dist --no-progress --no-interaction
+          npm install
+          npm run build
+
+      - name: Run ECS (Easy Coding Standard)
+        run: composer check-style
+
+      - name: Run PHPStan
+        run: composer test-phpstan
+
+      - name: Run tests
+        run: |
+          php artisan config:clear
+          php artisan test --coverage-clover=coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.xml
+          fail_ci_if_error: true
+
   deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
         with:
-          php-version: '8.4'
-          extensions: mbstring, xml, ctype, json, tokenizer, bcmath
-          tools: composer
-
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-dev
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install NPM dependencies
-        run: npm install
-
-      - name: Build assets
-        run: npm run build
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name: Deploy to server
-        uses: easingthemes/ssh-deploy@v5.0.0
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
-          REMOTE_PORT: ${{ secrets.SSH_PORT }}
-          SOURCE: "./"
-          TARGET: "/var/www/jpmb_app"
-          EXCLUDE: "/vendor/, /node_modules/, .git/, .github/"
-
-      - name: Run post-deployment commands
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd /var/www/jpmb_app
-            echo "${{ vars.ENV_FILE }}" > .env
-            composer install
-            php artisan migrate --force
-            php artisan optimize:clear
-            php artisan optimize
-            php artisan storage:link
-            sudo chown -R nginx:nginx storage bootstrap/cache
-            sudo chmod -R 775 storage bootstrap/cache
+        env:
+          SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
+        run: |
+          echo "${{ vars.ENV_CONTENT }}" > .env
+          ssh -o StrictHostKeyChecking=no -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
+            'cd /var/www/your-project && \
+             git pull origin main && \
+             composer install --no-dev --optimize-autoloader && \
+             php artisan migrate --force && \
+             npm install && \
+             npm run build && \
+             php artisan optimize:clear && \
+             php artisan config:cache && \
+             php artisan route:cache && \
+             php artisan view:cache'
