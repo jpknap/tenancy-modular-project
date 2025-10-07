@@ -4,6 +4,11 @@
          bootstrap="vendor/autoload.php"
          colors="true"
 >
+    <coverage>
+        <report>
+            <clover outputFile="coverage.xml"/>
+        </report>
+    </coverage>
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
@@ -32,4 +37,5 @@
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
     </php>
+
 </phpunit>

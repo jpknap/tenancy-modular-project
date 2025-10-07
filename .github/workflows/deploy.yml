@@ -67,6 +67,10 @@ jobs:
           php artisan config:clear
           php artisan test --coverage-clover=coverage.xml
 
+      - name: Check coverage threshold
+        run: |
+          vendor/bin/phpunit-coverage-check coverage.xml 80
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
