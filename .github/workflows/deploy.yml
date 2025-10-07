@@ -22,10 +22,17 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
+      # -----------------------
+      # 1. Obtener el código
+      # -----------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # -----------------------
+      # 2. Configurar PHP
+      # -----------------------
       - name: Setup PHP (enable coverage with PCOV)
         uses: shivammathur/setup-php@v2
         with:
@@ -35,14 +42,19 @@ jobs:
           coverage: pcov
           ini-values: |
             pcov.directory=${{ github.workspace }}
-            pcov.exclude="~vendor~|~tests~|~storage~|~bootstrap~"
 
+      # -----------------------
+      # 3. Preparar base de datos
+      # -----------------------
       - name: Create database directory and file
         run: |
           mkdir -p database
           touch database/database.sqlite
           chmod 777 database/database.sqlite
 
+      # -----------------------
+      # 4. Configurar .env para testing
+      # -----------------------
       - name: Prepare .env (testing)
         run: |
           cp .env.example .env
@@ -54,37 +66,54 @@ jobs:
             echo "APP_KEY="
           } >> .env
 
+      # -----------------------
+      # 5. Instalar dependencias
+      # -----------------------
       - name: Install PHP & Node deps
         run: |
           composer install --prefer-dist --no-progress --no-interaction
-          # Si NO necesitas assets para tests, puedes comentar las 2 líneas siguientes
+          # Si los tests no dependen del build de frontend, comenta estas 2 líneas para acelerar
           npm ci
           npm run build
 
+      # -----------------------
+      # 6. Generar APP_KEY
+      # -----------------------
       - name: Generate app key
         run: php artisan key:generate
 
-      # (Opcional) Solo si tus tests no usan RefreshDatabase
+      # -----------------------
+      # 7. (Opcional) Migraciones
+      # -----------------------
+      # Si usas RefreshDatabase no hace falta; si no, descomenta esto:
       # - name: Run migrations for tests
       #   run: php artisan migrate --force
 
+      # -----------------------
+      # 8. Chequeos de calidad
+      # -----------------------
       - name: Run ECS (Easy Coding Standard)
         run: composer check-style
 
       - name: Run PHPStan
         run: composer test-phpstan
 
+      # -----------------------
+      # 9. Ejecutar tests con cobertura
+      # -----------------------
       - name: Run tests with coverage (Clover)
         run: |
           php artisan config:clear
           php artisan test --coverage-clover=coverage.xml
 
+      # -----------------------
+      # 10. Validar cobertura >= 80%
+      # -----------------------
       - name: Check coverage >= 80%
         run: |
           php -r '
           $x = simplexml_load_file("coverage.xml");
           if (!$x) { fwrite(STDERR, "No se pudo leer coverage.xml\n"); exit(1); }
-          // Clover: project/metrics tiene statements y coveredstatements
           $m = $x->project->metrics ?? null;
           if (!$m) { fwrite(STDERR, "Formato Clover inesperado\n"); exit(1); }
           $s  = (int)$m["statements"];
@@ -96,10 +125,14 @@ jobs:
           echo "✅ Coverage OK (>= 80%)\n";
           '
 
+  # -----------------------
+  # Deploy solo en main
+  # -----------------------
   deploy:
     needs: test
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
