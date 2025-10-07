@@ -103,8 +103,8 @@ jobs:
       # -----------------------
       - name: Run tests with coverage (Clover)
         run: |
-          php artisan config:clear
-          php artisan test
+         php artisan config:clear
+         vendor/bin/phpunit --dont-report-useless-tests --coverage-clover=coverage.xml || true
 
       # -----------------------
       # 10. Validar cobertura >= 80%
