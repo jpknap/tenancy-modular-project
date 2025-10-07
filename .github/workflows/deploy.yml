@@ -15,7 +15,6 @@ env:
   SSH_USER: ${{ secrets.SSH_USER }}
   SSH_PORT: ${{ secrets.SSH_PORT }}
   SSH_KEY: ${{ secrets.SSH_KEY }}
-  ENV_CONTENT: ${{ vars.ENV_FILE }}
   DB_CONNECTION: sqlite
   DB_DATABASE: database/database.sqlite
 
@@ -172,7 +171,7 @@ jobs:
         env:
           SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
         run: |
-          echo "${{ vars.ENV_CONTENT }}" > .env
+          echo "${{ vars.ENV_FILE }}" > .env
           ssh -o StrictHostKeyChecking=no -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
             'cd /var/www/your-project && \
              git pull origin main && \
