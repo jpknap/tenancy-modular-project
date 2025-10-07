@@ -3,6 +3,7 @@ includes:
 
 parameters:
     level: 5
+
     paths:
         - app
         - config
@@ -17,11 +18,9 @@ parameters:
         - node_modules/*
         - public/*
 
-    # Configuraciones específicas para Laravel
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+    # Configuraciones modernas y soportadas en PHPStan 1.x
     checkMissingCallableSignature: false
-    checkExplicitMixed: false
+    treatPhpDocTypesAsCertain: true
 
     # Mejoras de rendimiento
     parallel:
