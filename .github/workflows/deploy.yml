@@ -11,10 +11,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SSH_HOST: ${{ secrets.SSH_HOST }}
-  SSH_USER: ${{ secrets.SSH_USER }}
-  SSH_PORT: ${{ secrets.SSH_PORT }}
-  SSH_KEY: ${{ secrets.SSH_KEY }}
   DB_CONNECTION: sqlite
   DB_DATABASE: database/database.sqlite
 
@@ -169,10 +165,10 @@ jobs:
 
       - name: Deploy to server
         env:
-          SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
+          SSH_AUTH_SOCK: ${{ env.SSH_KEY }}
         run: |
           echo "${{ vars.ENV_FILE }}" > .env
-          ssh -o StrictHostKeyChecking=no -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} \
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             'cd /var/www/your-project && \
              git pull origin main && \
              composer install --no-dev --optimize-autoloader && \
