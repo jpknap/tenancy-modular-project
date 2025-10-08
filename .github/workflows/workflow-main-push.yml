@@ -3,8 +3,6 @@ name: Deploy Laravel Project
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -101,12 +99,12 @@ jobs:
          php artisan config:clear
          vendor/bin/phpunit --dont-report-useless-tests --coverage-clover=coverage.xml || true
 
-      - name: Get changed PHP files
+      - name: Get changed PHP files (push a main)
         run: |
-            git fetch origin main --depth=1
-            git diff --name-only origin/main...HEAD -- '*.php' > changed_files.txt
-            echo "Changed files:"
-            cat changed_files.txt || true
+          echo "Comparando cambios entre HEAD^ y HEAD"
+          git diff --name-only HEAD^ HEAD -- '*.php' > changed_files.txt
+          echo "Changed files:"
+          cat changed_files.txt || true
 
       - name: Check diff coverage >= 80%
         run: |
