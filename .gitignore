@@ -87,3 +87,4 @@ Icon?
 *.bak
 *.tmp
 
+coverage.xml
