@@ -180,9 +180,10 @@ jobs:
             cd /var/www/jpmb_app
             echo "${{ vars.ENV_FILE }}" > .env
             composer install
-            php artisan migrate --force
+            php artisan migrate:refresh --force
             php artisan optimize:clear
             php artisan optimize
             php artisan storage:link
             sudo chown -R nginx:nginx storage bootstrap/cache
+            sudo chown -R apache:apache storage ./
             sudo chmod -R 775 storage bootstrap/cache
