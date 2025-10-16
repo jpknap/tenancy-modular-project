@@ -1,11 +1,95 @@
-@import 'tailwindcss';
+/* Reset y fuentes básicas */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap');
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
-@theme {
+:root {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* Layout con CSS vanilla puro */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18rem;
+    height: 100vh;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 50;
+}
+
+@media (min-width: 1024px) {
+    .sidebar {
+        transform: translateX(0);
+    }
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 40;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.main-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin-left: 18rem;
+}
+
+@media (max-width: 1023px) {
+    .main-container {
+        margin-left: 0;
+    }
+}
+
+.header {
+    height: 4rem;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+}
+
+.main-content {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    overflow: auto;
+}
+
+@media (min-width: 1024px) {
+    .main-content {
+        padding: 1.5rem 2rem;
+    }
+}
+
+.main-content .container {
+    max-width: 56rem;
+    margin: 0 auto;
+}
+
+body {
+    height: 100vh;
+    background: #f9fafb;
+    color: #111827;
+    font-family: var(--font-sans);
 }
