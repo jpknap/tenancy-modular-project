@@ -10,14 +10,14 @@
 
 <!-- Sidebar -->
 <aside class="sidebar" style="background-color: red">
-    @yield('side-menu')
+    @include('partials.sidebar-menu')
 </aside>
 
 <!-- Contenedor principal -->
 <div class="main-container" style="background-color: green">
     <!-- Header -->
     <header class="header">
-        @yield('top-bar')
+        @include('partials.top-bar')
     </header>
 
     <!-- Contenido -->
