@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Listeners\ProjectInitializedListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -70,7 +71,10 @@ class TenancyServiceProvider extends ServiceProvider
 
             // Tenancy events
             Events\InitializingTenancy::class => [],
-            Events\TenancyInitialized::class => [Listeners\BootstrapTenancy::class],
+            Events\TenancyInitialized::class => [
+                Listeners\BootstrapTenancy::class,
+                ProjectInitializedListener::class,
+            ],
 
             Events\EndingTenancy::class => [],
             Events\TenancyEnded::class => [Listeners\RevertToCentralContext::class],

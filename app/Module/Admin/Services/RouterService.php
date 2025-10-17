@@ -10,7 +10,7 @@ class RouterService
     public static function initRouterAdmin(): void
     {
         /** @var array<class-string<PageAdminInterface>> $admins */
-        $admins = config('admin');
+        $admins = config('projects.landlord.admins');
 
         foreach ($admins as $admin) {
             $admin = new $admin();

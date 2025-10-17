@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Adapters\Admin;
+namespace App\Projects\Landlord\Adapters\Admin;
 
-use App\Http\Controllers\Admin\TenantAdminController;
 use App\Models\Tenant;
 use App\Module\Admin\Adapter\AdminBaseAdapter;
+use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
 
 final class TenantAdmin extends AdminBaseAdapter
 {

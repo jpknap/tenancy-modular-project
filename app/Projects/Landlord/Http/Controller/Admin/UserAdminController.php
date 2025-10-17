@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Projects\Landlord\Http\Controller\Admin;
 
-use App\Adapters\Admin\UserAdmin;
+use App\Projects\Landlord\Adapters\Admin\UserAdmin;
 
 class UserAdminController extends AdminController
 {
