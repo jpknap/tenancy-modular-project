@@ -16,6 +16,6 @@ final class UserAdmin extends AdminBaseAdapter
 
     public function getListableAttributes(): array
     {
-        return ['id'];
+        return ['name'];
     }
 }
