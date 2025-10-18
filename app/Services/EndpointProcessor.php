@@ -157,6 +157,7 @@ class EndpointProcessor
         array $methodMiddleware,
         array $where
     ): Endpoint {
+        $name = str_replace( "/",".", "$projectPrefix.$classPrefix.$route->name");
         // Construir path completo: proyecto/clasePadre/claseHija/rutaMetodo
         $pathParts = array_filter([
             $projectPrefix,
@@ -174,7 +175,7 @@ class EndpointProcessor
             controller: $controller,
             method: $method,
             httpMethods: $route->methods,
-            name: $route->name,
+            name: $name,
             middleware: $allMiddleware,
             where: $where
         );

@@ -12,14 +12,14 @@ class MenuBuilderService
     protected static array $items = [
         'users' => [
             'label' => 'Users',
-            'alias_route' => 'landlord.users.list',
+            'alias_route' => 'landlord.admin.users.list',
             'icon' => 'icon',
             'permissions' => [],
             'children' => [],
         ],
         'tenants' => [
             'label' => 'Tenants',
-            'alias_route' => 'landlord.tenants.list',
+            'alias_route' => 'landlord.admin.tenants.list',
             'icon' => 'icon',
             'permissions' => [],
             'children' => [],

@@ -7,7 +7,7 @@ use App\Common\Admin\Controller\AdminController;
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
 
 #[RoutePrefix('tenants')]
-class TenantAdminController extends AdminController
+class  TenantAdminController extends AdminController
 {
     public function __construct()
     {
