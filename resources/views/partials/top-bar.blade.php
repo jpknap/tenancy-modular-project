@@ -31,7 +31,7 @@
         
         @if(isset($topbarData['user']))
             <div class="dropdown">
-                <button class="btn btn-light d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                <button class="btn btn-light d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
                          style="width: 32px; height: 32px; font-size: 0.875rem; font-weight: 600;">
                         {{ strtoupper(substr($topbarData['user']->name ?? 'U', 0, 1)) }}
@@ -39,11 +39,27 @@
                     <span class="d-none d-md-inline fw-medium">{{ $topbarData['user']->name ?? 'Usuario' }}</span>
                     <i class="bi bi-chevron-down small"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Perfil</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configuración</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a></li>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 250px;">
+                    {{-- User Info Header --}}
+                    <li class="px-3 py-2 border-bottom">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" 
+                                 style="width: 40px; height: 40px; font-weight: 600;">
+                                {{ strtoupper(substr($topbarData['user']->name ?? 'U', 0, 1)) }}
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">{{ $topbarData['user']->name ?? 'Usuario' }}</div>
+                                <div class="text-muted small">{{ $topbarData['user']->email ?? '' }}</div>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    {{-- Menu Items --}}
+                    <li><a class="dropdown-item py-2" href="#"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                    <li><a class="dropdown-item py-2" href="#"><i class="bi bi-gear me-2"></i>Configuración</a></li>
+                    <li><a class="dropdown-item py-2" href="#"><i class="bi bi-question-circle me-2"></i>Ayuda</a></li>
+                    <li><hr class="dropdown-divider my-1"></li>
+                    <li><a class="dropdown-item py-2 text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a></li>
                 </ul>
             </div>
         @endif

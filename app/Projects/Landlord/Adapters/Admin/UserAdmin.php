@@ -2,9 +2,10 @@
 
 namespace App\Projects\Landlord\Adapters\Admin;
 
-use App\Models\User;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
+use App\Models\User;
 use App\Projects\Landlord\Http\Controller\Admin\UserAdminController;
+use App\Projects\Landlord\Repositories\UserRepository;
 
 class UserAdmin extends AdminBaseAdapter
 {
@@ -14,9 +15,14 @@ class UserAdmin extends AdminBaseAdapter
 
     public static string $controller  = UserAdminController::class;
 
+    public function repository(): string
+    {
+        return UserRepository::class;
+    }
+
     public function getTitle(): string
     {
-        return 'Usuarios';
+        return ' Usuarios';
     }
     
     public function getListableAttributes(): array

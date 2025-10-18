@@ -2,9 +2,10 @@
 
 namespace App\Projects\Landlord\Adapters\Admin;
 
-use App\Models\Tenant;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
+use App\Models\Tenant;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
+use App\Projects\Landlord\Repositories\TenantRepository;
 
 class TenantAdmin extends AdminBaseAdapter
 {
@@ -13,6 +14,11 @@ class TenantAdmin extends AdminBaseAdapter
     protected string $routePrefix = 'tenant';
 
     public static string $controller = TenantAdminController::class;
+
+    public function repository(): string
+    {
+        return TenantRepository::class;
+    }
 
     public function getTitle(): string
     {

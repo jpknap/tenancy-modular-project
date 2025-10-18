@@ -26,30 +26,33 @@ abstract class AdminBaseAdapter
     }
 
     /**
-     * Obtiene todos los registros del modelo
+     * Obtiene el repositorio asociado al modelo
+     * Debe ser implementado por cada adapter
+     */
+    abstract public function repository(): string;
+
+    /**
+     * Obtiene todos los registros usando el repositorio
      */
     public function getAll()
     {
-        $modelClass = $this->model;
-        return $modelClass::all();
+        return app($this->repository())->all();
     }
 
     /**
-     * Obtiene registros paginados del modelo
+     * Obtiene registros paginados usando el repositorio
      */
     public function paginate(int $perPage = 15)
     {
-        $modelClass = $this->model;
-        return $modelClass::paginate($perPage);
+        return app($this->repository())->paginate($perPage);
     }
 
     /**
-     * Encuentra un registro por ID
+     * Encuentra un registro por ID usando el repositorio
      */
     public function find($id)
     {
-        $modelClass = $this->model;
-        return $modelClass::find($id);
+        return app($this->repository())->find($id);
     }
 
     public function getRoutePrefix(): string
