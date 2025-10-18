@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Module\Admin\Adapter;
+namespace App\Common\Admin\Adapter;
 
 abstract class AdminBaseAdapter
 {
@@ -8,12 +8,7 @@ abstract class AdminBaseAdapter
 
     protected string $routePrefix = '';
 
-    protected string $controller = '';
-
-    public function getController(): string
-    {
-        return $this->controller;
-    }
+    public static string $controller  = '';
 
     public function getListableAttributes(): array
     {
