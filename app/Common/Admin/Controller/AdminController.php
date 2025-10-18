@@ -18,8 +18,11 @@ abstract class AdminController extends Controller
     #[Route('list', methods: ['GET'], name: 'list')]
     public function list()
     {
+        $items = $this->admin->getAll();
+        
         return view('landlord.list', [
             'admin' => $this->admin,
+            'items' => $items,
         ]);
     }
 }

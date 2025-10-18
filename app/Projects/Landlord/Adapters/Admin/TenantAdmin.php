@@ -14,8 +14,13 @@ class TenantAdmin extends AdminBaseAdapter
 
     public static string $controller = TenantAdminController::class;
 
+    public function getTitle(): string
+    {
+        return 'Clientes';
+    }
+
     public function getListableAttributes(): array
     {
-        return ['id'];
+        return ['id', 'created_at', 'updated_at'];
     }
 }

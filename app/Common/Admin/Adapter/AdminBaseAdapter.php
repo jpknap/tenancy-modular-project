@@ -20,6 +20,38 @@ abstract class AdminBaseAdapter
         return '';
     }
 
+    public function getModel(): string
+    {
+        return $this->model;
+    }
+
+    /**
+     * Obtiene todos los registros del modelo
+     */
+    public function getAll()
+    {
+        $modelClass = $this->model;
+        return $modelClass::all();
+    }
+
+    /**
+     * Obtiene registros paginados del modelo
+     */
+    public function paginate(int $perPage = 15)
+    {
+        $modelClass = $this->model;
+        return $modelClass::paginate($perPage);
+    }
+
+    /**
+     * Encuentra un registro por ID
+     */
+    public function find($id)
+    {
+        $modelClass = $this->model;
+        return $modelClass::find($id);
+    }
+
     public function getRoutePrefix(): string
     {
         return $this->routePrefix;

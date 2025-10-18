@@ -14,8 +14,13 @@ class UserAdmin extends AdminBaseAdapter
 
     public static string $controller  = UserAdminController::class;
 
+    public function getTitle(): string
+    {
+        return 'Usuarios';
+    }
+    
     public function getListableAttributes(): array
     {
-        return ['name'];
+        return ['id', 'name', 'email', 'created_at'];
     }
 }

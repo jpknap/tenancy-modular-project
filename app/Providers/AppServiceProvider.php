@@ -17,9 +17,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-
         View::composer('partials.sidebar-menu', SidebarComposer::class);
         View::composer('partials.top-bar', TopbarComposer::class);
-
     }
 }
