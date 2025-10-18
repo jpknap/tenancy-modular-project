@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-
-
 use App\Attributes\Route;
 use App\Attributes\RoutePrefix;
 use App\DTO\Endpoint;
@@ -23,7 +21,7 @@ class EndpointProcessor
     {
         $endpoints = [];
         foreach ($controllers as $controllerClass) {
-            if (!class_exists($controllerClass)) {
+            if (! class_exists($controllerClass)) {
                 continue;
             }
             $reflection = new ReflectionClass($controllerClass);
@@ -101,7 +99,7 @@ class EndpointProcessor
 
         while ($current) {
             $attributes = $current->getAttributes(RoutePrefix::class);
-            if (!empty($attributes)) {
+            if (! empty($attributes)) {
                 $prefix = $attributes[0]->newInstance()->prefix;
                 array_unshift($prefixes, $prefix);
             }
@@ -157,13 +155,9 @@ class EndpointProcessor
         array $methodMiddleware,
         array $where
     ): Endpoint {
-        $name = str_replace( "/",".", "$projectPrefix.$classPrefix.$route->name");
+        $name = str_replace('/', '.', "{$projectPrefix}.{$classPrefix}.{$route->name}");
         // Construir path completo: proyecto/clasePadre/claseHija/rutaMetodo
-        $pathParts = array_filter([
-            $projectPrefix,
-            $classPrefix,
-            trim($route->path, '/')
-        ]);
+        $pathParts = array_filter([$projectPrefix, $classPrefix, trim($route->path, '/')]);
 
         $fullPath = implode('/', $pathParts);
 

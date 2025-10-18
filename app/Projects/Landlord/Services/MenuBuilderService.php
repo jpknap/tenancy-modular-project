@@ -4,7 +4,6 @@ namespace App\Projects\Landlord\Services;
 
 use App\DTO\Menu\MenuBuilder;
 use App\DTO\Menu\MenuItem;
-use App\ProjectManager;
 use App\Projects\Landlord\LandlordProject;
 
 class MenuBuilderService
@@ -23,8 +22,9 @@ class MenuBuilderService
             'icon' => 'icon',
             'permissions' => [],
             'children' => [],
-        ]
+        ],
     ];
+
     public static function buildMenu(): MenuBuilder
     {
         $items = [];

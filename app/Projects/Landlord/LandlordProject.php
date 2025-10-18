@@ -6,16 +6,14 @@ use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Contracts\ProjectInterface;
 use App\DTO\Endpoint;
 use App\DTO\Menu\MenuBuilder;
-use App\DTO\Menu\MenuItem;
-use App\Module\Admin\Contracts\PageAdminInterface;
 use App\Projects\Landlord\Services\MenuBuilderService;
 use App\Services\EndpointProcessor;
 
 class LandlordProject implements ProjectInterface
 {
-    private static string $title = 'Landlord';
-
     public static string $prefix = 'landlord';
+
+    private static string $title = 'Landlord';
 
     private MenuBuilder $menuBuilder;
 
@@ -39,12 +37,9 @@ class LandlordProject implements ProjectInterface
         return $this->prefix;
     }
 
-    private function initMenu(): void
-    {
-        $this->menuBuilder = MenuBuilderService::buildMenu();
-    }
-
-    /** @return Endpoint[] */
+    /**
+     * @return Endpoint[]
+     */
     public static function getEndpoints(): array
     {
         $adminControllers = [];
@@ -59,5 +54,10 @@ class LandlordProject implements ProjectInterface
         $allControllers = [...$controllers, ...$adminControllers];
         $processor = new EndpointProcessor();
         return $processor->process($allControllers, self::$prefix);
+    }
+
+    private function initMenu(): void
+    {
+        $this->menuBuilder = MenuBuilderService::buildMenu();
     }
 }

@@ -7,7 +7,16 @@ use App\Common\Repository\Contracts\RepositoryInterface;
 class RepositoryManager
 {
     private array $repositories = [];
+
     private array $instances = [];
+
+    /**
+     * Acceso mágico: $manager->user
+     */
+    public function __get(string $name): RepositoryInterface
+    {
+        return $this->get($name);
+    }
 
     /**
      * Registra un repositorio
@@ -26,7 +35,7 @@ class RepositoryManager
             return $this->instances[$name];
         }
 
-        if (!isset($this->repositories[$name])) {
+        if (! isset($this->repositories[$name])) {
             throw new \InvalidArgumentException("Repository '{$name}' is not registered");
         }
 
@@ -41,13 +50,5 @@ class RepositoryManager
     public function has(string $name): bool
     {
         return isset($this->repositories[$name]);
-    }
-
-    /**
-     * Acceso mágico: $manager->user
-     */
-    public function __get(string $name): RepositoryInterface
-    {
-        return $this->get($name);
     }
 }

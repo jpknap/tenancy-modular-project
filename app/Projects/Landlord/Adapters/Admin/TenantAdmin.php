@@ -9,11 +9,11 @@ use App\Projects\Landlord\Repositories\TenantRepository;
 
 class TenantAdmin extends AdminBaseAdapter
 {
+    public static string $controller = TenantAdminController::class;
+
     protected string $model = Tenant::class;
 
     protected string $routePrefix = 'tenant';
-
-    public static string $controller = TenantAdminController::class;
 
     public function repository(): string
     {

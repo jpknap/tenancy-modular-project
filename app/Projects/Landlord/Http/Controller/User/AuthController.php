@@ -2,8 +2,8 @@
 
 namespace App\Projects\Landlord\Http\Controller\User;
 
-use App\Attributes\RoutePrefix;
 use App\Attributes\Route;
+use App\Attributes\RoutePrefix;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;

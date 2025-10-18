@@ -2,8 +2,8 @@
 
 namespace App\Common\Admin\Controller;
 
-use App\Attributes\RoutePrefix;
 use App\Attributes\Route;
+use App\Attributes\RoutePrefix;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
 use Illuminate\Routing\Controller;
 
@@ -19,7 +19,7 @@ abstract class AdminController extends Controller
     public function list()
     {
         $items = $this->admin->getAll();
-        
+
         return view('landlord.list', [
             'admin' => $this->admin,
             'items' => $items,

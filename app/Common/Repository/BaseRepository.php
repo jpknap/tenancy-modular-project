@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
- * Class BaseRepository
- * 
  * Implementación base del patrón Repository
  * Simple, limpio y extensible
  */
@@ -20,25 +18,6 @@ abstract class BaseRepository implements RepositoryInterface
     public function __construct()
     {
         $this->makeModel();
-    }
-
-    /**
-     * Especifica el modelo a usar
-     */
-    abstract protected function model(): string;
-
-    /**
-     * Crea una instancia del modelo
-     */
-    protected function makeModel(): void
-    {
-        $model = app($this->model());
-
-        if (!$model instanceof Model) {
-            throw new \Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
-        }
-
-        $this->model = $model;
     }
 
     public function all(): Collection
@@ -64,8 +43,8 @@ abstract class BaseRepository implements RepositoryInterface
     public function update(int $id, array $data): bool
     {
         $model = $this->find($id);
-        
-        if (!$model) {
+
+        if (! $model) {
             return false;
         }
 
@@ -75,8 +54,8 @@ abstract class BaseRepository implements RepositoryInterface
     public function delete(int $id): bool
     {
         $model = $this->find($id);
-        
-        if (!$model) {
+
+        if (! $model) {
             return false;
         }
 
@@ -91,19 +70,39 @@ abstract class BaseRepository implements RepositoryInterface
     /**
      * Métodos helper adicionales
      */
-    
     public function findBy(string $field, mixed $value): Collection
     {
-        return $this->model->where($field, $value)->get();
+        return $this->model->where($field, $value)
+            ->get();
     }
 
     public function findOneBy(string $field, mixed $value): ?Model
     {
-        return $this->model->where($field, $value)->first();
+        return $this->model->where($field, $value)
+            ->first();
     }
 
     public function getModel(): Model
     {
         return $this->model;
+    }
+
+    /**
+     * Especifica el modelo a usar
+     */
+    abstract protected function model(): string;
+
+    /**
+     * Crea una instancia del modelo
+     */
+    protected function makeModel(): void
+    {
+        $model = app($this->model());
+
+        if (! $model instanceof Model) {
+            throw new \Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+        }
+
+        $this->model = $model;
     }
 }

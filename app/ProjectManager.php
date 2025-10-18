@@ -9,11 +9,10 @@ class ProjectManager
 {
     private static ?ProjectInterface $currentProject = null;
 
-
-     /* @var class-string<ProjectInterface>[]*/
-    private static array $projects = [
-        LandlordProject::class,
-    ];
+    /**
+     * @var class-string<ProjectInterface>[]
+     */
+    private static array $projects = [LandlordProject::class];
 
     public static function getProjects(): array
     {

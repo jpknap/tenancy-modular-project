@@ -4,11 +4,11 @@ namespace App\Common\Admin\Adapter;
 
 abstract class AdminBaseAdapter
 {
+    public static string $controller = '';
+
     protected string $model = '';
 
     protected string $routePrefix = '';
-
-    public static string $controller  = '';
 
     public function getListableAttributes(): array
     {
@@ -36,7 +36,8 @@ abstract class AdminBaseAdapter
      */
     public function getAll()
     {
-        return app($this->repository())->all();
+        return app($this->repository())
+            ->all();
     }
 
     /**
@@ -44,7 +45,8 @@ abstract class AdminBaseAdapter
      */
     public function paginate(int $perPage = 15)
     {
-        return app($this->repository())->paginate($perPage);
+        return app($this->repository())
+            ->paginate($perPage);
     }
 
     /**
@@ -52,7 +54,8 @@ abstract class AdminBaseAdapter
      */
     public function find($id)
     {
-        return app($this->repository())->find($id);
+        return app($this->repository())
+            ->find($id);
     }
 
     public function getRoutePrefix(): string

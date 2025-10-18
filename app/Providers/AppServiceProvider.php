@@ -7,7 +7,6 @@ use App\Http\View\Composers\SidebarComposer;
 use App\Http\View\Composers\TopbarComposer;
 use App\Projects\Landlord\Repositories\TenantRepository;
 use App\Projects\Landlord\Repositories\UserRepository;
-use App\Services\ProjectInitService;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 

@@ -21,11 +21,11 @@ Route::middleware([
             $route->name($endpoint->name);
         }
 
-        if (!empty($endpoint->middleware)) {
+        if (! empty($endpoint->middleware)) {
             $route->middleware($endpoint->middleware);
         }
 
-        if (!empty($endpoint->where)) {
+        if (! empty($endpoint->where)) {
             $route->where($endpoint->where);
         }
     }

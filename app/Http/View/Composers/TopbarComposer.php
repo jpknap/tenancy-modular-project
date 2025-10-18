@@ -14,9 +14,9 @@ class TopbarComposer
 
         // Obtener usuario autenticado o crear uno de prueba
         $user = Auth::user();
-        
+
         // Si no hay usuario autenticado, crear uno de prueba para desarrollo
-        if (!$user) {
+        if (! $user) {
             $user = (object) [
                 'id' => 1,
                 'name' => 'Usuario Demo',
@@ -32,7 +32,7 @@ class TopbarComposer
 
         $view->with('topbarData', $topbarData);
     }
-    
+
     private function getNotifications(): array
     {
         // Notificaciones de prueba
