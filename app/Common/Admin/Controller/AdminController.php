@@ -25,4 +25,31 @@ abstract class AdminController extends Controller
             'items' => $items,
         ]);
     }
+
+    #[Route('new', methods: ['GET'], name: 'new')]
+    public function new()
+    {
+        $formRequestClass = $this->admin->getFormRequest();
+
+        // Crear instancia directa sin validación (solo para obtener el form builder)
+        $formRequest = new $formRequestClass();
+
+        return view('landlord.new', [
+            'admin' => $this->admin,
+            'form' => $formRequest->getFormBuilder(),
+        ]);
+    }
+
+    #[Route('new', methods: ['POST'], name: 'store')]
+    public function store()
+    {
+        $formRequestClass = $this->admin->getFormRequest();
+        $validated = app($formRequestClass)->validated();
+
+        $item = app($this->admin->repository())->create($validated);
+
+        return redirect()
+            ->route('landlord.admin.' . $this->admin->getRoutePrefix() . '.list')
+            ->with('success', 'Registro creado exitosamente');
+    }
 }

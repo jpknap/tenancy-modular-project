@@ -6,6 +6,7 @@ use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Models\Tenant;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
 use App\Projects\Landlord\Repositories\TenantRepository;
+use App\Projects\Landlord\Requests\TenantFormRequest;
 
 class TenantAdmin extends AdminBaseAdapter
 {
@@ -18,6 +19,11 @@ class TenantAdmin extends AdminBaseAdapter
     public function repository(): string
     {
         return TenantRepository::class;
+    }
+
+    public function getFormRequest(): string
+    {
+        return TenantFormRequest::class;
     }
 
     public function getTitle(): string

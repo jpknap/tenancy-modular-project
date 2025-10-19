@@ -6,6 +6,7 @@ use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Models\User;
 use App\Projects\Landlord\Http\Controller\Admin\UserAdminController;
 use App\Projects\Landlord\Repositories\UserRepository;
+use App\Projects\Landlord\Requests\UserFormRequest;
 
 class UserAdmin extends AdminBaseAdapter
 {
@@ -20,9 +21,14 @@ class UserAdmin extends AdminBaseAdapter
         return UserRepository::class;
     }
 
+    public function getFormRequest(): string
+    {
+        return UserFormRequest::class;
+    }
+
     public function getTitle(): string
     {
-        return ' Usuarios';
+        return 'Usuarios';
     }
 
     public function getListableAttributes(): array

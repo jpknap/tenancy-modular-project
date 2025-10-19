@@ -24,7 +24,11 @@ abstract class AdminBaseAdapter
     {
         return $this->model;
     }
+
     abstract public function repository(): string;
+
+    abstract public function getFormRequest(): string;
+
     public function getAll()
     {
         return app($this->repository())
@@ -37,9 +41,6 @@ abstract class AdminBaseAdapter
             ->paginate($perPage);
     }
 
-    /**
-     * Encuentra un registro por ID usando el repositorio
-     */
     public function find($id)
     {
         return app($this->repository())
