@@ -14,11 +14,10 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // Registrar RepositoryManager como Singleton
         $this->app->singleton(RepositoryManager::class, function ($app) {
             $manager = new RepositoryManager();
-            $manager->register('user', UserRepository::class);
-            $manager->register('tenant', TenantRepository::class);
+            $manager->register(UserRepository::class, UserRepository::class);
+            $manager->register(TenantRepository::class, TenantRepository::class);
             return $manager;
         });
     }

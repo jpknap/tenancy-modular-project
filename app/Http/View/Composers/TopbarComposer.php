@@ -9,13 +9,8 @@ class TopbarComposer
 {
     public function compose(View $view): void
     {
-        // Aquí se pueden inyectar datos dinámicos del topbar
-        // Por ejemplo: información del usuario, notificaciones, etc.
-
-        // Obtener usuario autenticado o crear uno de prueba
         $user = Auth::user();
 
-        // Si no hay usuario autenticado, crear uno de prueba para desarrollo
         if (! $user) {
             $user = (object) [
                 'id' => 1,

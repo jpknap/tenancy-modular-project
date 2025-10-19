@@ -24,25 +24,13 @@ abstract class AdminBaseAdapter
     {
         return $this->model;
     }
-
-    /**
-     * Obtiene el repositorio asociado al modelo
-     * Debe ser implementado por cada adapter
-     */
     abstract public function repository(): string;
-
-    /**
-     * Obtiene todos los registros usando el repositorio
-     */
     public function getAll()
     {
         return app($this->repository())
             ->all();
     }
 
-    /**
-     * Obtiene registros paginados usando el repositorio
-     */
     public function paginate(int $perPage = 15)
     {
         return app($this->repository())

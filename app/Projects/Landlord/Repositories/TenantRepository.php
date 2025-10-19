@@ -3,12 +3,9 @@
 namespace App\Projects\Landlord\Repositories;
 
 use App\Common\Repository\BaseRepository;
-use App\Models\Tenant;
+use App\Projects\Landlord\Models\Tenant;
 use Illuminate\Database\Eloquent\Collection;
 
-/**
- * Repositorio para el modelo Tenant
- */
 class TenantRepository extends BaseRepository
 {
     public function getRecent(int $limit = 10): Collection
