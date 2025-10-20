@@ -2,7 +2,7 @@
 
 namespace App\DTO\Menu;
 
-readonly class MenuBuilder
+class MenuBuilder
 {
     public function __construct(
         public string $title,
