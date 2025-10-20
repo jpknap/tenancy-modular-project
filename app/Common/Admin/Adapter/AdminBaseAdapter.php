@@ -3,6 +3,7 @@
 namespace App\Common\Admin\Adapter;
 
 use App\Common\Admin\Contracts\AdminAdapterInterface;
+use App\Common\ListView\ListViewConfig;
 use App\Common\Repository\RepositoryManager;
 use App\Common\Repository\Contracts\RepositoryInterface;
 
@@ -23,6 +24,26 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
         return static::$controller;
     }
 
+    /**
+     * Configuración del ListView
+     * Override en adapters para personalizar
+     */
+    public function getListViewConfig(): ListViewConfig
+    {
+        $config = new ListViewConfig();
+        
+        // Configuración por defecto
+        $config->columns([
+            'id' => 'ID',
+            'created_at' => ['label' => 'Creado', 'format' => 'datetime'],
+        ]);
+        
+        return $config;
+    }
+
+    /**
+     * @deprecated Usar getListViewConfig() en su lugar
+     */
     public function getListableAttributes(): array
     {
         return [];

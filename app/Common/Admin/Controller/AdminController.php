@@ -18,7 +18,8 @@ abstract class AdminController extends Controller
     #[Route('list', methods: ['GET'], name: 'list')]
     public function list()
     {
-        $items = $this->admin->getAll();
+        $config = $this->admin->getListViewConfig();
+        $items = $this->admin->paginate($config->getPerPage());
 
         return view('landlord.list', [
             'admin' => $this->admin,

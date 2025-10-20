@@ -1,85 +1,45 @@
 @extends('layouts.layout_menu_sidebar')
 
-@section('title', 'Tenant List')
+@section('title', $admin->getTitle())
 
 @section('content')
+    @php
+        $config = $admin->getListViewConfig();
+    @endphp
+
     {{-- Page Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="h3 mb-1 fw-bold">{{$admin->getTitle()}}</h2>
-            <p class="text-muted mb-0">Administra y visualiza todos los tenants del sistema</p>
+            <h2 class="h3 mb-1 fw-bold">{{ $admin->getTitle() }}</h2>
+            <p class="text-muted mb-0">Administra y visualiza todos los registros del sistema</p>
         </div>
-        <button class="btn btn-primary">
-            <i class="bi bi-plus-circle me-2"></i>Nuevo Tenant
-        </button>
     </div>
 
     {{-- Stats Cards --}}
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="content-card">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
-                        <i class="bi bi-building text-primary fs-4"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-1 small">Total Registros</h6>
-                        <h3 class="mb-0 fw-bold">{{ $items->count() }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="content-card">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
-                        <i class="bi bi-check-circle text-success fs-4"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-1 small">Activos</h6>
-                        <h3 class="mb-0 fw-bold">{{ $items->count() }}</h3>
+    @if($config->hasStatCards())
+        <div class="row g-3 mb-4">
+            @foreach($config->getStatCards() as $card)
+                <div class="col-md-{{ 12 / count($config->getStatCards()) }}">
+                    <div class="content-card">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle {{ $card->getColorClass() }} bg-opacity-10 p-3 me-3">
+                                <i class="bi {{ $card->getIcon() }} {{ $card->getTextColorClass() }} fs-4"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-muted mb-1 small">{{ $card->getTitle() }}</h6>
+                                <h3 class="mb-0 fw-bold">{{ $card->getValue($items) }}</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
         </div>
-        <div class="col-md-3">
-            <div class="content-card">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
-                        <i class="bi bi-clock text-warning fs-4"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-1 small">Pendientes</h6>
-                        <h3 class="mb-0 fw-bold">0</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="content-card">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-danger bg-opacity-10 p-3 me-3">
-                        <i class="bi bi-x-circle text-danger fs-4"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted mb-1 small">Inactivos</h6>
-                        <h3 class="mb-0 fw-bold">0</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endif
 
     {{-- Main Content Card --}}
     <div class="content-card">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="mb-3">
             <h5 class="mb-0 fw-semibold">Listado de {{ $admin->getTitle() }}</h5>
-            <div class="input-group" style="max-width: 300px;">
-                <span class="input-group-text bg-white">
-                    <i class="bi bi-search"></i>
-                </span>
-                <input type="text" class="form-control" placeholder="Buscar...">
-            </div>
         </div>
 
         {{-- Table --}}
@@ -87,41 +47,76 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col" class="fw-semibold">#</th>
-                        @foreach($admin->getListableAttributes() as $attribute)
-                            <th scope="col" class="fw-semibold text-capitalize">{{ ucfirst($attribute) }}</th>
+                        @foreach($config->getColumns() as $column)
+                            @if($column->isVisible())
+                                <th scope="col" class="fw-semibold {{ $column->getHeaderClass() }}">
+                                    {{ $column->getLabel() }}
+                                    @if($column->isSortable())
+                                        <i class="bi bi-arrow-down-up ms-1 text-muted small"></i>
+                                    @endif
+                                </th>
+                            @endif
                         @endforeach
-                        <th scope="col" class="fw-semibold text-end">Acciones</th>
+                        @if(count($config->getActions()) > 0)
+                            <th scope="col" class="fw-semibold text-end">Acciones</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($items as $index => $item)
+                    @forelse($items as $item)
                         <tr>
-                            <td class="text-muted">{{ $index + 1 }}</td>
-                            @foreach($admin->getListableAttributes() as $attribute)
-                                <td>
-                                    <span class="fw-medium">{{ $item->$attribute ?? 'N/A' }}</span>
-                                </td>
+                            @foreach($config->getColumns() as $column)
+                                @if($column->isVisible())
+                                    <td class="{{ $column->getClass() }}">
+                                        {!! $column->format(data_get($item, $column->getKey())) !!}
+                                    </td>
+                                @endif
                             @endforeach
-                            <td class="text-end">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <button type="button" class="btn btn-outline-primary" title="Ver">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-secondary" title="Editar">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger" title="Eliminar">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
+                            @if(count($config->getActions()) > 0)
+                                <td class="text-end">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        @foreach($config->getActions() as $action)
+                                            @if($action->getType() === 'form')
+                                                <form
+                                                    method="POST"
+                                                    action="{{ $action->getUrl($item) }}"
+                                                    style="display: inline;"
+                                                    @if($action->requiresConfirmation())
+                                                        onsubmit="return confirm('{{ $action->getConfirmMessage() }}')"
+                                                    @endif
+                                                >
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button 
+                                                        type="submit" 
+                                                        class="btn btn-link p-0 text-decoration-none" 
+                                                        title="{{ $action->getLabel() }}"
+                                                    >
+                                                        <i class="{{ $action->getIcon() }} fs-5"></i>
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <a
+                                                    href="{{ $action->getUrl($item) }}"
+                                                    class="text-decoration-none"
+                                                    title="{{ $action->getLabel() }}"
+                                                    @if($action->requiresConfirmation())
+                                                        onclick="return confirm('{{ $action->getConfirmMessage() }}')"
+                                                    @endif
+                                                >
+                                                    <i class="{{ $action->getIcon() }} fs-5"></i>
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="{{ count($admin->getListableAttributes()) + 2 }}" class="text-center text-muted py-5">
+                            <td colspan="{{ count($config->getColumns()) + (count($config->getActions()) > 0 ? 1 : 0) }}" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox fs-1 d-block mb-3"></i>
-                                <p class="mb-0">No hay registros disponibles</p>
+                                <p class="mb-0">{{ $config->getEmptyMessage() }}</p>
                             </td>
                         </tr>
                     @endforelse
@@ -130,21 +125,15 @@
         </div>
 
         {{-- Pagination --}}
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <p class="text-muted mb-0 small">Mostrando <strong>{{ $items->count() }}</strong> resultados</p>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Anterior</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Siguiente</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        @if(method_exists($items, 'links'))
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <p class="text-muted mb-0 small">
+                    Mostrando <strong>{{ $items->firstItem() ?? 0 }}</strong>
+                    a <strong>{{ $items->lastItem() ?? 0 }}</strong>
+                    de <strong>{{ $items->total() }}</strong> resultados
+                </p>
+                {{ $items->links() }}
+            </div>
+        @endif
     </div>
 @endsection
