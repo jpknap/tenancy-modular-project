@@ -6,22 +6,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
- * TransactionService
- * 
- * Servicio para orquestar operaciones complejas con múltiples repositorios
- * Patrón: Service Layer + Unit of Work
- * 
- * Responsabilidades:
- * - Coordinar múltiples repositorios
- * - Manejar transacciones atómicas
- * - Ejecutar lógica de negocio compleja
+ * Empaquedador de transacciones
+ *
  */
 class TransactionService
 {
     /**
      * Ejecuta una operación dentro de una transacción
      * Si falla cualquier parte, hace rollback automático
-     * 
+     *
      * @param callable $callback Función que contiene la lógica a ejecutar
      * @return mixed Resultado de la operación
      * @throws \Throwable
@@ -42,10 +35,10 @@ class TransactionService
 
     /**
      * Ejecuta múltiples operaciones en secuencia dentro de una transacción
-     * 
+     *
      * @param array $operations Array de callables a ejecutar
      * @return array Resultados de cada operación
-     * 
+     *
      * Ejemplo:
      * $results = $service->executeMultiple([
      *     'tenant' => fn() => $tenantRepo->create($data),
@@ -65,7 +58,7 @@ class TransactionService
 
     /**
      * Ejecuta operación con reintentos en caso de deadlock
-     * 
+     *
      * @param callable $callback Función a ejecutar
      * @param int $maxAttempts Número máximo de intentos
      * @return mixed
@@ -92,7 +85,7 @@ class TransactionService
 
     /**
      * Ejecuta operaciones con rollback manual si es necesario
-     * 
+     *
      * @param callable $callback
      * @param callable|null $onRollback Callback a ejecutar en caso de rollback
      * @return mixed

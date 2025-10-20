@@ -36,17 +36,12 @@ class EndpointProcessor
                 projectPrefix: $projectPrefix,
                 classPrefix: $classPrefix,
             );
-
-            // 5. Agregar endpoints al array principal
             $endpoints = array_merge($endpoints, $controllerEndpoints);
         }
 
         return $endpoints;
     }
 
-    /**
-     * Procesa los métodos de un controlador y extrae endpoints
-     */
     private function processControllerMethods(
         ReflectionClass $reflection,
         string $controllerClass,
@@ -57,32 +52,31 @@ class EndpointProcessor
         $endpoints = [];
 
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            // Ignorar constructores
             if ($method->name === '__construct') {
                 continue;
             }
 
-            // Buscar atributos Route
+            /** @var Route $routeAttrs */
             $routeAttrs = $method->getAttributes(Route::class);
             if (empty($routeAttrs)) {
                 continue;
             }
 
-            // Procesar cada atributo Route del método
             foreach ($routeAttrs as $routeAttr) {
                 $route = $routeAttr->newInstance();
-
-                // Crear instancia de Endpoint
-                $endpoints[] = $this->buildEndpoint(
-                    projectPrefix: $projectPrefix,
-                    classPrefix: $classPrefix,
-                    route: $route,
-                    controller: $controllerClass,
-                    method: $method->name,
-                    classMiddleware: $classMiddleware,
-                    methodMiddleware: $this->getMethodMiddleware($method),
-                    where: $this->getWhereConstraints($method)
-                );
+                foreach ($route->methods as $httpMethod) {
+                        $endpoints[] = $this->buildEndpoint(
+                            projectPrefix: $projectPrefix,
+                            classPrefix: $classPrefix,
+                            route: $route,
+                            controller: $controllerClass,
+                            method: $method->name,
+                            httpMethod: $httpMethod,
+                            classMiddleware: $classMiddleware,
+                            methodMiddleware: $this->getMethodMiddleware($method),
+                            where: $this->getWhereConstraints($method)
+                        );
+                    }
             }
         }
 
@@ -151,24 +145,24 @@ class EndpointProcessor
         Route $route,
         string $controller,
         string $method,
+        string $httpMethod,
         array $classMiddleware,
         array $methodMiddleware,
         array $where
     ): Endpoint {
         $name = str_replace('/', '.', "{$projectPrefix}.{$classPrefix}.{$route->name}");
-        // Construir path completo: proyecto/clasePadre/claseHija/rutaMetodo
+
         $pathParts = array_filter([$projectPrefix, $classPrefix, trim($route->path, '/')]);
 
         $fullPath = implode('/', $pathParts);
 
-        // Combinar middleware: clase + método
         $allMiddleware = array_unique(array_merge($classMiddleware, $methodMiddleware));
 
         return new Endpoint(
             path: $fullPath,
             controller: $controller,
             method: $method,
-            httpMethods: $route->methods,
+            httpMethods: [$httpMethod], // Ahora es un solo método HTTP
             name: $name,
             middleware: $allMiddleware,
             where: $where

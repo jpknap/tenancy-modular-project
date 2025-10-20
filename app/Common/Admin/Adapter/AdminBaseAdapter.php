@@ -24,20 +24,15 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
         return static::$controller;
     }
 
-    /**
-     * Configuración del ListView
-     * Override en adapters para personalizar
-     */
     public function getListViewConfig(): ListViewConfig
     {
         $config = new ListViewConfig();
-        
-        // Configuración por defecto
+
         $config->columns([
             'id' => 'ID',
             'created_at' => ['label' => 'Creado', 'format' => 'datetime'],
         ]);
-        
+
         return $config;
     }
 

@@ -5,7 +5,9 @@ namespace App\Common\Admin\Controller;
 use App\Attributes\Route;
 use App\Attributes\RoutePrefix;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
+use Illuminate\Config\Repository;
 use Illuminate\Routing\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 #[RoutePrefix('admin')]
 abstract class AdminController extends Controller
@@ -27,24 +29,18 @@ abstract class AdminController extends Controller
         ]);
     }
 
-    #[Route('new', methods: ['GET'], name: 'new')]
-    public function new()
+    #[Route('create', methods: ['GET','POST'], name: 'create')]
+    public function new(Request $request)
     {
         $formRequestClass = $this->admin->getFormRequest();
 
-        // Crear instancia directa sin validación (solo para obtener el form builder)
         $formRequest = new $formRequestClass();
-
-        return view('landlord.new', [
-            'admin' => $this->admin,
-            'form' => $formRequest->getFormBuilder(),
-        ]);
-    }
-
-    #[Route('new', methods: ['POST'], name: 'store')]
-    public function store()
-    {
-        $formRequestClass = $this->admin->getFormRequest();
+        if ($request->getMethod() === 'GET') {
+            return view('landlord.create', [
+                'admin' => $this->admin,
+                'form' => $formRequest->getFormBuilder(),
+            ]);
+        }
         $validated = app($formRequestClass)->validated();
         $serviceClass = $this->admin->getService();
 

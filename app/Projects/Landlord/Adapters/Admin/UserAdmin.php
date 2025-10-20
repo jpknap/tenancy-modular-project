@@ -37,7 +37,6 @@ class UserAdmin extends AdminBaseAdapter
     {
         $config = new ListViewConfig();
 
-        // Tarjetas de estadísticas
         $config->addStatCard('Total Usuarios', 0, [
             'icon' => 'bi-people',
             'color' => 'primary',
