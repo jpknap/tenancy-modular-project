@@ -17,6 +17,7 @@ Sistema multi-tenant modular construido con Laravel 11, implementando patrones d
 - **[05-listview-config-pattern.md](./docs/05-listview-config-pattern.md)** - Sistema de listados
 - **[06-blade-components.md](./docs/06-blade-components.md)** - Componentes Blade
 - **[07-design-guide.md](./docs/07-design-guide.md)** - Guía de diseño
+- **[08-admin-view-config-pattern.md](./docs/08-admin-view-config-pattern.md)** - Configuración de vistas admin
 
 ## 🚀 Inicio Rápido
 

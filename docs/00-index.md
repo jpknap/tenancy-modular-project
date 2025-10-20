@@ -16,7 +16,8 @@ docs/
 │   ├── 04-form-builder-pattern.md       # Constructor de formularios
 │   ├── 05-listview-config-pattern.md    # Sistema de listados
 │   ├── 06-blade-components.md           # Componentes Blade
-│   └── 07-design-guide.md               # Guía de diseño
+│   ├── 07-design-guide.md               # Guía de diseño
+│   └── 08-admin-view-config-pattern.md  # Sistema de configuración de vistas admin
 │
 └── 📚 Ejemplos
     └── blade-components-examples.md     # Ejemplos de componentes
@@ -76,6 +77,7 @@ Si ya conoces Laravel y patrones de diseño:
 | [05-listview-config-pattern.md](./05-listview-config-pattern.md) | Sistema de listados con columnas, acciones y stats | Avanzado |
 | [06-blade-components.md](./06-blade-components.md) | Componentes Blade reutilizables | Básico |
 | [07-design-guide.md](./07-design-guide.md) | Guía de diseño visual | Básico |
+| [08-admin-view-config-pattern.md](./08-admin-view-config-pattern.md) | Sistema de configuración de vistas admin (List + Create) | Avanzado |
 
 ### 📚 Ejemplos
 
@@ -97,8 +99,12 @@ Si ya conoces Laravel y patrones de diseño:
 ### Quiero crear un listado
 → [05-listview-config-pattern.md](./05-listview-config-pattern.md)
 
+### Quiero configurar vistas de admin (List + Create)
+→ [08-admin-view-config-pattern.md](./08-admin-view-config-pattern.md)
+
 ### Quiero agregar tarjetas de estadísticas
 → [05-listview-config-pattern.md](./05-listview-config-pattern.md) - Sección "StatCard"
+→ [08-admin-view-config-pattern.md](./08-admin-view-config-pattern.md) - ListViewConfig
 
 ### Quiero crear un componente UI
 → [06-blade-components.md](./06-blade-components.md)

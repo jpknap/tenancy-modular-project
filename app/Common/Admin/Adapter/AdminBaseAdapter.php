@@ -2,8 +2,9 @@
 
 namespace App\Common\Admin\Adapter;
 
+use App\Common\Admin\Config\CreateViewConfig;
+use App\Common\Admin\Config\ListViewConfig;
 use App\Common\Admin\Contracts\AdminAdapterInterface;
-use App\Common\ListView\ListViewConfig;
 use App\Common\Repository\RepositoryManager;
 use App\Common\Repository\Contracts\RepositoryInterface;
 
@@ -32,6 +33,20 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
             'id' => 'ID',
             'created_at' => ['label' => 'Creado', 'format' => 'datetime'],
         ]);
+
+        return $config;
+    }
+
+    public function getCreateViewConfig(): CreateViewConfig
+    {
+        $formRequestClass = $this->getFormRequest();
+        $formRequest = new $formRequestClass();
+
+        $config = new CreateViewConfig($formRequest->getFormBuilder());
+
+        $config
+            ->title('Crear ' . $this->getTitle())
+            ->submitLabel('Guardar');
 
         return $config;
     }

@@ -5,6 +5,7 @@ namespace App\Common\Admin\Controller;
 use App\Attributes\Route;
 use App\Attributes\RoutePrefix;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
+use App\ProjectManager;
 use Illuminate\Config\Repository;
 use Illuminate\Routing\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,22 +33,22 @@ abstract class AdminController extends Controller
     #[Route('create', methods: ['GET','POST'], name: 'create')]
     public function new(Request $request)
     {
-        $formRequestClass = $this->admin->getFormRequest();
+        $config = $this->admin->getCreateViewConfig();
 
-        $formRequest = new $formRequestClass();
         if ($request->getMethod() === 'GET') {
-            return view('landlord.create', [
+            return view('landlord.new', [
                 'admin' => $this->admin,
-                'form' => $formRequest->getFormBuilder(),
+                'form' => $this->admin->getCreateViewConfig()->getFormBuilder(),
+                'config' => $config,
             ]);
         }
+        $formRequestClass = $this->admin->getFormRequest();
         $validated = app($formRequestClass)->validated();
+
         $serviceClass = $this->admin->getService();
 
-        $item = app($serviceClass)->create($validated);
-
-        return redirect()
-            ->route('landlord.admin.' . $this->admin->getRoutePrefix() . '.list')
-            ->with('success', 'Registro creado exitosamente');
+        app($serviceClass)->create($validated);
+        $project = ProjectManager::getCurrentProject()->getPrefix();
+        return redirect()->route("{$project}.admin.{$this->admin->getRoutePrefix()}.list");
     }
 }

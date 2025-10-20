@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Common\ListView;
+namespace App\Common\Admin\Config;
 
-/**
- * ListViewConfig
- * 
- * Configuración simplificada para vistas de listado
- * Patrón: Builder + Configuration Object
- */
+use App\Common\ListView\ListAction;
+use App\Common\ListView\ListColumn;
+use App\Common\ListView\StatCard;
+
 class ListViewConfig
 {
     /** @var ListColumn[] */
@@ -38,10 +36,8 @@ class ListViewConfig
     {
         foreach ($columns as $key => $config) {
             if (is_string($config)) {
-                // Simple: ['name' => 'Nombre']
                 $this->addColumn($key, $config);
             } elseif (is_array($config)) {
-                // Con opciones: ['name' => ['label' => 'Nombre', 'sortable' => true]]
                 $label = $config['label'] ?? $key;
                 unset($config['label']);
                 $this->addColumn($key, $label, $config);
@@ -49,44 +45,27 @@ class ListViewConfig
         }
         return $this;
     }
-
-    /**
-     * Agrega una acción (botón/enlace)
-     */
     public function addAction(string $label, string $route, array $options = []): self
     {
         $this->actions[] = new ListAction($label, $route, $options);
         return $this;
     }
-
-    /**
-     * Agrega una tarjeta de estadística
-     */
     public function addStatCard(string $title, mixed $value, array $options = []): self
     {
         $this->statCards[] = new StatCard($title, $value, $options);
         return $this;
     }
 
-    /**
-     * Configura la paginación
-     */
     public function perPage(int $perPage): self
     {
         $this->perPage = $perPage;
         return $this;
     }
-
-    /**
-     * Mensaje cuando no hay datos
-     */
     public function emptyMessage(string $message): self
     {
         $this->emptyMessage = $message;
         return $this;
     }
-
-    // Getters
 
     public function getColumns(): array
     {

@@ -3,10 +3,9 @@
 namespace App\Projects\Landlord\Adapters\Admin;
 
 use App\Common\Admin\Adapter\AdminBaseAdapter;
-use App\Common\ListView\ListViewConfig;
+use App\Common\Admin\Config\ListViewConfig;
 use App\Models\User;
 use App\Projects\Landlord\Http\Controller\Admin\UserAdminController;
-use App\Projects\Landlord\Repositories\UserRepository;
 use App\Projects\Landlord\Requests\UserFormRequest;
 use App\Projects\Landlord\Services\Model\UserService;
 
@@ -16,7 +15,7 @@ class UserAdmin extends AdminBaseAdapter
 
     protected static string $model = User::class;
 
-    protected string $routePrefix = 'user';
+    protected string $routePrefix = 'users';
 
     public function getFormRequest(): string
     {

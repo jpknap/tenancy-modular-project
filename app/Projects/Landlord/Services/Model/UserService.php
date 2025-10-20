@@ -3,11 +3,10 @@
 namespace App\Projects\Landlord\Services\Model;
 
 use App\Common\Service\TransactionService;
-use App\Contracts\ModelServiceInterface;
 use App\Projects\Landlord\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
-class UserService implements ModelServiceInterface
+class UserService
 {
     public function __construct(
         private TransactionService $transactionService,

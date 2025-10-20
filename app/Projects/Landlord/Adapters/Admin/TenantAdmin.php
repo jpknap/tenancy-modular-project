@@ -3,10 +3,10 @@
 namespace App\Projects\Landlord\Adapters\Admin;
 
 use App\Common\Admin\Adapter\AdminBaseAdapter;
-use App\Common\ListView\ListViewConfig;
+use App\Common\Admin\Config\CreateViewConfig;
+use App\Common\Admin\Config\ListViewConfig;
 use App\Models\Tenant;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
-use App\Projects\Landlord\Repositories\TenantRepository;
 use App\Projects\Landlord\Requests\TenantFormRequest;
 use App\Projects\Landlord\Services\Model\TenantService;
 
@@ -92,9 +92,19 @@ class TenantAdmin extends AdminBaseAdapter
 
         // Paginación
         $config->perPage(15);
-
-        // Mensaje vacío
         $config->emptyMessage('No hay tenants registrados');
+
+        return $config;
+    }
+
+    public function getCreateViewConfig(): CreateViewConfig
+    {
+        $config = parent::getCreateViewConfig();
+
+        $config
+            ->title('Crear Nuevo Tenant')
+            ->submitLabel('Crear Tenant')
+            ->successMessage('Tenant creado exitosamente');
 
         return $config;
     }

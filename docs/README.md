@@ -46,6 +46,11 @@ Bienvenido a la documentación del proyecto **Tenancy Modular**. Este proyecto i
    - Colores y tipografía
    - Componentes UI
 
+8. **[Admin View Config Pattern](./08-admin-view-config-pattern.md)**
+   - Sistema de configuración de vistas admin
+   - ListViewConfig y CreateViewConfig
+   - Configuración centralizada de CRUD
+
 ## 🚀 Inicio Rápido
 
 ### Estructura del Proyecto
