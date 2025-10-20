@@ -2,13 +2,26 @@
 
 namespace App\Common\Admin\Adapter;
 
-abstract class AdminBaseAdapter
+use App\Common\Admin\Contracts\AdminAdapterInterface;
+use App\Common\Repository\RepositoryManager;
+use App\Common\Repository\Contracts\RepositoryInterface;
+
+abstract class AdminBaseAdapter implements AdminAdapterInterface
 {
-    public static string $controller = '';
-
-    protected string $model = '';
-
+    protected static string $controller = '';
+    protected static string $model = '';
     protected string $routePrefix = '';
+
+    public function __construct(
+        protected RepositoryManager $repositoryManager
+    )
+    {
+    }
+
+    public static function getController(): string
+    {
+        return static::$controller;
+    }
 
     public function getListableAttributes(): array
     {
@@ -22,29 +35,34 @@ abstract class AdminBaseAdapter
 
     public function getModel(): string
     {
-        return $this->model;
+        return static::$model;
     }
 
-    abstract public function repository(): string;
+    public function getRepository(): RepositoryInterface
+    {
+        return $this->repositoryManager->get(static::$model);
+    }
 
     abstract public function getFormRequest(): string;
 
+    public function getService(): string
+    {
+        return '';
+    }
+
     public function getAll()
     {
-        return app($this->repository())
-            ->all();
+        return $this->getRepository()->all();
     }
 
     public function paginate(int $perPage = 15)
     {
-        return app($this->repository())
-            ->paginate($perPage);
+        return $this->getRepository()->paginate($perPage);
     }
 
     public function find($id)
     {
-        return app($this->repository())
-            ->find($id);
+        return $this->getRepository()->find($id);
     }
 
     public function getRoutePrefix(): string

@@ -47,7 +47,7 @@ class LandlordProject implements ProjectInterface
 
         /** @var class-string<AdminBaseAdapter> $adminClass */
         foreach ($admins as $adminClass) {
-            $adminControllers[] = $adminClass::$controller;
+            $adminControllers[] = $adminClass::getController();
         }
         $controllers = config('projects.landlord.controllers');
 

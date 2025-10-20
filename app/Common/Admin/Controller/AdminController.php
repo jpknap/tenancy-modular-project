@@ -45,8 +45,9 @@ abstract class AdminController extends Controller
     {
         $formRequestClass = $this->admin->getFormRequest();
         $validated = app($formRequestClass)->validated();
+        $serviceClass = $this->admin->getService();
 
-        $item = app($this->admin->repository())->create($validated);
+        $item = app($serviceClass)->create($validated);
 
         return redirect()
             ->route('landlord.admin.' . $this->admin->getRoutePrefix() . '.list')

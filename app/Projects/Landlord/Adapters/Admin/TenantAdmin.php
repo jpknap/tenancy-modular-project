@@ -7,23 +7,24 @@ use App\Models\Tenant;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
 use App\Projects\Landlord\Repositories\TenantRepository;
 use App\Projects\Landlord\Requests\TenantFormRequest;
+use App\Projects\Landlord\Services\Model\TenantService;
 
 class TenantAdmin extends AdminBaseAdapter
 {
-    public static string $controller = TenantAdminController::class;
+    protected static string $controller = TenantAdminController::class;
 
-    protected string $model = Tenant::class;
+    protected static string $model = Tenant::class;
 
     protected string $routePrefix = 'tenant';
-
-    public function repository(): string
-    {
-        return TenantRepository::class;
-    }
 
     public function getFormRequest(): string
     {
         return TenantFormRequest::class;
+    }
+
+    public function getService(): string
+    {
+        return TenantService::class;
     }
 
     public function getTitle(): string
