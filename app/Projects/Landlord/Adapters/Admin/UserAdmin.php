@@ -39,49 +39,79 @@ class UserAdmin extends AdminBaseAdapter
         $config->addStatCard('Total Usuarios', 0, [
             'icon' => 'bi-people',
             'color' => 'primary',
-            'value_resolver' => fn($items) => $items->total(),
+            'value_resolver' => fn ($items) => $items->total(),
         ]);
 
         $config->addStatCard('Activos', 0, [
             'icon' => 'bi-check-circle',
             'color' => 'success',
-            'value_resolver' => fn($items) => $items->where('is_active', true)->count(),
+            'value_resolver' => fn ($items) => $items->where('is_active', true)
+                ->count(),
         ]);
 
         $config->addStatCard('Administradores', 0, [
             'icon' => 'bi-shield-check',
             'color' => 'info',
-            'value_resolver' => fn($items) => $items->where('role', 'admin')->count(),
+            'value_resolver' => fn ($items) => $items->where('role', 'admin')
+                ->count(),
         ]);
 
         $config->addStatCard('Inactivos', 0, [
             'icon' => 'bi-x-circle',
             'color' => 'danger',
-            'value_resolver' => fn($items) => $items->where('is_active', false)->count(),
+            'value_resolver' => fn ($items) => $items->where('is_active', false)
+                ->count(),
         ]);
 
         // Columnas
         $config->columns([
-            'id' => ['label' => 'ID', 'sortable' => true, 'class' => 'text-center'],
-            'name' => ['label' => 'Nombre', 'sortable' => true, 'searchable' => true],
-            'email' => ['label' => 'Email', 'sortable' => true, 'searchable' => true],
-            'role' => ['label' => 'Rol', 'format' => 'badge'],
-            'is_active' => ['label' => 'Activo', 'format' => 'boolean', 'class' => 'text-center'],
-            'created_at' => ['label' => 'Fecha Registro', 'format' => 'datetime', 'sortable' => true],
+            'id' => [
+                'label' => 'ID',
+                'sortable' => true,
+                'class' => 'text-center',
+            ],
+            'name' => [
+                'label' => 'Nombre',
+                'sortable' => true,
+                'searchable' => true,
+            ],
+            'email' => [
+                'label' => 'Email',
+                'sortable' => true,
+                'searchable' => true,
+            ],
+            'role' => [
+                'label' => 'Rol',
+                'format' => 'badge',
+            ],
+            'is_active' => [
+                'label' => 'Activo',
+                'format' => 'boolean',
+                'class' => 'text-center',
+            ],
+            'created_at' => [
+                'label' => 'Fecha Registro',
+                'format' => 'datetime',
+                'sortable' => true,
+            ],
         ]);
 
         // Acciones por fila
         $config->addAction('Editar', $this->getUrlName('edit'), [
             'icon' => 'bi-pencil text-primary',
-            'route_params' => ['id' => 'id'],
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
-        $config->addAction('Eliminar', $this->getUrlName('create'), [
+        $config->addAction('Eliminar', $this->getUrlName('destroy'), [
             'icon' => 'bi-trash text-danger',
             'type' => 'form',
             'confirm' => true,
             'confirm_message' => '¿Está seguro de eliminar este usuario?',
-            'route_params' => ['id' => 'id'],
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         // Paginación

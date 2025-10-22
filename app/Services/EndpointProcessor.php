@@ -65,18 +65,18 @@ class EndpointProcessor
             foreach ($routeAttrs as $routeAttr) {
                 $route = $routeAttr->newInstance();
                 foreach ($route->methods as $httpMethod) {
-                        $endpoints[] = $this->buildEndpoint(
-                            projectPrefix: $projectPrefix,
-                            classPrefix: $classPrefix,
-                            route: $route,
-                            controller: $controllerClass,
-                            method: $method->name,
-                            httpMethod: $httpMethod,
-                            classMiddleware: $classMiddleware,
-                            methodMiddleware: $this->getMethodMiddleware($method),
-                            where: $this->getWhereConstraints($method)
-                        );
-                    }
+                    $endpoints[] = $this->buildEndpoint(
+                        projectPrefix: $projectPrefix,
+                        classPrefix: $classPrefix,
+                        route: $route,
+                        controller: $controllerClass,
+                        method: $method->name,
+                        httpMethod: $httpMethod,
+                        classMiddleware: $classMiddleware,
+                        methodMiddleware: $this->getMethodMiddleware($method),
+                        where: $this->getWhereConstraints($method)
+                    );
+                }
             }
         }
 

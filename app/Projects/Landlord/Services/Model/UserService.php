@@ -11,7 +11,8 @@ class UserService
     public function __construct(
         private TransactionService $transactionService,
         private UserRepository $userRepository
-    ) {}
+    ) {
+    }
 
     /**
      * Crea un usuario (usado desde AdminController)
@@ -68,8 +69,8 @@ class UserService
         return $this->transactionService->execute(function () use ($userId) {
             $user = $this->userRepository->find($userId);
 
-            if (!$user) {
-                throw new \Exception("User not found");
+            if (! $user) {
+                throw new \Exception('User not found');
             }
 
             // Lógica adicional antes de eliminar

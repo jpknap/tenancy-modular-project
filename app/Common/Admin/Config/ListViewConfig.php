@@ -8,16 +8,23 @@ use App\Common\ListView\StatCard;
 
 class ListViewConfig
 {
-    /** @var ListColumn[] */
+    /**
+     * @var ListColumn[]
+     */
     private array $columns = [];
 
-    /** @var ListAction[] */
+    /**
+     * @var ListAction[]
+     */
     private array $actions = [];
 
-    /** @var StatCard[] */
+    /**
+     * @var StatCard[]
+     */
     private array $statCards = [];
 
     private int $perPage = 15;
+
     private string $emptyMessage = 'No hay registros para mostrar';
 
     /**
@@ -45,11 +52,13 @@ class ListViewConfig
         }
         return $this;
     }
+
     public function addAction(string $label, string $route, array $options = []): self
     {
         $this->actions[] = new ListAction($label, $route, $options);
         return $this;
     }
+
     public function addStatCard(string $title, mixed $value, array $options = []): self
     {
         $this->statCards[] = new StatCard($title, $value, $options);
@@ -61,6 +70,7 @@ class ListViewConfig
         $this->perPage = $perPage;
         return $this;
     }
+
     public function emptyMessage(string $message): self
     {
         $this->emptyMessage = $message;

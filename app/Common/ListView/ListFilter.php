@@ -3,17 +3,20 @@
 namespace App\Common\ListView;
 
 /**
- * ListFilter
- * 
  * Representa un filtro en el listado
  */
 class ListFilter
 {
     private string $name;
+
     private string $label;
+
     private string $type;
+
     private array $options;
+
     private ?string $placeholder;
+
     private mixed $defaultValue;
 
     public function __construct(string $name, string $label, string $type, array $options = [])

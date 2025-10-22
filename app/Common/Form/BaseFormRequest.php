@@ -5,8 +5,6 @@ namespace App\Common\Form;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class BaseFormRequest
- * 
  * FormRequest base con soporte para FormBuilder
  * Patrón Template Method - Define esqueleto, subclases implementan detalles
  */
@@ -29,7 +27,7 @@ abstract class BaseFormRequest extends FormRequest
         if ($this->formBuilder === null) {
             $this->formBuilder = new FormBuilder();
         }
-        
+
         return $this->buildForm();
     }
 

@@ -3,16 +3,17 @@
 namespace App\Common\Form;
 
 /**
- * Class FormBuilder
- * 
  * Constructor de formularios con sintaxis fluida
  * Patrón Builder para construcción paso a paso
  */
 class FormBuilder
 {
     private array $fields = [];
+
     private string $method = 'POST';
+
     private string $action = '';
+
     private array $attributes = [];
 
     public function setMethod(string $method): self

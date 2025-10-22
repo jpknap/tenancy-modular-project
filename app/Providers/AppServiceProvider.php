@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         // Repository Manager
         $this->app->singleton(RepositoryManager::class, function ($app) {
             $manager = new RepositoryManager();
-            $manager->register(  User::class, UserRepository::class);
+            $manager->register(User::class, UserRepository::class);
             $manager->register(Tenant::class, TenantRepository::class);
             return $manager;
         });
@@ -41,10 +41,7 @@ class AppServiceProvider extends ServiceProvider
 
         // User Service
         $this->app->bind(UserService::class, function ($app) {
-            return new UserService(
-                $app->make(TransactionService::class),
-                $app->make(UserRepository::class)
-            );
+            return new UserService($app->make(TransactionService::class), $app->make(UserRepository::class));
         });
     }
 

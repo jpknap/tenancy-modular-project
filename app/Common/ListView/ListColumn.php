@@ -3,20 +3,26 @@
 namespace App\Common\ListView;
 
 /**
- * ListColumn
- * 
  * Representa una columna en el listado
  */
 class ListColumn
 {
     private string $key;
+
     private string $label;
+
     private bool $sortable;
+
     private bool $searchable;
+
     private ?string $format;
+
     private ?\Closure $formatter;
+
     private ?string $class;
+
     private ?string $headerClass;
+
     private bool $visible;
 
     public function __construct(string $key, string $label, array $options = [])
@@ -68,7 +74,7 @@ class ListColumn
             return ($this->formatter)($value);
         }
 
-        return match($this->format) {
+        return match ($this->format) {
             'date' => $value ? date('d/m/Y', strtotime($value)) : '-',
             'datetime' => $value ? date('d/m/Y H:i', strtotime($value)) : '-',
             'currency' => '$' . number_format($value, 2),
@@ -76,18 +82,6 @@ class ListColumn
             'badge' => $this->formatBadge($value),
             default => $value ?? '-'
         };
-    }
-
-    private function formatBadge($value): string
-    {
-        $badges = [
-            'active' => '<span class="badge bg-success">Activo</span>',
-            'inactive' => '<span class="badge bg-secondary">Inactivo</span>',
-            'pending' => '<span class="badge bg-warning">Pendiente</span>',
-            'completed' => '<span class="badge bg-primary">Completado</span>',
-        ];
-
-        return $badges[$value] ?? "<span class=\"badge bg-secondary\">{$value}</span>";
     }
 
     public function getClass(): ?string
@@ -103,5 +97,17 @@ class ListColumn
     public function isVisible(): bool
     {
         return $this->visible;
+    }
+
+    private function formatBadge($value): string
+    {
+        $badges = [
+            'active' => '<span class="badge bg-success">Activo</span>',
+            'inactive' => '<span class="badge bg-secondary">Inactivo</span>',
+            'pending' => '<span class="badge bg-warning">Pendiente</span>',
+            'completed' => '<span class="badge bg-primary">Completado</span>',
+        ];
+
+        return $badges[$value] ?? "<span class=\"badge bg-secondary\">{$value}</span>";
     }
 }

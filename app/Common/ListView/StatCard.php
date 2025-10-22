@@ -3,16 +3,18 @@
 namespace App\Common\ListView;
 
 /**
- * StatCard
- *
  * Representa una tarjeta de estadística en el listado
  */
 class StatCard
 {
     private string $title;
+
     private mixed $value;
+
     private string $icon;
+
     private string $color;
+
     private ?\Closure $valueResolver;
 
     public function __construct(string $title, mixed $value, array $options = [])
@@ -51,7 +53,7 @@ class StatCard
 
     public function getColorClass(): string
     {
-        return match($this->color) {
+        return match ($this->color) {
             'primary' => 'bg-primary',
             'success' => 'bg-success',
             'warning' => 'bg-warning',
@@ -64,7 +66,7 @@ class StatCard
 
     public function getTextColorClass(): string
     {
-        return match($this->color) {
+        return match ($this->color) {
             'primary' => 'text-primary',
             'success' => 'text-success',
             'warning' => 'text-warning',

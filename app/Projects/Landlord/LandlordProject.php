@@ -32,7 +32,7 @@ class LandlordProject implements ProjectInterface
         return $this->menuBuilder;
     }
 
-    public  static function getPrefix(): string
+    public static function getPrefix(): string
     {
         return static::$prefix;
     }

@@ -12,7 +12,8 @@ class TenantService
         private TransactionService $transactionService,
         private TenantRepository $tenantRepository,
         private UserRepository $userRepository
-    ) {}
+    ) {
+    }
 
     public function create(array $data)
     {
@@ -46,8 +47,8 @@ class TenantService
     public function updateTenantWithUsers(int $tenantId, array $tenantData, array $usersData): array
     {
         return $this->transactionService->executeMultiple([
-            'tenant' => fn() => $this->tenantRepository->update($tenantId, $tenantData),
-            'users' => fn() => $this->updateRelatedUsers($tenantId, $usersData),
+            'tenant' => fn () => $this->tenantRepository->update($tenantId, $tenantData),
+            'users' => fn () => $this->updateRelatedUsers($tenantId, $usersData),
         ]);
     }
 
@@ -59,8 +60,8 @@ class TenantService
         return $this->transactionService->execute(function () use ($tenantId) {
             $tenant = $this->tenantRepository->find($tenantId);
 
-            if (!$tenant) {
-                throw new \Exception("Tenant not found");
+            if (! $tenant) {
+                throw new \Exception('Tenant not found');
             }
 
             // 1. Eliminar usuarios del tenant

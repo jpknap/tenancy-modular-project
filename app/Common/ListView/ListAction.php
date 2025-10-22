@@ -3,19 +3,24 @@
 namespace App\Common\ListView;
 
 /**
- * ListAction
- *
  * Representa una acción (botón/enlace) en el listado
  */
 class ListAction
 {
     private string $label;
+
     private string $route;
+
     private string $type;
+
     private string $icon;
+
     private string $class;
+
     private bool $requiresConfirmation;
+
     private ?string $confirmMessage;
+
     private array $routeParams;
 
     public function __construct(string $label, string $route, array $options = [])

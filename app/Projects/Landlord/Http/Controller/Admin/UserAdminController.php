@@ -12,8 +12,7 @@ class UserAdminController extends AdminController
 {
     public function __construct(
         protected RepositoryManager $repositoryManager
-    )
-    {
+    ) {
         $admin = new UserAdmin($repositoryManager);
         parent::__construct($admin);
     }

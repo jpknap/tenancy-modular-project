@@ -4,13 +4,15 @@ namespace App\Common\Admin\Config;
 
 use App\Common\Form\FormBuilder;
 
-class CreateViewConfig
+class EditViewConfig
 {
     private FormBuilder $formBuilder;
 
-    private string $title = 'Crear Nuevo';
+    private string $title = 'Editar';
 
-    private string $submitLabel = 'Guardar';
+    private string $submitLabel = 'Actualizar';
+
+    private mixed $item = null;
 
     public function __construct(FormBuilder $formBuilder)
     {
@@ -29,6 +31,12 @@ class CreateViewConfig
         return $this;
     }
 
+    public function item(mixed $item): self
+    {
+        $this->item = $item;
+        return $this;
+    }
+
     public function getFormBuilder(): FormBuilder
     {
         return $this->formBuilder;
@@ -42,5 +50,10 @@ class CreateViewConfig
     public function getSubmitLabel(): string
     {
         return $this->submitLabel;
+    }
+
+    public function getItem(): mixed
+    {
+        return $this->item;
     }
 }

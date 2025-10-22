@@ -12,9 +12,7 @@ class TenantAdminController extends AdminController
 {
     public function __construct(
         protected RepositoryManager $repositoryManager
-
-    )
-    {
+    ) {
         $admin = new TenantAdmin($repositoryManager);
         parent::__construct($admin);
     }

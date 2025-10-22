@@ -4,6 +4,7 @@ namespace App\Projects\Landlord\Adapters\Admin;
 
 use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Common\Admin\Config\CreateViewConfig;
+use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
 use App\Models\Tenant;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
@@ -16,7 +17,7 @@ class TenantAdmin extends AdminBaseAdapter
 
     protected static string $model = Tenant::class;
 
-    protected string $routePrefix = 'tenant';
+    protected string $routePrefix = 'tenants';
 
     public function getFormRequest(): string
     {
@@ -41,53 +42,82 @@ class TenantAdmin extends AdminBaseAdapter
         $config->addStatCard('Total Registros', 0, [
             'icon' => 'bi-building',
             'color' => 'primary',
-            'value_resolver' => fn($items) => $items->total(),
+            'value_resolver' => fn ($items) => $items->total(),
         ]);
 
         $config->addStatCard('Activos', 0, [
             'icon' => 'bi-check-circle',
             'color' => 'success',
-            'value_resolver' => fn($items) => $items->where('status', 'active')->count(),
+            'value_resolver' => fn ($items) => $items->where('status', 'active')
+                ->count(),
         ]);
 
         $config->addStatCard('Pendientes', 0, [
             'icon' => 'bi-clock',
             'color' => 'warning',
-            'value_resolver' => fn($items) => $items->where('status', 'pending')->count(),
+            'value_resolver' => fn ($items) => $items->where('status', 'pending')
+                ->count(),
         ]);
 
         $config->addStatCard('Inactivos', 0, [
             'icon' => 'bi-x-circle',
             'color' => 'danger',
-            'value_resolver' => fn($items) => $items->where('status', 'inactive')->count(),
+            'value_resolver' => fn ($items) => $items->where('status', 'inactive')
+                ->count(),
         ]);
 
         // Columnas
         $config->columns([
-            'id' => ['label' => 'ID', 'sortable' => true, 'class' => 'text-center'],
-            'name' => ['label' => 'Nombre', 'sortable' => true, 'searchable' => true],
-            'email' => ['label' => 'Email', 'sortable' => true, 'searchable' => true],
-            'status' => ['label' => 'Estado', 'format' => 'badge', 'class' => 'text-center'],
-            'created_at' => ['label' => 'Fecha Creación', 'format' => 'datetime', 'sortable' => true],
+            'id' => [
+                'label' => 'ID',
+                'sortable' => true,
+                'class' => 'text-center',
+            ],
+            'name' => [
+                'label' => 'Nombre',
+                'sortable' => true,
+                'searchable' => true,
+            ],
+            'email' => [
+                'label' => 'Email',
+                'sortable' => true,
+                'searchable' => true,
+            ],
+            'status' => [
+                'label' => 'Estado',
+                'format' => 'badge',
+                'class' => 'text-center',
+            ],
+            'created_at' => [
+                'label' => 'Fecha Creación',
+                'format' => 'datetime',
+                'sortable' => true,
+            ],
         ]);
 
         // Acciones por fila
-        $config->addAction('Ver', 'landlord.admin.tenant.show', [
+        $config->addAction('Ver', $this->getUrlName('show'), [
             'icon' => 'bi-eye text-info',
-            'route_params' => ['id' => 'id'],
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
-        $config->addAction('Editar', 'landlord.admin.tenant.edit', [
+        $config->addAction('Editar', $this->getUrlName('edit'), [
             'icon' => 'bi-pencil text-primary',
-            'route_params' => ['id' => 'id'],
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
-        $config->addAction('Eliminar', 'landlord.admin.tenant.destroy', [
+        $config->addAction('Eliminar', $this->getUrlName('destroy'), [
             'icon' => 'bi-trash text-danger',
             'type' => 'form',
             'confirm' => true,
             'confirm_message' => '¿Está seguro de eliminar este tenant?',
-            'route_params' => ['id' => 'id'],
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         // Paginación
@@ -103,8 +133,18 @@ class TenantAdmin extends AdminBaseAdapter
 
         $config
             ->title('Crear Nuevo Tenant')
-            ->submitLabel('Crear Tenant')
-            ->successMessage('Tenant creado exitosamente');
+            ->submitLabel('Crear Tenant');
+
+        return $config;
+    }
+
+    public function getEditViewConfig(mixed $item): EditViewConfig
+    {
+        $config = parent::getEditViewConfig($item);
+
+        $config
+            ->title('Editar Tenant: ' . $item->name)
+            ->submitLabel('Actualizar Tenant');
 
         return $config;
     }

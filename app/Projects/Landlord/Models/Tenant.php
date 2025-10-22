@@ -6,5 +6,4 @@ use App\Models\Tenant as BaseTenant;
 
 class Tenant extends BaseTenant
 {
-
 }

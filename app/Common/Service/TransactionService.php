@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Empaquedador de transacciones
- *
  */
 class TransactionService
 {
@@ -17,7 +16,6 @@ class TransactionService
      *
      * @param callable $callback Función que contiene la lógica a ejecutar
      * @return mixed Resultado de la operación
-     * @throws \Throwable
      */
     public function execute(callable $callback): mixed
     {
@@ -61,7 +59,6 @@ class TransactionService
      *
      * @param callable $callback Función a ejecutar
      * @param int $maxAttempts Número máximo de intentos
-     * @return mixed
      */
     public function executeWithRetry(callable $callback, int $maxAttempts = 3): mixed
     {
@@ -86,9 +83,7 @@ class TransactionService
     /**
      * Ejecuta operaciones con rollback manual si es necesario
      *
-     * @param callable $callback
      * @param callable|null $onRollback Callback a ejecutar en caso de rollback
-     * @return mixed
      */
     public function executeWithRollbackHandler(callable $callback, ?callable $onRollback = null): mixed
     {

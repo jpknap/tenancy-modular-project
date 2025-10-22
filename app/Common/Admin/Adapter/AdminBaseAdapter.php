@@ -3,32 +3,33 @@
 namespace App\Common\Admin\Adapter;
 
 use App\Common\Admin\Config\CreateViewConfig;
+use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
 use App\Common\Admin\Contracts\AdminAdapterInterface;
-use App\Common\Repository\RepositoryManager;
 use App\Common\Repository\Contracts\RepositoryInterface;
-use App\Contracts\ProjectInterface;
+use App\Common\Repository\RepositoryManager;
 use App\ProjectManager;
 
 abstract class AdminBaseAdapter implements AdminAdapterInterface
 {
     protected static string $controller = '';
+
     protected static string $model = '';
+
     protected string $routePrefix = '';
 
     public function __construct(
         protected RepositoryManager $repositoryManager,
-    )
-    {
+    ) {
     }
 
-    public function getUrl(string $action): string
+    public function getUrl(string $action, array $params = []): string
     {
         $routeName = $this->getUrlName($action);
-        return route($routeName);
+        return route($routeName, $params);
     }
 
-    protected function getUrlName(string $action): string
+    public function getUrlName(string $action): string
     {
         $projectPrefix = ProjectManager::getCurrentProject()->getPrefix();
         return "{$projectPrefix}.admin.{$this->routePrefix}.{$action}";
@@ -45,7 +46,10 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
 
         $config->columns([
             'id' => 'ID',
-            'created_at' => ['label' => 'Creado', 'format' => 'datetime'],
+            'created_at' => [
+                'label' => 'Creado',
+                'format' => 'datetime',
+            ],
         ]);
 
         return $config;
@@ -61,6 +65,21 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
         $config
             ->title('Crear ' . $this->getTitle())
             ->submitLabel('Guardar');
+
+        return $config;
+    }
+
+    public function getEditViewConfig(mixed $item): EditViewConfig
+    {
+        $formRequestClass = $this->getFormRequest();
+        $formRequest = new $formRequestClass();
+
+        $config = new EditViewConfig($formRequest->getFormBuilder());
+
+        $config
+            ->title('Editar ' . $this->getTitle())
+            ->submitLabel('Actualizar')
+            ->item($item);
 
         return $config;
     }
@@ -97,17 +116,20 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
 
     public function getAll()
     {
-        return $this->getRepository()->all();
+        return $this->getRepository()
+            ->all();
     }
 
     public function paginate(int $perPage = 15)
     {
-        return $this->getRepository()->paginate($perPage);
+        return $this->getRepository()
+            ->paginate($perPage);
     }
 
     public function find($id)
     {
-        return $this->getRepository()->find($id);
+        return $this->getRepository()
+            ->find($id);
     }
 
     public function getRoutePrefix(): string
