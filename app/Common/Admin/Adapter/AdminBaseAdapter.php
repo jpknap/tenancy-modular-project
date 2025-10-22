@@ -7,6 +7,8 @@ use App\Common\Admin\Config\ListViewConfig;
 use App\Common\Admin\Contracts\AdminAdapterInterface;
 use App\Common\Repository\RepositoryManager;
 use App\Common\Repository\Contracts\RepositoryInterface;
+use App\Contracts\ProjectInterface;
+use App\ProjectManager;
 
 abstract class AdminBaseAdapter implements AdminAdapterInterface
 {
@@ -15,9 +17,21 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
     protected string $routePrefix = '';
 
     public function __construct(
-        protected RepositoryManager $repositoryManager
+        protected RepositoryManager $repositoryManager,
     )
     {
+    }
+
+    public function getUrl(string $action): string
+    {
+        $routeName = $this->getUrlName($action);
+        return route($routeName);
+    }
+
+    protected function getUrlName(string $action): string
+    {
+        $projectPrefix = ProjectManager::getCurrentProject()->getPrefix();
+        return "{$projectPrefix}.admin.{$this->routePrefix}.{$action}";
     }
 
     public static function getController(): string

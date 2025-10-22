@@ -31,7 +31,7 @@ abstract class AdminController extends Controller
     }
 
     #[Route('create', methods: ['GET','POST'], name: 'create')]
-    public function new(Request $request)
+    public function create(Request $request)
     {
         $config = $this->admin->getCreateViewConfig();
 
@@ -50,5 +50,13 @@ abstract class AdminController extends Controller
         app($serviceClass)->create($validated);
         $project = ProjectManager::getCurrentProject()->getPrefix();
         return redirect()->route("{$project}.admin.{$this->admin->getRoutePrefix()}.list");
+    }
+
+    #[Route('edit/{id}', methods: ['GET','POST'], name: 'edit')]
+    public function edit()
+    {
+        $project = ProjectManager::getCurrentProject()->getPrefix();
+        return redirect()->route("{$project->getPrefix()}.admin.{$this->admin->getRoutePrefix()}.list");
+
     }
 }

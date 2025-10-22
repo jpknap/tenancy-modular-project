@@ -83,6 +83,6 @@ class ListAction
             }
         }
 
-        return '#';
+        return route($this->route, $params);
     }
 }

@@ -71,12 +71,12 @@ class UserAdmin extends AdminBaseAdapter
         ]);
 
         // Acciones por fila
-        $config->addAction('Editar', 'landlord.admin.user.edit', [
+        $config->addAction('Editar', $this->getUrlName('edit'), [
             'icon' => 'bi-pencil text-primary',
             'route_params' => ['id' => 'id'],
         ]);
 
-        $config->addAction('Eliminar', 'landlord.admin.user.destroy', [
+        $config->addAction('Eliminar', $this->getUrlName('create'), [
             'icon' => 'bi-trash text-danger',
             'type' => 'form',
             'confirm' => true,
