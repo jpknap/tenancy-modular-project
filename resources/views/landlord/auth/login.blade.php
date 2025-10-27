@@ -8,7 +8,7 @@
 <body class="bg-light d-flex justify-content-center align-items-center vh-100">
 <div class="card p-4 shadow" style="width: 22rem;">
     <h3 class="text-center mb-3">Landlord Login</h3>
-    <form method="POST" action="{{ url('landlord/login') }}">
+    <form method="POST" action="{{ url('landlord/auth/login') }}">
         @csrf
         <div class="mb-3">
             <label>Email</label>

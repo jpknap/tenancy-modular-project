@@ -6,7 +6,9 @@ use App\DTO\Menu\MenuBuilder;
 
 interface ProjectInterface
 {
-    public function getPrefix(): string;
+    public static function getTitle(): string;
+
+    public static function getPrefix(): string;
 
     public function init(): void;
 

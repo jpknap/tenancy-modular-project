@@ -1,62 +1,184 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏢 Tenancy Modular Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema multi-tenant modular construido con Laravel 11, implementando patrones de diseño robustos y arquitectura escalable.
 
-## About Laravel
+## 📚 Documentación
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**[Ver Documentación Completa →](./docs/README.md)**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Documentos Principales
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **[00-index.md](./docs/00-index.md)** - Índice completo de documentación
+- **[README.md](./docs/README.md)** - Guía de inicio rápido
+- **[01-implementation-summary.md](./docs/01-implementation-summary.md)** - Arquitectura del proyecto
+- **[02-repository-pattern.md](./docs/02-repository-pattern.md)** - Patrón Repository
+- **[03-service-layer-pattern.md](./docs/03-service-layer-pattern.md)** - Service Layer
+- **[04-form-builder-pattern.md](./docs/04-form-builder-pattern.md)** - Constructor de formularios
+- **[05-listview-config-pattern.md](./docs/05-listview-config-pattern.md)** - Sistema de listados
+- **[06-blade-components.md](./docs/06-blade-components.md)** - Componentes Blade
+- **[07-design-guide.md](./docs/07-design-guide.md)** - Guía de diseño
+- **[08-admin-view-config-pattern.md](./docs/08-admin-view-config-pattern.md)** - Configuración de vistas admin
 
-## Learning Laravel
+## 🚀 Inicio Rápido
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Requisitos
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- PHP 8.2+
+- Composer
+- Node.js 18+
+- MySQL/PostgreSQL
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Instalación
 
-## Laravel Sponsors
+```bash
+# Clonar repositorio
+git clone <repository-url>
+cd tenancy-modular-project
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Instalar dependencias PHP
+composer install
 
-### Premium Partners
+# Instalar dependencias Node
+npm install
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Configurar entorno
+cp .env.example .env
+php artisan key:generate
 
-## Contributing
+# Migrar base de datos
+php artisan migrate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Compilar assets
+npm run dev
+```
 
-## Code of Conduct
+### Servidor de Desarrollo
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan serve
+```
 
-## Security Vulnerabilities
+Visita: `http://localhost:8000`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🏗️ Arquitectura
 
-## License
+```
+app/
+├── Common/                    # Código compartido
+│   ├── Admin/                # Sistema de administración
+│   ├── FormBuilder/         # Constructor de formularios
+│   ├── ListView/            # Sistema de listados
+│   └── Repositories/        # Repositorios base
+│
+└── Projects/                 # Proyectos modulares
+    └── Landlord/            # Proyecto principal
+        ├── Adapters/        # Adaptadores
+        ├── Http/            # Controllers y Requests
+        ├── Models/          # Modelos Eloquent
+        ├── Repositories/    # Repositorios
+        └── Services/        # Servicios de negocio
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# tenancy-modular-project
+## ✨ Características
+
+### 🎯 Patrones Implementados
+
+- ✅ **Repository Pattern** - Abstracción de acceso a datos
+- ✅ **Service Layer** - Lógica de negocio centralizada
+- ✅ **Builder Pattern** - Construcción de formularios y listados
+- ✅ **Adapter Pattern** - Sistema de administración flexible
+
+### 🎨 UI/UX
+
+- ✅ **Bootstrap 5** - Framework CSS moderno
+- ✅ **Bootstrap Icons** - Iconografía consistente
+- ✅ **Blade Components** - Componentes reutilizables
+- ✅ **Responsive Design** - Adaptable a todos los dispositivos
+
+### 🔧 Sistema de Administración
+
+- ✅ **CRUD Automático** - Con AdminBaseAdapter
+- ✅ **Formularios Dinámicos** - FormBuilder configurable
+- ✅ **Listados Avanzados** - ListViewConfig con columnas, acciones y estadísticas
+- ✅ **StatCards** - Tarjetas de estadísticas personalizables
+
+## 📝 Ejemplo Rápido
+
+### Crear un CRUD Completo
+
+```php
+// 1. Repository
+class TenantRepository extends BaseRepository
+{
+    protected function getModelClass(): string
+    {
+        return Tenant::class;
+    }
+}
+
+// 2. Service
+class TenantService extends BaseModelService
+{
+    public function __construct(TenantRepository $repository)
+    {
+        parent::__construct($repository);
+    }
+}
+
+// 3. Admin Adapter
+class TenantAdmin extends AdminBaseAdapter
+{
+    public function getListViewConfig(): ListViewConfig
+    {
+        $config = new ListViewConfig();
+        
+        $config->columns([
+            'id' => ['label' => 'ID', 'sortable' => true],
+            'name' => ['label' => 'Nombre', 'searchable' => true],
+        ]);
+        
+        return $config;
+    }
+}
+```
+
+## 🧪 Testing
+
+```bash
+# Ejecutar tests
+php artisan test
+
+# Con cobertura
+php artisan test --coverage
+```
+
+## 📊 Code Quality
+
+```bash
+# PHPStan
+./vendor/bin/phpstan analyse
+
+# ECS (Easy Coding Standard)
+./vendor/bin/ecs check
+```
+
+## 🤝 Contribución
+
+1. Sigue los patrones establecidos en la documentación
+2. Escribe tests para nuevas funcionalidades
+3. Mantén la consistencia con el código existente
+4. Documenta cambios significativos
+
+## 📄 Licencia
+
+Este proyecto es privado y confidencial.
+
+## 🔗 Enlaces
+
+- [Laravel Documentation](https://laravel.com/docs)
+- [Bootstrap Documentation](https://getbootstrap.com/docs)
+- [Documentación del Proyecto](./docs/README.md)
+
+---
+
+**Construido con ❤️ usando Laravel 11**

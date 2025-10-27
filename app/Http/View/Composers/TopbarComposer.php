@@ -7,30 +7,34 @@ use Illuminate\View\View;
 
 class TopbarComposer
 {
-    /**
-     * Vincula datos al partial del topbar
-     */
     public function compose(View $view): void
     {
-        // Aquí se pueden inyectar datos dinámicos del topbar
-        // Por ejemplo: información del usuario, notificaciones, etc.
+        $user = Auth::user();
+
+        if (! $user) {
+            $user = (object) [
+                'id' => 1,
+                'name' => 'Usuario Demo',
+                'email' => 'demo@example.com',
+            ];
+        }
 
         $topbarData = [
-            'title' => 'Barra superior',
-            'user' => Auth::user(),
+            'title' => '',
+            'user' => $user,
             'notifications' => $this->getNotifications(),
         ];
 
         $view->with('topbarData', $topbarData);
     }
 
-    /**
-     * Obtiene las notificaciones (ejemplo)
-     */
     private function getNotifications(): array
     {
+        // Notificaciones de prueba
         return [
-            // Aquí se pueden cargar notificaciones reales
+            'Nueva actualización disponible',
+            'Tienes 3 mensajes sin leer',
+            'Recordatorio: Reunión a las 15:00',
         ];
     }
 }

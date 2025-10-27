@@ -1,17 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Projects\Landlord\Http\Controller\Auth;
 
+use App\Attributes\Route;
+use App\Attributes\RoutePrefix;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class LandlordAuthController extends Controller
+#[RoutePrefix('auth')]
+class AuthController extends Controller
 {
+    #[Route('/login', methods: ['GET'], name: 'login')]
     public function showLogin()
     {
         return view('landlord.auth.login');
     }
 
+    #[Route('/login', methods: ['POST'], name: 'login.post')]
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -22,7 +28,7 @@ class LandlordAuthController extends Controller
         if (Auth::guard('web')->attempt($credentials)) {
             $request->session()
                 ->regenerate();
-            return redirect()->intended('/landlord/dashboard');
+            return redirect()->intended('/landlord/admin/tenant/list');
         }
 
         return back()->withErrors([
@@ -30,6 +36,7 @@ class LandlordAuthController extends Controller
         ]);
     }
 
+    #[Route('/logout', methods: ['POST'], name: 'logout')]
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
@@ -38,6 +45,6 @@ class LandlordAuthController extends Controller
         $request->session()
             ->regenerateToken();
 
-        return redirect('/landlord/login');
+        return redirect('/landlord/auth/login');
     }
 }
