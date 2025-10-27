@@ -7,7 +7,7 @@ use App\Common\Admin\Form\FormBuilder;
 
 class UserFormRequest extends BaseFormRequest
 {
-    public function buildForm(): FormBuilder
+    public function buildCreateForm(): FormBuilder
     {
         return $this->formBuilder
             ->setMethod('POST')
@@ -28,27 +28,47 @@ class UserFormRequest extends BaseFormRequest
                 'placeholder' => 'Repita la contraseña',
                 'required' => true,
             ])
-            ->select('role', 'Rol', [
-                'admin' => 'Administrador',
-                'user' => 'Usuario',
-                'guest' => 'Invitado',
-            ], [
-                'required' => true,
-            ])
-            ->checkbox('active', 'Usuario Activo', [
+            ->checkbox('enabled', 'Usuario Activo', [
                 'checked' => true,
             ]);
     }
 
+    public function buildEditForm(): FormBuilder
+    {
+        return $this->formBuilder
+            ->setMethod('PUT')
+            ->setAction('#')
+            ->text('name', 'Nombre Completo', [
+                'placeholder' => 'Ingrese el nombre completo',
+                'required' => true,
+            ])
+            ->email('email', 'Email', [
+                'placeholder' => 'correo@ejemplo.com',
+                'required' => true,
+            ])
+            ->checkbox('enabled', 'Usuario Activo');
+    }
+
     public function rules(): array
     {
-        return [
+        $userId = $this->route('id');
+
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:admin,user,guest'],
-            'active' => ['nullable', 'boolean'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                $userId ? "unique:users,email,{$userId}" : 'unique:users,email'
+            ],
+            'enabled' => ['nullable', 'boolean'],
         ];
+
+        if ($this->isCreating()) {
+            $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
+        }
+
+        return $rules;
     }
 
     public function messages(): array

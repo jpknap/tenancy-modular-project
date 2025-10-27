@@ -17,7 +17,8 @@ docs/
 │   ├── 05-listview-config-pattern.md    # Sistema de listados
 │   ├── 06-blade-components.md           # Componentes Blade
 │   ├── 07-design-guide.md               # Guía de diseño
-│   └── 08-admin-view-config-pattern.md  # Sistema de configuración de vistas admin
+│   ├── 08-admin-view-config-pattern.md  # Sistema de configuración de vistas admin
+│   └── 09-multiple-forms-pattern.md     # Formularios múltiples (create/edit/custom)
 │
 └── 📚 Ejemplos
     └── blade-components-examples.md     # Ejemplos de componentes
@@ -77,7 +78,8 @@ Si ya conoces Laravel y patrones de diseño:
 | [05-listview-config-pattern.md](./05-listview-config-pattern.md) | Sistema de listados con columnas, acciones y stats | Avanzado |
 | [06-blade-components.md](./06-blade-components.md) | Componentes Blade reutilizables | Básico |
 | [07-design-guide.md](./07-design-guide.md) | Guía de diseño visual | Básico |
-| [08-admin-view-config-pattern.md](./08-admin-view-config-pattern.md) | Sistema de configuración de vistas admin (List + Create) | Avanzado |
+| [08-admin-view-config-pattern.md](./08-admin-view-config-pattern.md) | Sistema de configuración de vistas admin (List + Create + Edit) | Avanzado |
+| [09-multiple-forms-pattern.md](./09-multiple-forms-pattern.md) | Formularios múltiples con contextos (create/edit/custom) | Avanzado |
 
 ### 📚 Ejemplos
 
@@ -95,6 +97,9 @@ Si ya conoces Laravel y patrones de diseño:
 
 ### Quiero crear un formulario
 → [04-form-builder-pattern.md](./04-form-builder-pattern.md)
+
+### Quiero formularios diferentes para create/edit
+→ [09-multiple-forms-pattern.md](./09-multiple-forms-pattern.md)
 
 ### Quiero crear un listado
 → [05-listview-config-pattern.md](./05-listview-config-pattern.md)

@@ -2,60 +2,81 @@
 
 namespace App\Common\Admin\Form;
 
+use App\Common\Admin\Enum\FormContextEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * FormRequest base con soporte para FormBuilder
- * Patrón Template Method - Define esqueleto, subclases implementan detalles
- */
 abstract class BaseFormRequest extends FormRequest
 {
     protected ?FormBuilder $formBuilder = null;
+    protected \UnitEnum $currentContext;
 
-    /**
-     * Define la estructura del formulario
-     * Hook method - Implementado por subclases
-     */
-    abstract public function buildForm(): FormBuilder;
-
-    /**
-     * Obtiene el FormBuilder configurado
-     * Template method - Define el flujo
-     */
-    public function getFormBuilder(): FormBuilder
+    public function __construct()
     {
+        parent::__construct();
+        $this->currentContext = FormContextEnum::CREATE;
+    }
+
+    abstract public function buildCreateForm(): FormBuilder;
+
+    abstract public function buildEditForm(): FormBuilder;
+
+    public function buildCustomForm(\UnitEnum $context): FormBuilder
+    {
+        $value = $context instanceof \BackedEnum ? $context->value : $context->name;
+        throw new \BadMethodCallException("Custom form '{$value}' not implemented");
+    }
+
+    public function getFormBuilder(\UnitEnum $context = null): FormBuilder
+    {
+        $context = $context ?? FormContextEnum::CREATE;
+
         if ($this->formBuilder === null) {
             $this->formBuilder = new FormBuilder();
         }
 
-        return $this->buildForm();
+        $this->currentContext = $context;
+
+        $contextValue = $context instanceof \BackedEnum ? $context->value : $context->name;
+
+        return match ($contextValue) {
+            FormContextEnum::CREATE->value => $this->buildCreateForm(),
+            FormContextEnum::EDIT->value => $this->buildEditForm(),
+            default => $this->buildCustomForm($context),
+        };
     }
 
-    /**
-     * Reglas de validación
-     * Hook method - Implementado por subclases
-     */
+    public function getContext(): \UnitEnum
+    {
+        return $this->currentContext;
+    }
+
+    public function isCreating(): bool
+    {
+        return ! $this->route('id');
+    }
+
+    public function isUpdating(): bool
+    {
+        return (bool) $this->route('id');
+    }
+
+    public function getModelId(): ?int
+    {
+        return $this->route('id');
+    }
+
     abstract public function rules(): array;
 
-    /**
-     * Autorización por defecto
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Mensajes personalizados de validación
-     */
     public function messages(): array
     {
         return [];
     }
 
-    /**
-     * Atributos personalizados para mensajes
-     */
     public function attributes(): array
     {
         return [];

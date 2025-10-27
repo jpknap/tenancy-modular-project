@@ -5,9 +5,8 @@ namespace App\Common\Admin\Controller;
 use App\Attributes\Route;
 use App\Attributes\RoutePrefix;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
-use App\ProjectManager;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 #[RoutePrefix('admin')]
 abstract class AdminController extends Controller
@@ -32,30 +31,28 @@ abstract class AdminController extends Controller
     #[Route('create', methods: ['GET', 'POST'], name: 'create')]
     public function create(Request $request)
     {
-        $config = $this->admin->getCreateViewConfig();
+        if ($request->isMethod('GET')) {
+            $config = $this->admin->getCreateViewConfig();
 
-        if ($request->getMethod() === 'GET') {
             return view('landlord.new', [
                 'admin' => $this->admin,
-                'form' => $this->admin->getCreateViewConfig()
-                    ->getFormBuilder(),
+                'form' => $config->getFormBuilder(),
                 'config' => $config,
             ]);
         }
+
         $formRequestClass = $this->admin->getFormRequest();
-        $validated = app($formRequestClass)
-            ->validated();
+        $validated = app($formRequestClass)->validated();
 
-        $serviceClass = $this->admin->getService();
+        resolve($this->admin->getService())->create($validated);
 
-        app($serviceClass)
-            ->create($validated);
-        $project = ProjectManager::getCurrentProject()->getPrefix();
-        return redirect()->route("{$project}.admin.{$this->admin->getRoutePrefix()}.list");
+        return redirect()
+            ->route($this->admin->getUrlName('list'))
+            ->with('success', 'Registro creado exitosamente');
     }
 
     #[Route('edit/{id}', methods: ['GET', 'PUT'], name: 'edit')]
-    public function edit(Request $request, $id)
+    public function edit(Request $request, int $id)
     {
         $item = $this->admin->find($id);
 
@@ -63,9 +60,9 @@ abstract class AdminController extends Controller
             abort(404);
         }
 
-        $config = $this->admin->getEditViewConfig($item);
-
         if ($request->isMethod('GET')) {
+            $config = $this->admin->getEditViewConfig($item);
+
             return view('landlord.edit', [
                 'admin' => $this->admin,
                 'config' => $config,
@@ -73,12 +70,9 @@ abstract class AdminController extends Controller
         }
 
         $formRequestClass = $this->admin->getFormRequest();
-        $validated = app($formRequestClass)
-            ->validated();
-        $serviceClass = $this->admin->getService();
+        $validated = app($formRequestClass)->validated();
 
-        $updatedItem = app($serviceClass)
-            ->update($id, $validated);
+        resolve($this->admin->getService())->update($id, $validated);
 
         return redirect()
             ->route($this->admin->getUrlName('list'))
@@ -86,7 +80,7 @@ abstract class AdminController extends Controller
     }
 
     #[Route('destroy/{id}', methods: ['DELETE'], name: 'destroy')]
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $item = $this->admin->find($id);
 
@@ -94,9 +88,10 @@ abstract class AdminController extends Controller
             abort(404);
         }
 
-        $serviceClass = $this->admin->getService();
-        app($serviceClass)
-            ->delete($id);
-        return redirect()->route($this->admin->getUrlName('list'));
+        resolve($this->admin->getService())->delete($id);
+
+        return redirect()
+            ->route($this->admin->getUrlName('list'))
+            ->with('success', 'Registro eliminado exitosamente');
     }
 }

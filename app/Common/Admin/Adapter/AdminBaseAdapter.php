@@ -6,6 +6,7 @@ use App\Common\Admin\Config\CreateViewConfig;
 use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
 use App\Common\Admin\Contracts\AdminAdapterInterface;
+use App\Common\Admin\Enum\FormContextEnum;
 use App\Common\Repository\Contracts\RepositoryInterface;
 use App\Common\Repository\RepositoryManager;
 use App\ProjectManager;
@@ -60,7 +61,7 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
         $formRequestClass = $this->getFormRequest();
         $formRequest = new $formRequestClass();
 
-        $config = new CreateViewConfig($formRequest->getFormBuilder());
+        $config = new CreateViewConfig($formRequest->getFormBuilder(FormContextEnum::CREATE));
 
         $config
             ->title('Crear ' . $this->getTitle())
@@ -74,7 +75,7 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
         $formRequestClass = $this->getFormRequest();
         $formRequest = new $formRequestClass();
 
-        $config = new EditViewConfig($formRequest->getFormBuilder());
+        $config = new EditViewConfig($formRequest->getFormBuilder(FormContextEnum::EDIT));
 
         $config
             ->title('Editar ' . $this->getTitle())

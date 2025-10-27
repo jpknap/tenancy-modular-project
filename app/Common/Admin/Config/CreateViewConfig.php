@@ -12,7 +12,7 @@ class CreateViewConfig
 
     private string $submitLabel = 'Guardar';
 
-    public function __construct(FormBuilder $formBuilder)
+    public function __construct(FormBuilder $formBuilder, string $context = 'create')
     {
         $this->formBuilder = $formBuilder;
     }
