@@ -80,11 +80,7 @@ class UserAdmin extends AdminBaseAdapter
                 'sortable' => true,
                 'searchable' => true,
             ],
-            'role' => [
-                'label' => 'Rol',
-                'format' => 'badge',
-            ],
-            'is_active' => [
+            'enabled' => [
                 'label' => 'Activo',
                 'format' => 'boolean',
                 'class' => 'text-center',
@@ -104,11 +100,8 @@ class UserAdmin extends AdminBaseAdapter
             ],
         ]);
 
-        $config->addAction('Eliminar', $this->getUrlName('destroy'), [
+        $config->addAction('Eliminar', $this->getUrlName('delete'), [
             'icon' => 'bi-trash text-danger',
-            'type' => 'form',
-            'confirm' => true,
-            'confirm_message' => '¿Está seguro de eliminar este usuario?',
             'route_params' => [
                 'id' => 'id',
             ],
@@ -121,5 +114,15 @@ class UserAdmin extends AdminBaseAdapter
         $config->emptyMessage('No hay usuarios registrados');
 
         return $config;
+    }
+
+    protected function getDeleteDisplayFields(): array
+    {
+        return [
+            'id' => 'ID',
+            'name' => 'Nombre',
+            'email' => 'Email',
+            'created_at' => 'Fecha de Registro',
+        ];
     }
 }

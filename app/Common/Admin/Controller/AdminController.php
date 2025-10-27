@@ -79,13 +79,22 @@ abstract class AdminController extends Controller
             ->with('success', 'Registro actualizado exitosamente');
     }
 
-    #[Route('destroy/{id}', methods: ['DELETE'], name: 'destroy')]
-    public function destroy(int $id)
+    #[Route('delete/{id}', methods: ['GET', 'DELETE'], name: 'delete')]
+    public function delete(Request $request, int $id)
     {
         $item = $this->admin->find($id);
 
         if (! $item) {
             abort(404);
+        }
+
+        if ($request->isMethod('GET')) {
+            $config = $this->admin->getDeleteViewConfig($item);
+
+            return view('landlord.delete', [
+                'admin' => $this->admin,
+                'config' => $config,
+            ]);
         }
 
         resolve($this->admin->getService())->delete($id);

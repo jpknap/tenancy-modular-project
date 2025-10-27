@@ -3,6 +3,7 @@
 namespace App\Common\Admin\Adapter;
 
 use App\Common\Admin\Config\CreateViewConfig;
+use App\Common\Admin\Config\DeleteViewConfig;
 use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
 use App\Common\Admin\Contracts\AdminAdapterInterface;
@@ -83,6 +84,26 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
             ->item($item);
 
         return $config;
+    }
+
+    public function getDeleteViewConfig(mixed $item): DeleteViewConfig
+    {
+        $config = new DeleteViewConfig();
+
+        $config
+            ->title('Eliminar ' . $this->getTitle())
+            ->message('¿Está seguro que desea eliminar este registro? Esta acción no se puede deshacer.')
+            ->submitLabel('Sí, eliminar')
+            ->cancelLabel('Cancelar')
+            ->item($item)
+            ->displayFields($this->getDeleteDisplayFields());
+
+        return $config;
+    }
+
+    protected function getDeleteDisplayFields(): array
+    {
+        return [];
     }
 
     /**

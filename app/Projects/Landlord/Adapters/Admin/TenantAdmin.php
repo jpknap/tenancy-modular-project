@@ -110,17 +110,13 @@ class TenantAdmin extends AdminBaseAdapter
             ],
         ]);
 
-        $config->addAction('Eliminar', $this->getUrlName('destroy'), [
+        $config->addAction('Eliminar', $this->getUrlName('delete'), [
             'icon' => 'bi-trash text-danger',
-            'type' => 'form',
-            'confirm' => true,
-            'confirm_message' => '¿Está seguro de eliminar este tenant?',
             'route_params' => [
                 'id' => 'id',
             ],
         ]);
 
-        // Paginación
         $config->perPage(15);
         $config->emptyMessage('No hay tenants registrados');
 
@@ -147,5 +143,16 @@ class TenantAdmin extends AdminBaseAdapter
             ->submitLabel('Actualizar Tenant');
 
         return $config;
+    }
+
+    protected function getDeleteDisplayFields(): array
+    {
+        return [
+            'id' => 'ID',
+            'name' => 'Nombre',
+            'email' => 'Email',
+            'status' => 'Estado',
+            'created_at' => 'Fecha de Creación',
+        ];
     }
 }
