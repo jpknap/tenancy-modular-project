@@ -50,6 +50,9 @@
     </footer>
 </div>
 
+{{-- Alert System --}}
+<x-alert />
+
 {{-- Sidebar Toggle Script --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -78,6 +81,9 @@
         });
     });
 </script>
+
+{{-- Scripts Stack --}}
+@stack('scripts')
 
 </body>
 </html>

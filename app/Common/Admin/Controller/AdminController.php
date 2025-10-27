@@ -5,6 +5,7 @@ namespace App\Common\Admin\Controller;
 use App\Attributes\Route;
 use App\Attributes\RoutePrefix;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
+use App\Common\Services\AlertManager;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -12,7 +13,8 @@ use Illuminate\Routing\Controller;
 abstract class AdminController extends Controller
 {
     public function __construct(
-        private readonly AdminBaseAdapter $admin
+        private readonly AdminBaseAdapter $admin,
+        private readonly AlertManager $alertManager
     ) {
     }
 
@@ -46,9 +48,12 @@ abstract class AdminController extends Controller
 
         resolve($this->admin->getService())->create($validated);
 
-        return redirect()
-            ->route($this->admin->getUrlName('list'))
-            ->with('success', 'Registro creado exitosamente');
+        $this->alertManager->success(
+            'El registro ha sido creado correctamente',
+            '¡Registro creado!'
+        );
+
+        return redirect()->route($this->admin->getUrlName('list'));
     }
 
     #[Route('edit/{id}', methods: ['GET', 'PUT'], name: 'edit')]
@@ -74,9 +79,12 @@ abstract class AdminController extends Controller
 
         resolve($this->admin->getService())->update($id, $validated);
 
-        return redirect()
-            ->route($this->admin->getUrlName('list'))
-            ->with('success', 'Registro actualizado exitosamente');
+        $this->alertManager->success(
+            'Los cambios han sido guardados correctamente',
+            '¡Registro actualizado!'
+        );
+
+        return redirect()->route($this->admin->getUrlName('list'));
     }
 
     #[Route('delete/{id}', methods: ['GET', 'DELETE'], name: 'delete')]
@@ -99,8 +107,11 @@ abstract class AdminController extends Controller
 
         resolve($this->admin->getService())->delete($id);
 
-        return redirect()
-            ->route($this->admin->getUrlName('list'))
-            ->with('success', 'Registro eliminado exitosamente');
+        $this->alertManager->success(
+            'El registro ha sido eliminado permanentemente',
+            '¡Registro eliminado!'
+        );
+
+        return redirect()->route($this->admin->getUrlName('list'));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Common\Repository\RepositoryManager;
 use App\Common\Repository\Service\TransactionService;
+use App\Common\Services\AlertManager;
 use App\Http\View\Composers\SidebarComposer;
 use App\Http\View\Composers\TopbarComposer;
 use App\Models\Tenant;
@@ -19,7 +20,6 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // Repository Manager
         $this->app->singleton(RepositoryManager::class, function ($app) {
             $manager = new RepositoryManager();
             $manager->register(User::class, UserRepository::class);
@@ -27,10 +27,10 @@ class AppServiceProvider extends ServiceProvider
             return $manager;
         });
 
-        // Transaction Service (Singleton)
         $this->app->singleton(TransactionService::class);
 
-        // Tenant Service
+        $this->app->singleton(AlertManager::class);
+
         $this->app->bind(TenantService::class, function ($app) {
             return new TenantService(
                 $app->make(TransactionService::class),
@@ -39,7 +39,6 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
-        // User Service
         $this->app->bind(UserService::class, function ($app) {
             return new UserService($app->make(TransactionService::class), $app->make(UserRepository::class));
         });
