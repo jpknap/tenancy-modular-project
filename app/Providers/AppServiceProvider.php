@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Common\Repository\RepositoryManager;
-use App\Common\Service\TransactionService;
+use App\Common\Repository\Service\TransactionService;
 use App\Http\View\Composers\SidebarComposer;
 use App\Http\View\Composers\TopbarComposer;
 use App\Models\Tenant;

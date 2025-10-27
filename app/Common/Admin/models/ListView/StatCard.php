@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\ListView;
+namespace App\Common\Admin\models\ListView;
 
 /**
  * Representa una tarjeta de estadística en el listado

@@ -2,9 +2,9 @@
 
 namespace App\Common\Admin\Config;
 
-use App\Common\ListView\ListAction;
-use App\Common\ListView\ListColumn;
-use App\Common\ListView\StatCard;
+use App\Common\Admin\models\ListView\ListAction;
+use App\Common\Admin\models\ListView\ListColumn;
+use App\Common\Admin\models\ListView\StatCard;
 
 class ListViewConfig
 {

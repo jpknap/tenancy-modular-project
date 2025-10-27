@@ -2,7 +2,7 @@
 
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
 use App\Projects\Landlord\Adapters\Admin\UserAdmin;
-use App\Projects\Landlord\Http\Controller\User\AuthController;
+use App\Projects\Landlord\Http\Controller\Auth\AuthController;
 
 return [
     'landlord' => [

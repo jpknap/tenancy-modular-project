@@ -6,7 +6,7 @@ use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Common\Admin\Config\ListViewConfig;
 use App\Models\User;
 use App\Projects\Landlord\Http\Controller\Admin\UserAdminController;
-use App\Projects\Landlord\Requests\UserFormRequest;
+use App\Projects\Landlord\FormRequests\UserFormRequest;
 use App\Projects\Landlord\Services\Model\UserService;
 
 class UserAdmin extends AdminBaseAdapter

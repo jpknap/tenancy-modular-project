@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Projects\Landlord\Http\Controller\User;
+namespace App\Projects\Landlord\Http\Controller\Auth;
 
 use App\Attributes\Route;
 use App\Attributes\RoutePrefix;

@@ -2,7 +2,7 @@
 
 namespace App\Projects\Landlord\Services\Model;
 
-use App\Common\Service\TransactionService;
+use App\Common\Repository\Service\TransactionService;
 use App\Projects\Landlord\Repositories\TenantRepository;
 use App\Projects\Landlord\Repositories\UserRepository;
 

@@ -8,7 +8,7 @@ use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
 use App\Models\Tenant;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
-use App\Projects\Landlord\Requests\TenantFormRequest;
+use App\Projects\Landlord\FormRequests\TenantFormRequest;
 use App\Projects\Landlord\Services\Model\TenantService;
 
 class TenantAdmin extends AdminBaseAdapter

@@ -260,8 +260,7 @@ class AdminController {
 
 namespace App\Projects\Landlord\Requests;
 
-use App\Common\Form\BaseFormRequest;
-use App\Common\Form\FormBuilder;
+use App\Common\Admin\Form\BaseFormRequest;use App\Common\Admin\Form\FormBuilder;
 
 class TenantFormRequest extends BaseFormRequest
 {
@@ -399,8 +398,7 @@ public function create()
 ### Test del FormBuilder
 
 ```php
-use Tests\TestCase;
-use App\Common\Form\FormBuilder;
+use App\Common\Admin\Form\FormBuilder;use Tests\TestCase;
 
 class FormBuilderTest extends TestCase
 {
@@ -434,7 +432,7 @@ class FormBuilderTest extends TestCase
 
 ```php
 use Tests\TestCase;
-use App\Projects\Landlord\Requests\TenantFormRequest;
+use App\Projects\Landlord\FormRequests\TenantFormRequest;
 use Illuminate\Support\Facades\Validator;
 
 class TenantFormRequestTest extends TestCase

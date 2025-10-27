@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Form;
+namespace App\Common\Admin\Form;
 
 /**
  * Constructor de formularios con sintaxis fluida

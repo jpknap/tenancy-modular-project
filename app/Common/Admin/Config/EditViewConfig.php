@@ -2,7 +2,7 @@
 
 namespace App\Common\Admin\Config;
 
-use App\Common\Form\FormBuilder;
+use App\Common\Admin\Form\FormBuilder;
 
 class EditViewConfig
 {

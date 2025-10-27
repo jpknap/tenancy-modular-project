@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\ListView;
+namespace App\Common\Admin\models\ListView;
 
 /**
  * Representa una acción (botón/enlace) en el listado

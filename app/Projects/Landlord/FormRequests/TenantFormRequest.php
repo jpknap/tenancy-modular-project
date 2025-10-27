@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Projects\Landlord\Requests;
+namespace App\Projects\Landlord\FormRequests;
 
-use App\Common\Form\BaseFormRequest;
-use App\Common\Form\FormBuilder;
+use App\Common\Admin\Form\BaseFormRequest;
+use App\Common\Admin\Form\FormBuilder;
 
 class TenantFormRequest extends BaseFormRequest
 {

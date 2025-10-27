@@ -8,6 +8,7 @@ Sistema de configuración centralizado para vistas de administración (CRUD), si
 - [Arquitectura](#arquitectura)
 - [ListViewConfig](#listviewconfig)
 - [CreateViewConfig](#createviewconfig)
+- [EditViewConfig](#editviewconfig)
 - [AdminBaseAdapter](#adminbaseadapter)
 - [Ejemplos Completos](#ejemplos-completos)
 
@@ -49,11 +50,12 @@ public function create() {
 ```
 app/Common/Admin/Config/
 ├── ListViewConfig.php       # Configuración de listados
-├── CreateViewConfig.php     # Configuración de formularios
-└── (futuro) EditViewConfig, ShowViewConfig...
+├── CreateViewConfig.php     # Configuración de formularios create
+├── EditViewConfig.php       # Configuración de formularios edit
+└── (futuro) ShowViewConfig, DeleteViewConfig...
 
 app/Common/Admin/Adapter/
-└── AdminBaseAdapter.php     # Implementa getListViewConfig(), getCreateViewConfig()
+└── AdminBaseAdapter.php     # Implementa getListViewConfig(), getCreateViewConfig(), getEditViewConfig()
 
 app/Projects/{Project}/Adapters/Admin/
 └── {Model}Admin.php         # Personaliza configs por modelo
@@ -66,8 +68,9 @@ app/Projects/{Project}/Adapters/Admin/
 │                     AdminBaseAdapter                       │
 ├────────────────────────────────────────────────────────────┤
 │                                                            │
-│  getListViewConfig()     →  ListViewConfig                │
-│  getCreateViewConfig()   →  CreateViewConfig              │
+│  getListViewConfig()      →  ListViewConfig               │
+│  getCreateViewConfig()    →  CreateViewConfig             │
+│  getEditViewConfig($item) →  EditViewConfig               │
 │                                                            │
 └────────────────────────────────────────────────────────────┘
                               ↓
@@ -75,17 +78,20 @@ app/Projects/{Project}/Adapters/Admin/
 │                      AdminController                       │
 ├────────────────────────────────────────────────────────────┤
 │                                                            │
-│  list()    → usa $config (ListViewConfig)                 │
-│  create()  → usa $config (CreateViewConfig)               │
+│  list()       → usa $config (ListViewConfig)              │
+│  create()     → usa $config (CreateViewConfig)            │
+│  edit($id)    → usa $config (EditViewConfig)              │
+│  destroy($id) → elimina y redirecciona                    │
 │                                                            │
 └────────────────────────────────────────────────────────────┘
                               ↓
 ┌────────────────────────────────────────────────────────────┐
 │                          Vista                             │
-├────────────────────────────────────────────────────────────�│
+├────────────────────────────────────────────────────────────┤
 │                                                            │
 │  list.blade.php    → $config->getColumns()                │
 │  create.blade.php  → $config->getFormBuilder()            │
+│  edit.blade.php    → $config->getFormBuilder() + item     │
 │                                                            │
 └────────────────────────────────────────────────────────────┘
 ```
@@ -352,9 +358,136 @@ public function create(Request $request)
 </div>
 ```
 
+## ✏️ EditViewConfig
+
+Configuración para vistas de edición de formularios (similar a CreateViewConfig pero con datos pre-cargados).
+
+### Estructura
+
+```php
+namespace App\Common\Admin\Config;
+
+use App\Common\Admin\Form\FormBuilder;
+
+class EditViewConfig
+{
+    private FormBuilder $formBuilder;
+    private string $title = 'Editar';
+    private string $submitLabel = 'Actualizar';
+    private mixed $item = null;
+
+    public function __construct(FormBuilder $formBuilder) { }
+}
+```
+
+### Métodos Disponibles
+
+```php
+// Título de la página
+$config->title('Editar Tenant: ' . $item->name);
+$title = $config->getTitle(); // string
+
+// Label del botón submit
+$config->submitLabel('Actualizar');
+$label = $config->getSubmitLabel(); // string
+
+// Item a editar
+$config->item($item);
+$item = $config->getItem(); // mixed (el modelo)
+
+// FormBuilder
+$formBuilder = $config->getFormBuilder(); // FormBuilder
+```
+
+### Ejemplo Completo
+
+```php
+public function getEditViewConfig(mixed $item): EditViewConfig
+{
+    // Obtener configuración base del padre
+    $config = parent::getEditViewConfig($item);
+
+    // Personalizar con datos del item
+    $config
+        ->title('Editar Tenant: ' . $item->name)
+        ->submitLabel('Actualizar Tenant');
+
+    return $config;
+}
+```
+
+### Uso en Controller
+
+```php
+#[Route('edit/{id}', methods: ['GET', 'PUT'], name: 'edit')]
+public function edit(Request $request, $id)
+{
+    $item = $this->admin->find($id);
+    
+    if (!$item) {
+        abort(404);
+    }
+
+    $config = $this->admin->getEditViewConfig($item);
+    
+    if ($request->isMethod('GET')) {
+        return view('landlord.edit', [
+            'admin' => $this->admin,
+            'config' => $config,
+        ]);
+    }
+    
+    // PUT: procesar actualización
+    $formRequestClass = $this->admin->getFormRequest();
+    $validated = app($formRequestClass)->validated();
+    $serviceClass = $this->admin->getService();
+
+    app($serviceClass)->update($id, $validated);
+
+    return redirect()
+        ->route($this->admin->getUrlName('list'))
+        ->with('success', 'Registro actualizado exitosamente');
+}
+```
+
+### Uso en Vista
+
+```blade
+{{-- edit.blade.php --}}
+<div class="content-card">
+    <h2>{{ $config->getTitle() }}</h2>
+
+    <form method="POST" action="{{ $admin->getUrl('edit', ['id' => $config->getItem()->id]) }}">
+        @csrf
+        @method('PUT')
+        
+        @foreach($config->getFormBuilder()->getFields() as $field)
+            @php
+                // Auto-poblar con datos del item
+                $field['value'] = old($field['name'], data_get($config->getItem(), $field['name']));
+            @endphp
+            <x-form.field :field="$field" />
+        @endforeach
+        
+        <button type="submit">{{ $config->getSubmitLabel() }}</button>
+    </form>
+</div>
+```
+
+### Diferencias con CreateViewConfig
+
+| Característica | CreateViewConfig | EditViewConfig |
+|----------------|------------------|----------------|
+| **Título default** | 'Crear Nuevo' | 'Editar' |
+| **Submit label** | 'Guardar' | 'Actualizar' |
+| **Método HTTP** | POST | PUT |
+| **Tiene item** | ❌ No | ✅ Sí (`getItem()`) |
+| **Campos** | Vacíos | Pre-poblados |
+| **Ruta** | `/create` | `/edit/{id}` |
+
 ## 🎯 AdminBaseAdapter
 
-El `AdminBaseAdapter` proporciona implementaciones por defecto de ambos configs.
+El `AdminBaseAdapter` proporciona implementaciones por defecto de todos los configs.
 
 ### Implementación Base
 
@@ -382,9 +515,22 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
         
         $config
             ->title('Crear ' . $this->getTitle())
-            ->submitLabel('Guardar')
-            ->cancelRoute($this->getRoutePrefix() . '.list')
-            ->successMessage('Registro creado exitosamente');
+            ->submitLabel('Guardar');
+        
+        return $config;
+    }
+
+    public function getEditViewConfig(mixed $item): EditViewConfig
+    {
+        $formRequestClass = $this->getFormRequest();
+        $formRequest = new $formRequestClass();
+        
+        $config = new EditViewConfig($formRequest->getFormBuilder());
+        
+        $config
+            ->title('Editar ' . $this->getTitle())
+            ->submitLabel('Actualizar')
+            ->item($item);
         
         return $config;
     }
@@ -553,6 +699,50 @@ class UserAdmin extends AdminBaseAdapter
     }
 
     // CreateViewConfig usa configuración por defecto del padre
+}
+```
+
+## 🔄 Sistema CRUD Completo
+
+El sistema admin ahora tiene implementado un CRUD completo:
+
+| Operación | Config | Controller | Vista | Estado |
+|-----------|--------|------------|-------|--------|
+| **List** | `ListViewConfig` | `list()` | `list.blade.php` | ✅ Completo |
+| **Create** | `CreateViewConfig` | `create()` | `create.blade.php` | ✅ Completo |
+| **Edit** | `EditViewConfig` | `edit($id)` | `edit.blade.php` | ✅ Completo |
+| **Delete** | - | `destroy($id)` | Form en list | ✅ Completo |
+| **Show** | - | - | - | ⏳ Pendiente |
+
+### Rutas Generadas
+
+Para cada adapter (ej. `UserAdmin` con `routePrefix = 'users'`):
+
+```
+landlord.admin.users.list     GET     /landlord/admin/users/list
+landlord.admin.users.create   GET     /landlord/admin/users/create
+landlord.admin.users.create   POST    /landlord/admin/users/create
+landlord.admin.users.edit     GET     /landlord/admin/users/edit/{id}
+landlord.admin.users.edit     PUT     /landlord/admin/users/edit/{id}
+landlord.admin.users.destroy  DELETE  /landlord/admin/users/destroy/{id}
+```
+
+### Métodos de AdminController
+
+```php
+abstract class AdminController extends Controller
+{
+    #[Route('list', methods: ['GET'], name: 'list')]
+    public function list() { ... }
+
+    #[Route('create', methods: ['GET', 'POST'], name: 'create')]
+    public function create(Request $request) { ... }
+
+    #[Route('edit/{id}', methods: ['GET', 'PUT'], name: 'edit')]
+    public function edit(Request $request, $id) { ... }
+
+    #[Route('destroy/{id}', methods: ['DELETE'], name: 'destroy')]
+    public function destroy($id) { ... }
 }
 ```
 

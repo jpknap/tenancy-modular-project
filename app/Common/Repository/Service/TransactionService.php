@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Service;
+namespace App\Common\Repository\Service;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\Log;
  */
 class TransactionService
 {
-    /**
-     * Ejecuta una operación dentro de una transacción
-     * Si falla cualquier parte, hace rollback automático
-     *
-     * @param callable $callback Función que contiene la lógica a ejecutar
-     * @return mixed Resultado de la operación
-     */
     public function execute(callable $callback): mixed
     {
         try {
@@ -31,18 +24,6 @@ class TransactionService
         }
     }
 
-    /**
-     * Ejecuta múltiples operaciones en secuencia dentro de una transacción
-     *
-     * @param array $operations Array de callables a ejecutar
-     * @return array Resultados de cada operación
-     *
-     * Ejemplo:
-     * $results = $service->executeMultiple([
-     *     'tenant' => fn() => $tenantRepo->create($data),
-     *     'user' => fn() => $userRepo->create($userData),
-     * ]);
-     */
     public function executeMultiple(array $operations): array
     {
         return $this->execute(function () use ($operations) {

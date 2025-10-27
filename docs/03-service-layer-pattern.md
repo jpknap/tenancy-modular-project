@@ -87,7 +87,7 @@ public function store(TenantFormRequest $request, TenantService $service)
 ### 1. **execute()** - Transacción Simple
 
 ```php
-use App\Common\Service\TransactionService;
+use App\Common\Repository\Service\TransactionService;
 
 $transactionService = app(TransactionService::class);
 
