@@ -48,22 +48,19 @@ class TenantAdmin extends AdminBaseAdapter
         $config->addStatCard('Activos', 0, [
             'icon' => 'bi-check-circle',
             'color' => 'success',
-            'value_resolver' => fn ($items) => $items->where('status', 'active')
-                ->count(),
+            'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'active')->count(),
         ]);
 
         $config->addStatCard('Pendientes', 0, [
             'icon' => 'bi-clock',
             'color' => 'warning',
-            'value_resolver' => fn ($items) => $items->where('status', 'pending')
-                ->count(),
+            'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'pending')->count(),
         ]);
 
         $config->addStatCard('Inactivos', 0, [
             'icon' => 'bi-x-circle',
             'color' => 'danger',
-            'value_resolver' => fn ($items) => $items->where('status', 'inactive')
-                ->count(),
+            'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'inactive')->count(),
         ]);
 
         // Columnas
@@ -78,12 +75,17 @@ class TenantAdmin extends AdminBaseAdapter
                 'sortable' => true,
                 'searchable' => true,
             ],
-            'email' => [
-                'label' => 'Email',
-                'sortable' => true,
-                'searchable' => true,
+            'domains.0.subdomain' => [
+                'label' => 'Subdominio',
+                'sortable' => false,
+                'searchable' => false,
             ],
-            'status' => [
+            'data.email' => [
+                'label' => 'Email',
+                'sortable' => false,
+                'searchable' => false,
+            ],
+            'data.status' => [
                 'label' => 'Estado',
                 'format' => 'badge',
                 'class' => 'text-center',
@@ -92,14 +94,6 @@ class TenantAdmin extends AdminBaseAdapter
                 'label' => 'Fecha Creación',
                 'format' => 'datetime',
                 'sortable' => true,
-            ],
-        ]);
-
-        // Acciones por fila
-        $config->addAction('Ver', $this->getUrlName('show'), [
-            'icon' => 'bi-eye text-info',
-            'route_params' => [
-                'id' => 'id',
             ],
         ]);
 
@@ -138,9 +132,17 @@ class TenantAdmin extends AdminBaseAdapter
     {
         $config = parent::getEditViewConfig($item);
 
+        // Pre-cargar valores desde la data JSON y domain
+        $itemData = $item->toArray();
+        $itemData['email'] = $item->data['email'] ?? '';
+        $itemData['status'] = $item->data['status'] ?? 'pending';
+        $itemData['description'] = $item->data['description'] ?? '';
+        $itemData['subdomain'] = $item->domains->first()->subdomain ?? '';
+
         $config
-            ->title('Editar Tenant: ' . $item->name)
-            ->submitLabel('Actualizar Tenant');
+            ->title('Editar Cliente: ' . $item->name)
+            ->submitLabel('Actualizar Cliente')
+            ->item((object) $itemData);
 
         return $config;
     }
@@ -150,8 +152,9 @@ class TenantAdmin extends AdminBaseAdapter
         return [
             'id' => 'ID',
             'name' => 'Nombre',
-            'email' => 'Email',
-            'status' => 'Estado',
+            'identifier' => 'Identificador',
+            'data.email' => 'Email',
+            'data.status' => 'Estado',
             'created_at' => 'Fecha de Creación',
         ];
     }

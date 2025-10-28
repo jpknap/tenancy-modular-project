@@ -5,6 +5,7 @@ namespace App\Projects\Landlord\Services\Model;
 use App\Common\Repository\Service\TransactionService;
 use App\Projects\Landlord\Repositories\TenantRepository;
 use App\Projects\Landlord\Repositories\UserRepository;
+use Illuminate\Support\Str;
 
 class TenantService
 {
@@ -17,12 +18,68 @@ class TenantService
 
     public function create(array $data)
     {
-        return $this->transactionService->execute(function () use ($data) {
-            $tenant = $this->tenantRepository->create($data);
-            $this->setupDefaultSettings($tenant);
+        // NO usar transacción porque PostgreSQL no permite CREATE SCHEMA dentro de transacciones
+        // El evento TenantCreated disparará la creación del schema automáticamente
+        $identifier = Str::slug($data['name']);
+        $subdomain = $data['subdomain'];
+        
+        $tenantData = [
+            'name' => $data['name'],
+            'identifier' => $identifier,
+            'data' => [
+                'email' => $data['email'] ?? null,
+                'status' => $data['status'] ?? 'pending',
+                'description' => $data['description'] ?? null,
+            ],
+        ];
 
-            return $tenant;
+        $tenant = $this->tenantRepository->create($tenantData);
+        
+        $this->createDomain($tenant, $subdomain);
+        $this->setupDefaultSettings($tenant);
+
+        return $tenant;
+    }
+
+    public function update(int $id, array $data)
+    {
+        return $this->transactionService->execute(function () use ($id, $data) {
+            $tenant = $this->tenantRepository->find($id);
+            
+            if (!$tenant) {
+                throw new \Exception('Tenant not found');
+            }
+
+            $currentData = $tenant->data ?? [];
+            
+            $tenantData = [
+                'name' => $data['name'],
+                'data' => array_merge($currentData, [
+                    'email' => $data['email'] ?? null,
+                    'status' => $data['status'] ?? 'pending',
+                    'description' => $data['description'] ?? null,
+                ]),
+            ];
+
+            return $this->tenantRepository->update($id, $tenantData);
         });
+    }
+
+    public function delete(int $id): bool
+    {
+        // NO usar transacción porque PostgreSQL no permite DROP SCHEMA dentro de transacciones
+        // El evento TenantDeleted disparará la eliminación del schema automáticamente
+        return $this->tenantRepository->delete($id);
+    }
+
+    private function createDomain($tenant, string $subdomain): void
+    {
+        $domain = $subdomain . '.' . config('app.domain', 'localhost');
+        
+        $tenant->domains()->create([
+            'domain' => $domain,
+            'subdomain' => $subdomain,
+        ]);
     }
 
     public function createTenantWithAdmin(array $tenantData, array $adminData): array

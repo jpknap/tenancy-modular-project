@@ -7,56 +7,105 @@ use App\Common\Admin\Form\FormBuilder;
 
 class TenantFormRequest extends BaseFormRequest
 {
-    public function buildForm(): FormBuilder
+    public function buildCreateForm(): FormBuilder
     {
         return $this->formBuilder
             ->setMethod('POST')
             ->setAction('#')
-            ->text('name', 'Nombre del Tenant', [
-                'placeholder' => 'Ingrese el nombre del tenant',
+            ->text('name', 'Nombre del Cliente', [
+                'placeholder' => 'Ej: Mi Empresa S.A.',
                 'required' => true,
+                'help' => 'Nombre completo de la organización',
             ])
-            ->email('email', 'Email', [
-                'placeholder' => 'correo@ejemplo.com',
+            ->text('subdomain', 'Subdominio', [
+                'placeholder' => 'Ej: miempresa',
+                'required' => true,
+                'help' => 'Solo letras minúsculas, números y guiones. Ejemplo: miempresa.localhost',
+                'pattern' => '[a-z0-9-]+',
+            ])
+            ->email('email', 'Email de Contacto', [
+                'placeholder' => 'contacto@ejemplo.com',
                 'required' => true,
             ])
             ->select('status', 'Estado', [
                 'active' => 'Activo',
-                'inactive' => 'Inactivo',
                 'pending' => 'Pendiente',
+                'inactive' => 'Inactivo',
             ], [
                 'required' => true,
             ])
             ->textarea('description', 'Descripción', [
-                'placeholder' => 'Descripción opcional del tenant',
-                'rows' => 4,
-            ])
-            ->date('start_date', 'Fecha de Inicio', [
+                'placeholder' => 'Información adicional sobre el cliente (opcional)',
+                'rows' => 3,
+            ]);
+    }
+
+    public function buildEditForm(): FormBuilder
+    {
+        return $this->formBuilder
+            ->setMethod('PUT')
+            ->setAction('#')
+            ->text('name', 'Nombre del Cliente', [
+                'placeholder' => 'Ej: Mi Empresa S.A.',
                 'required' => true,
+            ])
+            ->text('subdomain', 'Subdominio', [
+                'placeholder' => 'Ej: miempresa',
+                'required' => true,
+                'readonly' => true,
+                'help' => 'El subdominio no puede ser modificado',
+            ])
+            ->email('email', 'Email de Contacto', [
+                'placeholder' => 'contacto@ejemplo.com',
+                'required' => true,
+            ])
+            ->select('status', 'Estado', [
+                'active' => 'Activo',
+                'pending' => 'Pendiente',
+                'inactive' => 'Inactivo',
+            ], [
+                'required' => true,
+            ])
+            ->textarea('description', 'Descripción', [
+                'placeholder' => 'Información adicional sobre el cliente (opcional)',
+                'rows' => 3,
             ]);
     }
 
     public function rules(): array
     {
-        return [
+        $tenantId = $this->route('id');
+
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
+            'subdomain' => [
+                'required',
+                'string',
+                'max:63',
+                'regex:/^[a-z0-9-]+$/',
+                $tenantId 
+                    ? "unique:domains,subdomain,{$tenantId},tenant_id" 
+                    : 'unique:domains,subdomain'
+            ],
             'email' => ['required', 'email', 'max:255'],
             'status' => ['required', 'in:active,inactive,pending'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'start_date' => ['required', 'date', 'after_or_equal:today'],
         ];
+
+        return $rules;
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'El nombre del tenant es obligatorio',
+            'name.required' => 'El nombre del cliente es obligatorio',
+            'subdomain.required' => 'El subdominio es obligatorio',
+            'subdomain.regex' => 'El subdominio solo puede contener letras minúsculas, números y guiones',
+            'subdomain.unique' => 'Este subdominio ya está en uso',
             'email.required' => 'El email es obligatorio',
             'email.email' => 'El email debe ser una dirección válida',
             'status.required' => 'Debe seleccionar un estado',
             'status.in' => 'El estado seleccionado no es válido',
-            'start_date.required' => 'La fecha de inicio es obligatoria',
-            'start_date.after_or_equal' => 'La fecha debe ser hoy o posterior',
         ];
     }
 
@@ -64,10 +113,10 @@ class TenantFormRequest extends BaseFormRequest
     {
         return [
             'name' => 'nombre',
+            'subdomain' => 'subdominio',
             'email' => 'correo electrónico',
             'status' => 'estado',
             'description' => 'descripción',
-            'start_date' => 'fecha de inicio',
         ];
     }
 }
