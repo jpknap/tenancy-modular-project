@@ -50,6 +50,12 @@ Bienvenido a la documentación del proyecto **Tenancy Modular**. Este proyecto i
    - Sistema de configuración de vistas admin
    - ListViewConfig y CreateViewConfig
    - Configuración centralizada de CRUD
+### 🏢 Multi-Tenancy
+
+10. **[Tenancy Configuration](./10-tenancy-configuration.md)**
+   - Configuración PostgreSQL Schema Separation
+   - Flujo de creación de tenants
+   - Restricciones y mejores prácticas
 
 ## 🚀 Inicio Rápido
 

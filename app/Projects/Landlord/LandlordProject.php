@@ -60,4 +60,9 @@ class LandlordProject implements ProjectInterface
     {
         $this->menuBuilder = MenuBuilderService::buildMenu();
     }
+
+    public function getPathMigration(): string
+    {
+        return "";
+    }
 }

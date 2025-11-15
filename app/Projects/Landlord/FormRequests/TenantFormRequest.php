@@ -4,9 +4,33 @@ namespace App\Projects\Landlord\FormRequests;
 
 use App\Common\Admin\Form\BaseFormRequest;
 use App\Common\Admin\Form\FormBuilder;
+use App\ProjectManager;
+use App\Contracts\ProjectInterface;
+use Illuminate\Validation\Rule;
 
 class TenantFormRequest extends BaseFormRequest
 {
+    /**
+     * Obtener proyectos disponibles (excluyendo landlord)
+     */
+    private function getAvailableProjects(): array
+    {
+        $projects = ProjectManager::getProjects();
+        $projectOptions = [];
+
+        /** @var class-string<ProjectInterface> $projectClass */
+        foreach ($projects as $projectClass) {
+            $prefix = $projectClass::getPrefix();
+            
+            // Excluir el proyecto landlord
+            if ($prefix !== 'landlord') {
+                $projectOptions[$prefix] = $projectClass::getTitle();
+            }
+        }
+
+        return $projectOptions;
+    }
+
     public function buildCreateForm(): FormBuilder
     {
         return $this->formBuilder
@@ -33,6 +57,10 @@ class TenantFormRequest extends BaseFormRequest
                 'inactive' => 'Inactivo',
             ], [
                 'required' => true,
+            ])
+            ->select('current_project', 'Proyecto', $this->getAvailableProjects(), [
+                'required' => true,
+                'help' => 'Seleccione el proyecto que utilizará este tenant',
             ])
             ->textarea('description', 'Descripción', [
                 'placeholder' => 'Información adicional sobre el cliente (opcional)',
@@ -66,6 +94,10 @@ class TenantFormRequest extends BaseFormRequest
             ], [
                 'required' => true,
             ])
+            ->select('current_project', 'Proyecto', $this->getAvailableProjects(), [
+                'required' => true,
+                'help' => 'Seleccione el proyecto que utilizará este tenant',
+            ])
             ->textarea('description', 'Descripción', [
                 'placeholder' => 'Información adicional sobre el cliente (opcional)',
                 'rows' => 3,
@@ -75,6 +107,17 @@ class TenantFormRequest extends BaseFormRequest
     public function rules(): array
     {
         $tenantId = $this->route('id');
+        
+        // Obtener prefixes válidos (excluyendo landlord)
+        $validProjects = [];
+        $projects = ProjectManager::getProjects();
+        /** @var class-string<ProjectInterface> $projectClass */
+        foreach ($projects as $projectClass) {
+            $prefix = $projectClass::getPrefix();
+            if ($prefix !== 'landlord') {
+                $validProjects[] = $prefix;
+            }
+        }
 
         $rules = [
             'name' => ['required', 'string', 'max:255'],
@@ -89,6 +132,7 @@ class TenantFormRequest extends BaseFormRequest
             ],
             'email' => ['required', 'email', 'max:255'],
             'status' => ['required', 'in:active,inactive,pending'],
+            'current_project' => ['required', 'string', 'max:255', Rule::in($validProjects)],
             'description' => ['nullable', 'string', 'max:1000'],
         ];
 
@@ -106,6 +150,8 @@ class TenantFormRequest extends BaseFormRequest
             'email.email' => 'El email debe ser una dirección válida',
             'status.required' => 'Debe seleccionar un estado',
             'status.in' => 'El estado seleccionado no es válido',
+            'current_project.required' => 'Debe seleccionar un proyecto',
+            'current_project.in' => 'El proyecto seleccionado no es válido',
         ];
     }
 
@@ -116,6 +162,7 @@ class TenantFormRequest extends BaseFormRequest
             'subdomain' => 'subdominio',
             'email' => 'correo electrónico',
             'status' => 'estado',
+            'current_project' => 'proyecto',
             'description' => 'descripción',
         ];
     }

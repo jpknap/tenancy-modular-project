@@ -20,6 +20,9 @@ docs/
 │   ├── 08-admin-view-config-pattern.md  # Sistema de configuración de vistas admin
 │   └── 09-multiple-forms-pattern.md     # Formularios múltiples (create/edit/custom)
 │
+├── 🏢 Multi-Tenancy
+│   └── 10-tenancy-configuration.md      # PostgreSQL Schema Separation
+│
 └── 📚 Ejemplos
     └── blade-components-examples.md     # Ejemplos de componentes
 ```

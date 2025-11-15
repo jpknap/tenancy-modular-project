@@ -10,6 +10,8 @@ use App\Models\Tenant;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
 use App\Projects\Landlord\FormRequests\TenantFormRequest;
 use App\Projects\Landlord\Services\Model\TenantService;
+use App\ProjectManager;
+use App\Contracts\ProjectInterface;
 
 class TenantAdmin extends AdminBaseAdapter
 {
@@ -85,6 +87,26 @@ class TenantAdmin extends AdminBaseAdapter
                 'sortable' => false,
                 'searchable' => false,
             ],
+            'current_project' => [
+                'label' => 'Proyecto',
+                'sortable' => true,
+                'searchable' => false,
+                'formatter' => function ($value) {
+                    if (!$value) {
+                        return '<span class="badge bg-secondary">Sin asignar</span>';
+                    }
+                    
+                    $projects = ProjectManager::getProjects();
+                    /** @var class-string<ProjectInterface> $projectClass */
+                    foreach ($projects as $projectClass) {
+                        if ($projectClass::getPrefix() === $value) {
+                            return '<span class="badge bg-primary">' . $projectClass::getTitle() . '</span>';
+                        }
+                    }
+                    
+                    return '<span class="badge bg-warning">' . $value . '</span>';
+                },
+            ],
             'data.status' => [
                 'label' => 'Estado',
                 'format' => 'badge',
@@ -138,6 +160,7 @@ class TenantAdmin extends AdminBaseAdapter
         $itemData['status'] = $item->data['status'] ?? 'pending';
         $itemData['description'] = $item->data['description'] ?? '';
         $itemData['subdomain'] = $item->domains->first()->subdomain ?? '';
+        $itemData['current_project'] = $item->current_project ?? '';
 
         $config
             ->title('Editar Cliente: ' . $item->name)

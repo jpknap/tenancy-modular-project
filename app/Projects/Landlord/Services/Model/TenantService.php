@@ -26,6 +26,7 @@ class TenantService
         $tenantData = [
             'name' => $data['name'],
             'identifier' => $identifier,
+            'current_project' => $data['current_project'] ?? null,
             'data' => [
                 'email' => $data['email'] ?? null,
                 'status' => $data['status'] ?? 'pending',
@@ -54,6 +55,7 @@ class TenantService
             
             $tenantData = [
                 'name' => $data['name'],
+                'current_project' => $data['current_project'] ?? $tenant->current_project,
                 'data' => array_merge($currentData, [
                     'email' => $data['email'] ?? null,
                     'status' => $data['status'] ?? 'pending',

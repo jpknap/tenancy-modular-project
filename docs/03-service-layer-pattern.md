@@ -331,16 +331,50 @@ public function test_create_tenant_with_admin()
 - Fácil de modificar
 - Cambios localizados
 
+## ⚠️ Excepción: Tenancy con PostgreSQL Schemas
+
+**IMPORTANTE**: Cuando trabajas con **PostgreSQL Schema Separation** para tenancy, NO uses transacciones en operaciones que crean/eliminan tenants:
+
+```php
+// ❌ INCORRECTO - PostgreSQL no permite CREATE/DROP SCHEMA en transacciones
+public function create(array $data)
+{
+    return $this->transactionService->execute(function () use ($data) {
+        $tenant = $this->tenantRepository->create($data);
+        // CREATE SCHEMA falla aquí ❌
+        return $tenant;
+    });
+}
+
+// ✅ CORRECTO - Sin transacción para permitir CREATE SCHEMA
+public function create(array $data)
+{
+    // Sin DB::transaction()
+    $tenant = $this->tenantRepository->create($tenantData);
+    $this->createDomain($tenant, $subdomain);
+    // El evento TenantCreated → CREATE SCHEMA (fuera de transacción) ✅
+    return $tenant;
+}
+```
+
+**Razón**: PostgreSQL no permite ejecutar `CREATE SCHEMA` o `DROP SCHEMA` dentro de un bloque de transacción.
+
+El paquete `stancl/tenancy` maneja la creación del schema automáticamente mediante eventos:
+1. `TenantCreated` → `CreateDatabase` job → `CREATE SCHEMA`
+2. `TenantDeleted` → `DeleteDatabase` job → `DROP SCHEMA CASCADE`
+
 ## 📚 Comparación: Repository vs Service
 
 | Aspecto | Repository | Service |
 |---------|-----------|---------|
 | **Responsabilidad** | Acceso a datos | Lógica de negocio |
 | **Complejidad** | Simple (CRUD) | Compleja (orquestación) |
-| **Transacciones** | No maneja | Sí maneja |
+| **Transacciones** | No maneja | Sí maneja* |
 | **Múltiples entidades** | No | Sí |
 | **Validación** | No | Sí (validación de negocio) |
 | **Ejemplo** | `create($data)` | `createTenantWithAdmin($data)` |
+
+*Excepto en operaciones de tenancy con PostgreSQL schemas
 
 ## 🔧 Registro en Service Provider
 

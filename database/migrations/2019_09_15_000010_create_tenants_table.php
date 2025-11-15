@@ -19,6 +19,7 @@ class CreateTenantsTable extends Migration
             $table->string('identifier')
                 ->unique();
             $table->timestamps();
+            $table->string('current_project');
             $table->json('data')
                 ->nullable();
         });

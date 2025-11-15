@@ -17,6 +17,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     protected $fillable = [
         'name',
         'identifier',
+        'current_project',
         'data',
     ];
 
@@ -30,6 +31,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'id',
             'name',
             'identifier',
+            'current_project',
         ];
     }
 }
