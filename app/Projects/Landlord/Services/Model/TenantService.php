@@ -3,8 +3,11 @@
 namespace App\Projects\Landlord\Services\Model;
 
 use App\Common\Repository\Service\TransactionService;
+use App\ProjectManager;
+use App\Projects\Landlord\LandlordProject;
 use App\Projects\Landlord\Repositories\TenantRepository;
 use App\Projects\Landlord\Repositories\UserRepository;
+use App\Services\ProjectInitService;
 use Illuminate\Support\Str;
 
 class TenantService
@@ -22,7 +25,7 @@ class TenantService
         // El evento TenantCreated disparará la creación del schema automáticamente
         $identifier = Str::slug($data['name']);
         $subdomain = $data['subdomain'];
-        
+
         $tenantData = [
             'name' => $data['name'],
             'identifier' => $identifier,
@@ -34,9 +37,10 @@ class TenantService
             ],
         ];
 
+
         $tenant = $this->tenantRepository->create($tenantData);
-        
         $this->createDomain($tenant, $subdomain);
+        
         $this->setupDefaultSettings($tenant);
 
         return $tenant;
@@ -46,13 +50,13 @@ class TenantService
     {
         return $this->transactionService->execute(function () use ($id, $data) {
             $tenant = $this->tenantRepository->find($id);
-            
+
             if (!$tenant) {
                 throw new \Exception('Tenant not found');
             }
 
             $currentData = $tenant->data ?? [];
-            
+
             $tenantData = [
                 'name' => $data['name'],
                 'current_project' => $data['current_project'] ?? $tenant->current_project,
@@ -77,7 +81,7 @@ class TenantService
     private function createDomain($tenant, string $subdomain): void
     {
         $domain = $subdomain . '.' . config('app.domain', 'localhost');
-        
+
         $tenant->domains()->create([
             'domain' => $domain,
             'subdomain' => $subdomain,
@@ -190,8 +194,8 @@ class TenantService
      */
     private function setupDefaultSettings($tenant): void
     {
-        // Lógica para crear configuraciones por defecto
-        // Ejemplo: crear roles, permisos, configuraciones, etc.
+        //TODO: Lógica para crear configuraciones por defecto
+        //Ejemplo: crear roles, permisos, configuraciones, etc.
     }
 
     /**

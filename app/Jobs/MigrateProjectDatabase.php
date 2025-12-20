@@ -41,10 +41,10 @@ class MigrateProjectDatabase implements ShouldQueue
             foreach ($paths as $pathInfo) {
                 $path = $pathInfo['path'];
                 $type = $pathInfo['type'];
-                
+
                 if (file_exists($path)) {
                     Log::info("Ejecutando migraciones [{$type}] desde: {$path}");
-                    
+
                     $exitCode = Artisan::call('migrate', [
                         '--path' => $path,
                         '--force' => true,
@@ -71,8 +71,8 @@ class MigrateProjectDatabase implements ShouldQueue
     protected function getMigrationPaths(Tenant $tenant): array
     {
         $paths = [];
-        
-        // 1. Siempre incluir migraciones Common
+
+        //Siempre incluir migraciones Common
         $commonPath = database_path('migrations/projects/Common');
         if (file_exists($commonPath)) {
             $paths[] = [
@@ -81,7 +81,7 @@ class MigrateProjectDatabase implements ShouldQueue
             ];
         }
 
-        // 2. Incluir migraciones del proyecto específico si está definido
+        // migraciones del proyecto específico si está definido
         if (!empty($tenant->current_project)) {
             $projectPath = $this->getProjectMigrationPath($tenant->current_project);
             if ($projectPath && file_exists($projectPath)) {
@@ -101,13 +101,13 @@ class MigrateProjectDatabase implements ShouldQueue
     protected function getProjectMigrationPath(string $projectPrefix): ?string
     {
         $projects = ProjectManager::getProjects();
-        
+
         /** @var class-string<ProjectInterface> $projectClass */
         foreach ($projects as $projectClass) {
             if ($projectClass::getPrefix() === $projectPrefix) {
                 $projectInstance = new $projectClass();
                 $migrationFolder = $projectInstance->getPathMigration();
-                
+
                 if (!empty($migrationFolder)) {
                     return database_path("migrations/projects/{$migrationFolder}");
                 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Projects\ActivitiesBoard\Http\Controller\Auth\AuthController as AuthControllerAct;
 use App\Projects\ActivitiesBoard\Adapters\Admin\ActivityAdmin;
 use App\Projects\ActivitiesBoard\Adapters\Admin\UserAdmin as ActivitiesBoardUserAdmin;
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
@@ -19,6 +20,6 @@ return [
     ],
     'activities-board' => [
         'admins' => [ActivityAdmin::class, ActivitiesBoardUserAdmin::class],
-        'controllers' => [],
+        'controllers' => [AuthControllerAct::class],
     ],
 ];

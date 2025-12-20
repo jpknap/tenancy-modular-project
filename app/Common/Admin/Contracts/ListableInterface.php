@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Module\Admin\Contracts;
+namespace App\Common\Admin\Contracts;
 
 interface ListableInterface
 {

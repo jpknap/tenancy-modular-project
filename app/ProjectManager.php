@@ -39,6 +39,9 @@ class ProjectManager
 
     public static function setCurrentProject(ProjectInterface $project): void
     {
+        if(null != self::$currentProject) {
+            return;
+        }
         self::$currentProject = $project;
     }
 
