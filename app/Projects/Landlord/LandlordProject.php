@@ -6,6 +6,7 @@ use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Contracts\ProjectInterface;
 use App\DTO\Endpoint;
 use App\DTO\Menu\MenuBuilder;
+use App\Projects\Landlord\Providers\LandlordServiceProvider;
 use App\Projects\Landlord\Services\MenuBuilderService;
 use App\Services\EndpointProcessor;
 
@@ -19,7 +20,20 @@ class LandlordProject implements ProjectInterface
 
     public function init(): void
     {
+        $this->registerServiceProvider();
         $this->initMenu();
+    }
+
+    /**
+     * Registrar el ServiceProvider del proyecto
+     */
+    private function registerServiceProvider(): void
+    {
+        $app = app();
+        
+        if (!$app->providerIsLoaded(LandlordServiceProvider::class)) {
+            $app->register(LandlordServiceProvider::class);
+        }
     }
 
     public static function getTitle(): string

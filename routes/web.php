@@ -14,7 +14,7 @@ Route::middleware([
     ProjectInitialized::class,
 ])->group(function () {
     $routes = LandlordProject::getEndpoints();
-    
+
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
         $route = Route::$httpMethod($endpoint->path, [$endpoint->controller, $endpoint->method]);
@@ -41,10 +41,9 @@ Route::middleware([
     ProjectInitialized::class,
 ])->group(function () {
     $routes = [
-        ...SportCompetitionProject::getEndpoints(),
         ...ActivitiesBoardProject::getEndpoints(),
     ];
-    
+
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
         $route = Route::$httpMethod($endpoint->path, [$endpoint->controller, $endpoint->method]);

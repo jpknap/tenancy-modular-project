@@ -6,6 +6,7 @@ use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Contracts\ProjectInterface;
 use App\DTO\Endpoint;
 use App\DTO\Menu\MenuBuilder;
+use App\Projects\SportCompetition\Providers\SportCompetitionServiceProvider;
 use App\Projects\SportCompetition\Services\MenuBuilderService;
 use App\Services\EndpointProcessor;
 
@@ -19,7 +20,20 @@ class SportCompetitionProject implements ProjectInterface
 
     public function init(): void
     {
+        $this->registerServiceProvider();
         $this->initMenu();
+    }
+
+    /**
+     * Registrar el ServiceProvider del proyecto
+     */
+    private function registerServiceProvider(): void
+    {
+        $app = app();
+        
+        if (!$app->providerIsLoaded(SportCompetitionServiceProvider::class)) {
+            $app->register(SportCompetitionServiceProvider::class);
+        }
     }
 
     public static function getTitle(): string
