@@ -2,6 +2,7 @@
 
 namespace App\Common\Admin\Controller;
 
+use App\Attributes\Middleware;
 use App\Attributes\Route;
 use App\Attributes\RoutePrefix;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 #[RoutePrefix('admin')]
+#[Middleware(['auth.landlord'])]
 abstract class AdminController extends Controller
 {
     public function __construct(

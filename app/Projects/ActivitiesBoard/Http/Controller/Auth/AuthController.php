@@ -2,49 +2,22 @@
 
 namespace App\Projects\ActivitiesBoard\Http\Controller\Auth;
 
-use App\Attributes\Route;
-use App\Attributes\RoutePrefix;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Common\Http\Controller\Auth\BaseAuthController;
 
-#[RoutePrefix('auth')]
-class AuthController extends Controller
+class AuthController extends BaseAuthController
 {
-    #[Route('/login', methods: ['GET'], name: 'login')]
-    public function showLogin()
+    protected function guard(): string
     {
-        return view('activities-board.auth.login');
+        return 'web';
     }
 
-    #[Route('/login', methods: ['POST'], name: 'login.post')]
-    public function login(Request $request)
+    protected function loginView(): string
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::guard('web')->attempt($credentials)) {
-            $request->session()
-                ->regenerate();
-            return redirect()->intended('/activities-board/admin/users/list');
-        }
-
-        return back()->withErrors([
-            'email' => 'Las credenciales no son correctas.',
-        ]);
+        return 'activities-board.auth.login';
     }
 
-    #[Route('/logout', methods: ['POST'], name: 'logout')]
-    public function logout(Request $request)
+    protected function defaultRedirect(): string
     {
-        Auth::guard('web')->logout();
-        $request->session()
-            ->invalidate();
-        $request->session()
-            ->regenerateToken();
-
-        return redirect('/activities-board/auth/login');
+        return '/activities-board/admin/users/list';
     }
 }

@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'auth.landlord' => \App\Http\Middleware\EnsureAuthenticated::class . ':landlord',
+            'auth.tenant'   => \App\Http\Middleware\EnsureAuthenticated::class . ':web',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

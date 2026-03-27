@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Attributes\Middleware;
 use App\Attributes\Route;
 use App\Attributes\RoutePrefix;
+use App\Attributes\Where;
 use App\DTO\Endpoint;
 use ReflectionClass;
 use ReflectionMethod;
@@ -35,6 +37,7 @@ class EndpointProcessor
                 controllerClass: $controllerClass,
                 projectPrefix: $projectPrefix,
                 classPrefix: $classPrefix,
+                classMiddleware: $this->getClassMiddleware($reflection),
             );
             $endpoints = array_merge($endpoints, $controllerEndpoints);
         }
@@ -104,8 +107,23 @@ class EndpointProcessor
     }
 
     /**
-     * Obtiene middleware de clase con herencia
+     * Obtiene middleware de clase con herencia (padre → hijo)
      */
+    private function getClassMiddleware(ReflectionClass $reflection): array
+    {
+        $middleware = [];
+        $current = $reflection;
+
+        while ($current) {
+            $attributes = $current->getAttributes(Middleware::class);
+            foreach ($attributes as $attr) {
+                $middleware = array_merge($attr->newInstance()->middleware, $middleware);
+            }
+            $current = $current->getParentClass();
+        }
+
+        return array_unique($middleware);
+    }
 
     /**
      * Obtiene middleware de método
