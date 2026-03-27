@@ -2,49 +2,28 @@
 
 namespace App\Projects\SportCompetition\Http\Controller\Auth;
 
-use App\Attributes\Route;
-use App\Attributes\RoutePrefix;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Common\Http\Controller\Auth\BaseAuthController;
+use App\Projects\SportCompetition\Enums\Routes;
 
-#[RoutePrefix('auth')]
-class AuthController extends Controller
+class AuthController extends BaseAuthController
 {
-    #[Route('/login', methods: ['GET'], name: 'login')]
-    public function showLogin()
+    protected function guard(): string
     {
-        return view('sport-competition.auth.login');
+        return 'web';
     }
 
-    #[Route('/login', methods: ['POST'], name: 'login.post')]
-    public function login(Request $request)
+    protected function loginView(): string
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::guard('web')->attempt($credentials)) {
-            $request->session()
-                ->regenerate();
-            return redirect()->intended('/sport-competition/admin/users/list');
-        }
-
-        return back()->withErrors([
-            'email' => 'Las credenciales no son correctas.',
-        ]);
+        return 'sport-competition.auth.login';
     }
 
-    #[Route('/logout', methods: ['POST'], name: 'logout')]
-    public function logout(Request $request)
+    protected function defaultRedirectRoute(): string
     {
-        Auth::guard('web')->logout();
-        $request->session()
-            ->invalidate();
-        $request->session()
-            ->regenerateToken();
+        return Routes::UserList->value;
+    }
 
-        return redirect('/sport-competition/auth/login');
+    protected function loginRoute(): string
+    {
+        return Routes::Login->value;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Projects\Landlord\Http\Controller\Auth;
 
 use App\Common\Http\Controller\Auth\BaseAuthController;
+use App\Projects\Landlord\Enums\Routes;
 
 class AuthController extends BaseAuthController
 {
@@ -16,8 +17,13 @@ class AuthController extends BaseAuthController
         return 'landlord.auth.login';
     }
 
-    protected function defaultRedirect(): string
+    protected function defaultRedirectRoute(): string
     {
-        return '/landlord/admin/tenant/list';
+        return Routes::TenantList->value;
+    }
+
+    protected function loginRoute(): string
+    {
+        return Routes::Login->value;
     }
 }

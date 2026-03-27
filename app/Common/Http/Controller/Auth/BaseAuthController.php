@@ -23,9 +23,19 @@ abstract class BaseAuthController extends Controller
     abstract protected function loginView(): string;
 
     /**
-     * Ruta de redirección tras login exitoso (e.g., '/landlord/admin/tenant/list')
+     * Nombre de ruta nombrada para redirección tras login exitoso (e.g., 'landlord.admin.tenants.list')
      */
-    abstract protected function defaultRedirect(): string;
+    abstract protected function defaultRedirectRoute(): string;
+
+    /**
+     * Nombre de ruta nombrada para redirección tras logout (e.g., 'landlord.auth.login')
+     */
+    abstract protected function loginRoute(): string;
+
+    protected function defaultRedirect(): string
+    {
+        return route($this->defaultRedirectRoute());
+    }
 
     #[Route('/login', methods: ['GET'], name: 'login')]
     public function showLogin(): mixed
@@ -63,18 +73,6 @@ abstract class BaseAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect($this->loginUrl());
-    }
-
-    /**
-     * URL del login para redirección post-logout.
-     * Por defecto deriva la URL a partir del defaultRedirect().
-     * Las subclases pueden sobreescribir si la ruta difiere del patrón.
-     */
-    protected function loginUrl(): string
-    {
-        $parts = explode('/', trim($this->defaultRedirect(), '/'));
-
-        return '/' . $parts[0] . '/auth/login';
+        return redirect(route($this->loginRoute()));
     }
 }

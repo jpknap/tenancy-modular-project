@@ -16,7 +16,7 @@ class LandlordProject implements ProjectInterface
 
     private static string $title = 'Landlord';
 
-    private MenuBuilder $menuBuilder;
+private MenuBuilder $menuBuilder;
 
     public function init(): void
     {

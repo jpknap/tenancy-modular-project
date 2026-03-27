@@ -3,6 +3,7 @@
 namespace App\Projects\ActivitiesBoard\Http\Controller\Auth;
 
 use App\Common\Http\Controller\Auth\BaseAuthController;
+use App\Projects\ActivitiesBoard\Enums\Routes;
 
 class AuthController extends BaseAuthController
 {
@@ -16,8 +17,13 @@ class AuthController extends BaseAuthController
         return 'activities-board.auth.login';
     }
 
-    protected function defaultRedirect(): string
+    protected function defaultRedirectRoute(): string
     {
-        return '/activities-board/admin/users/list';
+        return Routes::UserList->value;
+    }
+
+    protected function loginRoute(): string
+    {
+        return Routes::Login->value;
     }
 }

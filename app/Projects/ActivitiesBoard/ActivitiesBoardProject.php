@@ -16,7 +16,7 @@ class ActivitiesBoardProject implements ProjectInterface
 
     private static string $title = 'Activities Board';
 
-    private MenuBuilder $menuBuilder;
+private MenuBuilder $menuBuilder;
 
     public function init(): void
     {
