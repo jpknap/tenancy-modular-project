@@ -59,7 +59,16 @@
                     <li><a class="dropdown-item py-2" href="#"><i class="bi bi-gear me-2"></i>Configuración</a></li>
                     <li><a class="dropdown-item py-2" href="#"><i class="bi bi-question-circle me-2"></i>Ayuda</a></li>
                     <li><hr class="dropdown-divider my-1"></li>
-                    <li><a class="dropdown-item py-2 text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a></li>
+                    @if($topbarData['logoutUrl'])
+                    <li>
+                        <form method="POST" action="{{ $topbarData['logoutUrl'] }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item py-2 text-danger border-0 bg-transparent w-100 text-start">
+                                <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                            </button>
+                        </form>
+                    </li>
+                    @endif
                 </ul>
             </div>
         @endif
