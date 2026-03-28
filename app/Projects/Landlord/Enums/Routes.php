@@ -4,6 +4,9 @@ namespace App\Projects\Landlord\Enums;
 
 enum Routes: string
 {
+    // Profile
+    case ProfileEdit = 'landlord.profile.edit';
+
     // Auth
     case Login     = 'landlord.auth.login';
     case LoginPost = 'landlord.auth.login.post';

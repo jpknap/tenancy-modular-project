@@ -5,13 +5,13 @@ namespace App\Common\Admin\Enum;
 enum FormContextEnum: string
 {
     case CREATE = 'create';
-    case EDIT = 'edit';
+    case EDIT   = 'edit';
 
     public function label(): string
     {
         return match ($this) {
             self::CREATE => 'Crear',
-            self::EDIT => 'Editar',
+            self::EDIT   => 'Editar',
         };
     }
 
@@ -23,5 +23,10 @@ enum FormContextEnum: string
     public function isEdit(): bool
     {
         return $this === self::EDIT;
+    }
+
+    public function isCustom(): bool
+    {
+        return ! $this->isCreate() && ! $this->isEdit();
     }
 }

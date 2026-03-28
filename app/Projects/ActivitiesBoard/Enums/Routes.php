@@ -4,6 +4,9 @@ namespace App\Projects\ActivitiesBoard\Enums;
 
 enum Routes: string
 {
+    // Profile
+    case ProfileEdit = 'activities-board.profile.edit';
+
     // Auth
     case Login     = 'activities-board.auth.login';
     case LoginPost = 'activities-board.auth.login.post';

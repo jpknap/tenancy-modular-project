@@ -55,7 +55,7 @@
                     </li>
                     
                     {{-- Menu Items --}}
-                    <li><a class="dropdown-item py-2" href="#"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                    <li><a class="dropdown-item py-2" href="{{ $topbarData['profileUrl'] ?? '#' }}"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
                     <li><a class="dropdown-item py-2" href="#"><i class="bi bi-gear me-2"></i>Configuración</a></li>
                     <li><a class="dropdown-item py-2" href="#"><i class="bi bi-question-circle me-2"></i>Ayuda</a></li>
                     <li><hr class="dropdown-divider my-1"></li>

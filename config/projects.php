@@ -6,13 +6,15 @@ use App\Projects\ActivitiesBoard\Adapters\Admin\UserAdmin as ActivitiesBoardUser
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
 use App\Projects\Landlord\Adapters\Admin\UserAdmin;
 use App\Projects\Landlord\Http\Controller\Auth\AuthController;
+use App\Projects\Landlord\Http\Controller\ProfileController as LandlordProfileController;
+use App\Projects\ActivitiesBoard\Http\Controller\ProfileController as ActivitiesBoardProfileController;
 use App\Projects\SportCompetition\Adapters\Admin\UserAdmin as SportCompetitionUserAdmin;
 use App\Projects\SportCompetition\Http\Controller\Auth\AuthController as SportCompetitionAuthController;
 
 return [
     'landlord' => [
         'admins' => [UserAdmin::class, TenantAdmin::class],
-        'controllers' => [AuthController::class],
+        'controllers' => [AuthController::class, LandlordProfileController::class],
     ],
     'sport-competition' => [
         'admins' => [SportCompetitionUserAdmin::class],
@@ -20,6 +22,6 @@ return [
     ],
     'activities-board' => [
         'admins' => [ActivityAdmin::class, ActivitiesBoardUserAdmin::class],
-        'controllers' => [AuthControllerAct::class],
+        'controllers' => [AuthControllerAct::class, ActivitiesBoardProfileController::class],
     ],
 ];
