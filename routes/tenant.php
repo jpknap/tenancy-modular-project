@@ -1,19 +1,35 @@
 <?php
 
-declare(strict_types=1);
-
+// Rutas de Tenants (subdominios de tenant)
 use App\Http\Middleware\ProjectInitialized;
-use Illuminate\Support\Facades\Route;
+use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
-    ProjectInitialized::class,
     PreventAccessFromCentralDomains::class,
+    ProjectInitialized::class,
 ])->group(function () {
-    Route::get('/', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
-    });
+    $routes = [
+        ...ActivitiesBoardProject::getEndpoints(),
+    ];
+
+    foreach ($routes as $endpoint) {
+        $httpMethod = $endpoint->getPrimaryHttpMethod();
+        $route = Route::$httpMethod($endpoint->path, [$endpoint->controller, $endpoint->method]);
+
+        if ($endpoint->name) {
+            $route->name($endpoint->name);
+        }
+
+        if (! empty($endpoint->middleware)) {
+            $route->middleware($endpoint->middleware);
+        }
+
+        if (! empty($endpoint->where)) {
+            $route->where($endpoint->where);
+        }
+    }
 });

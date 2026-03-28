@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        $this->call(TenantsSeeder::class);
+        // $this->call(TenantsSeeder::class);  // Deshabilitado: los tenants se crean desde el admin
         $this->call(TenantUsersSeeder::class);
     }
 }

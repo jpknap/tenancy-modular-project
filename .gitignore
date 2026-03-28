@@ -47,6 +47,10 @@ composer.phar
 /public/storage
 # (mantén los .gitignore dentro de storage/ para preservar carpetas vacías)
 
+# --- Windsurf ---
+.windsurf/
+.windsurf*
+
 # --- Node / Vite ---
 /node_modules/
 /pnpm-lock.yaml
