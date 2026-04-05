@@ -3,7 +3,7 @@
 **Track:** timezone-config
 **Proyecto:** landlord
 **Prioridad:** medium
-**Estado:** backlog
+**Estado:** done
 **Ref plan:** SF-05
 **Depende de:** 01
 **Sinergia:** Comparte implementación con language-config SF-03. Si ese track ya creó la sección, solo agregar el campo timezone aquí.

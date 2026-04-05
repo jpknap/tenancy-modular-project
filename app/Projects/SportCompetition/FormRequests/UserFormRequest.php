@@ -30,6 +30,9 @@ class UserFormRequest extends BaseFormRequest
             ])
             ->checkbox('enabled', 'Usuario Activo', [
                 'checked' => true,
+            ])
+            ->select('timezone', 'Zona Horaria', timezone_options(withBlank: true), [
+                'help' => 'Si no se selecciona, hereda la zona horaria del tenant',
             ]);
     }
 
@@ -46,7 +49,10 @@ class UserFormRequest extends BaseFormRequest
                 'placeholder' => 'correo@ejemplo.com',
                 'required' => true,
             ])
-            ->checkbox('enabled', 'Usuario Activo');
+            ->checkbox('enabled', 'Usuario Activo')
+            ->select('timezone', 'Zona Horaria', timezone_options(withBlank: true), [
+                'help' => 'Si no se selecciona, hereda la zona horaria del tenant',
+            ]);
     }
 
     public function rules(): array
@@ -61,7 +67,8 @@ class UserFormRequest extends BaseFormRequest
                 'max:255',
                 $userId ? "unique:users,email,{$userId}" : 'unique:users,email'
             ],
-            'enabled' => ['nullable', 'boolean'],
+            'enabled'  => ['nullable', 'boolean'],
+            'timezone' => ['nullable', 'string', 'timezone:all'],
         ];
 
         if ($this->isCreating()) {

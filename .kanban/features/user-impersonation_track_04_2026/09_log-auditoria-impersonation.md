@@ -1,3 +1,5 @@
+
+
 # 09 — Log de auditoría de suplantaciones
 
 **Track:** user-impersonation

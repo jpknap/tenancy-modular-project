@@ -28,6 +28,9 @@ class UserFormRequest extends BaseFormRequest
             ->password('password_confirmation', 'Confirmar Contraseña', [
                 'placeholder' => '********',
                 'required' => true,
+            ])
+            ->select('timezone', 'Zona Horaria', timezone_options(withBlank: true), [
+                'help' => 'Si no se selecciona, hereda la zona horaria del tenant',
             ]);
     }
 
@@ -52,6 +55,9 @@ class UserFormRequest extends BaseFormRequest
             ->password('password_confirmation', 'Confirmar Contraseña', [
                 'placeholder' => '********',
                 'required' => false,
+            ])
+            ->select('timezone', 'Zona Horaria', timezone_options(withBlank: true), [
+                'help' => 'Si no se selecciona, hereda la zona horaria del tenant',
             ]);
     }
 
@@ -69,6 +75,8 @@ class UserFormRequest extends BaseFormRequest
                 $userId ? "unique:users,email,{$userId}" : 'unique:users,email'
             ],
         ];
+
+        $rules['timezone'] = ['nullable', 'string', 'timezone:all'];
 
         if ($isEditing) {
             $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];

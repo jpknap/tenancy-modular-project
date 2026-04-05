@@ -3,7 +3,7 @@
 **Track:** timezone-config
 **Proyecto:** core
 **Prioridad:** high
-**Estado:** backlog
+**Estado:** done
 **Ref plan:** SF-02
 
 ## Qué hacer

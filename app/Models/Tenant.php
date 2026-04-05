@@ -18,6 +18,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'name',
         'identifier',
         'current_project',
+        'timezone',
         'data',
     ];
 
@@ -32,6 +33,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'name',
             'identifier',
             'current_project',
+            'timezone',
         ];
     }
 }

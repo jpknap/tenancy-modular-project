@@ -62,6 +62,10 @@ class TenantFormRequest extends BaseFormRequest
                 'required' => true,
                 'help' => 'Seleccione el proyecto que utilizará este tenant',
             ])
+            ->select('timezone', 'Zona Horaria', timezone_options(), [
+                'required' => true,
+                'help' => 'Zona horaria predeterminada para todos los usuarios del tenant',
+            ])
             ->textarea('description', 'Descripción', [
                 'placeholder' => 'Información adicional sobre el cliente (opcional)',
                 'rows' => 3,
@@ -98,6 +102,10 @@ class TenantFormRequest extends BaseFormRequest
                 'required' => true,
                 'help' => 'Seleccione el proyecto que utilizará este tenant',
             ])
+            ->select('timezone', 'Zona Horaria', timezone_options(), [
+                'required' => true,
+                'help' => 'Zona horaria predeterminada para todos los usuarios del tenant',
+            ])
             ->textarea('description', 'Descripción', [
                 'placeholder' => 'Información adicional sobre el cliente (opcional)',
                 'rows' => 3,
@@ -133,7 +141,8 @@ class TenantFormRequest extends BaseFormRequest
             'email' => ['required', 'email', 'max:255'],
             'status' => ['required', 'in:active,inactive,pending'],
             'current_project' => ['required', 'string', 'max:255', Rule::in($validProjects)],
-            'description' => ['nullable', 'string', 'max:1000'],
+            'timezone'        => ['required', 'string', 'timezone:all'],
+            'description'     => ['nullable', 'string', 'max:1000'],
         ];
 
         return $rules;

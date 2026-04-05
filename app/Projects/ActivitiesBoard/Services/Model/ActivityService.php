@@ -16,6 +16,8 @@ class ActivityService
     public function create(array $data)
     {
         return $this->transactionService->execute(function () use ($data) {
+            // Fechas datetime deben llegar ya convertidas a UTC desde el FormRequest.
+            // La BD siempre almacena UTC. Ver ActivityFormRequest para la conversión.
             return $this->activityRepository->create($data);
         });
     }

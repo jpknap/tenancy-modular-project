@@ -3,6 +3,7 @@
 namespace App\Projects\Landlord\Adapters\Admin;
 
 use App\Common\Admin\Adapter\AdminBaseAdapter;
+use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
 use App\Models\User;
 use App\Projects\Landlord\Http\Controller\Admin\UserAdminController;
@@ -114,6 +115,15 @@ class UserAdmin extends AdminBaseAdapter
         $config->emptyMessage('No hay usuarios registrados');
 
         return $config;
+    }
+
+    public function getEditViewConfig(mixed $item): EditViewConfig
+    {
+        if (! $item->timezone) {
+            $item->timezone = resolve_tenant_timezone();
+        }
+
+        return parent::getEditViewConfig($item);
     }
 
     protected function getDeleteDisplayFields(): array

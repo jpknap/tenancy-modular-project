@@ -3,7 +3,7 @@
 **Track:** timezone-config
 **Proyecto:** activities-board
 **Prioridad:** medium
-**Estado:** backlog
+**Estado:** done
 **Ref plan:** SF-06
 **Depende de:** 01, 02
 

@@ -95,6 +95,10 @@ class UserAdmin extends AdminBaseAdapter
 
     public function getEditViewConfig(mixed $item): EditViewConfig
     {
+        if (! $item->timezone) {
+            $item->timezone = resolve_tenant_timezone();
+        }
+
         $config = parent::getEditViewConfig($item);
         $config->title('Editar Usuario: ' . $item->name)->submitLabel('Actualizar Usuario');
         return $config;
