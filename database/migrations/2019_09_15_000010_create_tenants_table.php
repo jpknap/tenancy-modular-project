@@ -20,6 +20,7 @@ class CreateTenantsTable extends Migration
                 ->unique();
             $table->timestamps();
             $table->string('current_project');
+            $table->string('timezone', 50)->default('UTC');
             $table->json('data')
                 ->nullable();
         });
