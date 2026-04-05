@@ -4,7 +4,6 @@ namespace App\Common\Http\Requests;
 
 use App\Common\Admin\Form\BaseFormRequest;
 use App\Common\Admin\Form\FormBuilder;
-use Illuminate\Support\Facades\Auth;
 
 class ProfileFormRequest extends BaseFormRequest
 {
@@ -34,7 +33,10 @@ class ProfileFormRequest extends BaseFormRequest
 
     public function rules(): array
     {
-        $userId = Auth::id();
+        $userId = collect(array_keys(config('auth.guards')))
+            ->map(fn ($guard) => auth()->guard($guard)->id())
+            ->filter()
+            ->first();
 
         return [
             'name'  => ['required', 'string', 'max:255'],
