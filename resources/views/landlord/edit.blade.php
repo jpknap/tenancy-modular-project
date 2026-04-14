@@ -48,6 +48,11 @@
                     $fieldName = $field['name'];
                     $fieldValue = old($fieldName, data_get($config->getItem(), $fieldName));
                     $field['value'] = $fieldValue;
+
+                    // Verificar si el campo debe ser visible basado en permisos
+                    if (isset($field['options']['can']) && !auth()->user()?->can($field['options']['can'])) {
+                        continue;
+                    }
                 @endphp
                 <x-form.field :field="$field" />
             @endforeach

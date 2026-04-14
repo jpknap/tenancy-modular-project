@@ -63,6 +63,11 @@ class UserAdmin extends AdminBaseAdapter
                 'sortable' => true,
                 'searchable' => true,
             ],
+            'role' => [
+                'label' => 'Rol',
+                'sortable' => false,
+                'value_resolver' => fn ($user) => $user->getRoleNames()->first() ?? 'Sin rol',
+            ],
             'created_at' => [
                 'label' => 'Fecha Registro',
                 'format' => 'datetime',

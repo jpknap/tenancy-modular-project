@@ -4,6 +4,7 @@ namespace App\Projects\ActivitiesBoard\FormRequests;
 
 use App\Common\Admin\Form\BaseFormRequest;
 use App\Common\Admin\Form\FormBuilder;
+use App\Enums\UserRole;
 
 class UserFormRequest extends BaseFormRequest
 {
@@ -52,7 +53,8 @@ class UserFormRequest extends BaseFormRequest
             ->password('password_confirmation', 'Confirmar Contraseña', [
                 'placeholder' => '********',
                 'required' => false,
-            ]);
+            ])
+            ->select('role', 'Rol', UserRole::options(), ['required' => false, 'can' => 'roles:assign']);
     }
 
     public function rules(): array
@@ -72,6 +74,7 @@ class UserFormRequest extends BaseFormRequest
 
         if ($isEditing) {
             $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];
+            $rules['role'] = ['nullable', 'string', 'in:' . implode(',', UserRole::values())];
         } else {
             $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
         }
