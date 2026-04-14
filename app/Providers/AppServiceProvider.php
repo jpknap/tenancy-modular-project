@@ -7,6 +7,7 @@ use App\Common\Repository\Service\TransactionService;
 use App\Common\Services\AlertManager;
 use App\Http\View\Composers\SidebarComposer;
 use App\Http\View\Composers\TopbarComposer;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,6 +36,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::before(function ($user, $ability) {
+            if (method_exists($user, 'hasRole') && $user->hasRole('superadmin')) {
+                return true;
+            }
+
+            return null;
+        });
+
         View::composer('partials.sidebar-menu', SidebarComposer::class);
         View::composer('partials.top-bar', TopbarComposer::class);
     }
