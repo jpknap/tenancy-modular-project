@@ -194,8 +194,9 @@ class TenantService
      */
     private function setupDefaultSettings($tenant): void
     {
-        //TODO: Lógica para crear configuraciones por defecto
-        //Ejemplo: crear roles, permisos, configuraciones, etc.
+        $tenant->run(function () {
+            (new \Database\Seeders\RolesAndPermissionsSeeder())->run();
+        });
     }
 
     /**
