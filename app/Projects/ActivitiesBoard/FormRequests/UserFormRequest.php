@@ -4,6 +4,7 @@ namespace App\Projects\ActivitiesBoard\FormRequests;
 
 use App\Common\Admin\Form\BaseFormRequest;
 use App\Common\Admin\Form\FormBuilder;
+use App\Enums\UserRole;
 
 class UserFormRequest extends BaseFormRequest
 {
@@ -59,6 +60,8 @@ class UserFormRequest extends BaseFormRequest
             ->select('timezone', 'Zona Horaria', timezone_options(withBlank: true), [
                 'help' => 'Si no se selecciona, hereda la zona horaria del tenant',
             ]);
+            ])
+            ->select('role', 'Rol', UserRole::options(), ['required' => false, 'can' => 'roles:assign']);
     }
 
     public function rules(): array
@@ -80,6 +83,7 @@ class UserFormRequest extends BaseFormRequest
 
         if ($isEditing) {
             $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];
+            $rules['role'] = ['nullable', 'string', 'in:' . implode(',', UserRole::values())];
         } else {
             $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
         }
