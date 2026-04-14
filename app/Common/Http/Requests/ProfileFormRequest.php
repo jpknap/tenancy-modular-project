@@ -4,6 +4,7 @@ namespace App\Common\Http\Requests;
 
 use App\Common\Admin\Form\BaseFormRequest;
 use App\Common\Admin\Form\FormBuilder;
+use App\Common\Services\LocaleService;
 
 class ProfileFormRequest extends BaseFormRequest
 {
@@ -28,6 +29,9 @@ class ProfileFormRequest extends BaseFormRequest
             ->email('email', 'Correo electrónico', [
                 'placeholder' => 'correo@ejemplo.com',
                 'required'    => true,
+            ])
+            ->select('locale', 'Idioma preferido', LocaleService::options(), [
+                'help' => 'Idioma de la interfaz para tu sesión',
             ]);
     }
 
@@ -39,8 +43,9 @@ class ProfileFormRequest extends BaseFormRequest
             ->first();
 
         return [
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', "unique:users,email,{$userId}"],
+            'name'   => ['required', 'string', 'max:255'],
+            'email'  => ['required', 'email', 'max:255', "unique:users,email,{$userId}"],
+            'locale' => ['nullable', 'string', 'in:es,en,pt'],
         ];
     }
 
@@ -56,8 +61,9 @@ class ProfileFormRequest extends BaseFormRequest
     public function attributes(): array
     {
         return [
-            'name'  => 'nombre',
-            'email' => 'correo electrónico',
+            'name'   => 'nombre',
+            'email'  => 'correo electrónico',
+            'locale' => 'idioma',
         ];
     }
 }

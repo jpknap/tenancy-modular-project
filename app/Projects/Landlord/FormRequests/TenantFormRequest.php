@@ -4,8 +4,9 @@ namespace App\Projects\Landlord\FormRequests;
 
 use App\Common\Admin\Form\BaseFormRequest;
 use App\Common\Admin\Form\FormBuilder;
-use App\ProjectManager;
+use App\Common\Services\LocaleService;
 use App\Contracts\ProjectInterface;
+use App\ProjectManager;
 use Illuminate\Validation\Rule;
 
 class TenantFormRequest extends BaseFormRequest
@@ -15,11 +16,7 @@ class TenantFormRequest extends BaseFormRequest
      */
     private function getAvailableLocales(): array
     {
-        return [
-            'es' => 'Español',
-            'en' => 'English',
-            'pt' => 'Português',
-        ];
+        return LocaleService::options();
     }
 
     private function getAvailableProjects(): array
@@ -159,7 +156,7 @@ class TenantFormRequest extends BaseFormRequest
             'status' => ['required', 'in:active,inactive,pending'],
             'current_project' => ['required', 'string', 'max:255', Rule::in($validProjects)],
             'timezone'        => ['required', 'string', 'timezone:all'],
-            'locale'          => ['required', 'string', 'in:es,en,pt'],
+            'locale'          => ['required', 'string', 'in:' . implode(',', LocaleService::SUPPORTED)],
             'description'     => ['nullable', 'string', 'max:1000'],
         ];
 
