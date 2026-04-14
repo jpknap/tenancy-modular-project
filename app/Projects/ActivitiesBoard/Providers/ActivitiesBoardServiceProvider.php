@@ -10,6 +10,7 @@ use App\Projects\ActivitiesBoard\Repositories\ActivityRepository;
 use App\Projects\ActivitiesBoard\Repositories\UserRepository;
 use App\Projects\ActivitiesBoard\Services\Model\ActivityService;
 use App\Projects\ActivitiesBoard\Services\Model\UserService;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class ActivitiesBoardServiceProvider extends ServiceProvider
@@ -31,7 +32,13 @@ class ActivitiesBoardServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::before(function ($user, $ability) {
+            if (method_exists($user, 'hasRole') && $user->hasRole('superadmin')) {
+                return true;
+            }
+
+            return null;
+        });
     }
 
     /**
