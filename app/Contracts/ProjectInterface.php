@@ -14,4 +14,6 @@ interface ProjectInterface
 
     public function getMenuBuilder(): MenuBuilder;
     public function getPathMigration(): string;
+
+    public function getLangPath(): string;
 }

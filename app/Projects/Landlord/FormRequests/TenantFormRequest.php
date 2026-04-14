@@ -13,6 +13,15 @@ class TenantFormRequest extends BaseFormRequest
     /**
      * Obtener proyectos disponibles (excluyendo landlord)
      */
+    private function getAvailableLocales(): array
+    {
+        return [
+            'es' => 'Español',
+            'en' => 'English',
+            'pt' => 'Português',
+        ];
+    }
+
     private function getAvailableProjects(): array
     {
         $projects = ProjectManager::getProjects();
@@ -66,6 +75,10 @@ class TenantFormRequest extends BaseFormRequest
                 'required' => true,
                 'help' => 'Zona horaria predeterminada para todos los usuarios del tenant',
             ])
+            ->select('locale', 'Idioma', $this->getAvailableLocales(), [
+                'required' => true,
+                'help' => 'Idioma predeterminado de la interfaz para este tenant',
+            ])
             ->textarea('description', 'Descripción', [
                 'placeholder' => 'Información adicional sobre el cliente (opcional)',
                 'rows' => 3,
@@ -106,6 +119,10 @@ class TenantFormRequest extends BaseFormRequest
                 'required' => true,
                 'help' => 'Zona horaria predeterminada para todos los usuarios del tenant',
             ])
+            ->select('locale', 'Idioma', $this->getAvailableLocales(), [
+                'required' => true,
+                'help' => 'Idioma predeterminado de la interfaz para este tenant',
+            ])
             ->textarea('description', 'Descripción', [
                 'placeholder' => 'Información adicional sobre el cliente (opcional)',
                 'rows' => 3,
@@ -142,6 +159,7 @@ class TenantFormRequest extends BaseFormRequest
             'status' => ['required', 'in:active,inactive,pending'],
             'current_project' => ['required', 'string', 'max:255', Rule::in($validProjects)],
             'timezone'        => ['required', 'string', 'timezone:all'],
+            'locale'          => ['required', 'string', 'in:es,en,pt'],
             'description'     => ['nullable', 'string', 'max:1000'],
         ];
 
@@ -161,6 +179,8 @@ class TenantFormRequest extends BaseFormRequest
             'status.in' => 'El estado seleccionado no es válido',
             'current_project.required' => 'Debe seleccionar un proyecto',
             'current_project.in' => 'El proyecto seleccionado no es válido',
+            'locale.required'    => 'Debe seleccionar un idioma',
+            'locale.in'          => 'El idioma seleccionado no es válido',
         ];
     }
 
@@ -173,6 +193,7 @@ class TenantFormRequest extends BaseFormRequest
             'status' => 'estado',
             'current_project' => 'proyecto',
             'description' => 'descripción',
+            'locale'      => 'idioma',
         ];
     }
 }

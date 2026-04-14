@@ -22,6 +22,7 @@ private MenuBuilder $menuBuilder;
     {
         $this->registerServiceProvider();
         $this->initMenu();
+        $this->registerTranslations();
     }
 
     /**
@@ -78,5 +79,15 @@ private MenuBuilder $menuBuilder;
     public function getPathMigration(): string
     {
         return "";
+    }
+
+    public function getLangPath(): string
+    {
+        return lang_path('projects/landlord');
+    }
+
+    private function registerTranslations(): void
+    {
+        app('translator')->addNamespace(static::$prefix, $this->getLangPath());
     }
 }

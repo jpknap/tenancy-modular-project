@@ -161,6 +161,8 @@ class TenantAdmin extends AdminBaseAdapter
         $itemData['description'] = $item->data['description'] ?? '';
         $itemData['subdomain'] = $item->domains->first()->subdomain ?? '';
         $itemData['current_project'] = $item->current_project ?? '';
+        $itemData['timezone'] = $item->timezone ?? 'UTC';
+        $itemData['locale'] = $item->locale ?? 'es';
 
         $config
             ->title('Editar Cliente: ' . $item->name)

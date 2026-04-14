@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Tenant;
 use App\ProjectManager;
 use App\Projects\Landlord\LandlordProject;
+use Illuminate\Support\Facades\App;
 
 class ProjectInitService
 {
@@ -15,11 +16,16 @@ class ProjectInitService
             ProjectManager::getCurrentProject()->init();
             return;
         }
+
         /** @var Tenant $tenant */
         $tenant = tenancy()->tenant;
         $project = ProjectManager::getProject(prefix: $tenant->current_project);
 
         ProjectManager::setCurrentProject(new $project());
         ProjectManager::getCurrentProject()->init();
+
+        if (!empty($tenant->locale)) {
+            App::setLocale($tenant->locale);
+        }
     }
 }
