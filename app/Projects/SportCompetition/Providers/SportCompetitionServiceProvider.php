@@ -2,6 +2,7 @@
 
 namespace App\Projects\SportCompetition\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class SportCompetitionServiceProvider extends ServiceProvider
@@ -20,6 +21,12 @@ class SportCompetitionServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::before(function ($user, $ability) {
+            if (method_exists($user, 'hasRole') && $user->hasRole('superadmin')) {
+                return true;
+            }
+
+            return null;
+        });
     }
 }
