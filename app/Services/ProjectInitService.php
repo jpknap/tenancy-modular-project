@@ -16,6 +16,7 @@ class ProjectInitService
         if (!tenancy()->initialized) {
             ProjectManager::setCurrentProject(new LandlordProject());
             ProjectManager::getCurrentProject()->init();
+            $this->applyLocale(null);
             return;
         }
 

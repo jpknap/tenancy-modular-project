@@ -5,8 +5,8 @@ namespace App\Projects\SportCompetition\Adapters\Admin;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Common\Admin\Config\ListViewConfig;
 use App\Models\User;
-use App\Projects\SportCompetition\Http\Controller\Admin\UserAdminController;
 use App\Projects\SportCompetition\FormRequests\UserFormRequest;
+use App\Projects\SportCompetition\Http\Controller\Admin\UserAdminController;
 use App\Projects\SportCompetition\Services\Model\UserService;
 
 class UserAdmin extends AdminBaseAdapter
@@ -29,89 +29,77 @@ class UserAdmin extends AdminBaseAdapter
 
     public function getTitle(): string
     {
-        return 'Usuarios';
+        return __('sport-competition::messages.user.title');
     }
 
     public function getListViewConfig(): ListViewConfig
     {
         $config = new ListViewConfig();
 
-        $config->addStatCard('Total Usuarios', 0, [
-            'icon' => 'bi-people',
-            'color' => 'primary',
+        $config->addStatCard(__('sport-competition::messages.user.stat_cards.total'), 0, [
+            'icon'           => 'bi-people',
+            'color'          => 'primary',
             'value_resolver' => fn ($items) => $items->total(),
         ]);
 
-        $config->addStatCard('Activos', 0, [
-            'icon' => 'bi-check-circle',
-            'color' => 'success',
-            'value_resolver' => fn ($items) => $items->where('is_active', true)
-                ->count(),
+        $config->addStatCard(__('sport-competition::messages.user.stat_cards.active'), 0, [
+            'icon'           => 'bi-check-circle',
+            'color'          => 'success',
+            'value_resolver' => fn ($items) => $items->where('is_active', true)->count(),
         ]);
 
-        $config->addStatCard('Administradores', 0, [
-            'icon' => 'bi-shield-check',
-            'color' => 'info',
-            'value_resolver' => fn ($items) => $items->where('role', 'admin')
-                ->count(),
+        $config->addStatCard(__('sport-competition::messages.user.stat_cards.admins'), 0, [
+            'icon'           => 'bi-shield-check',
+            'color'          => 'info',
+            'value_resolver' => fn ($items) => $items->where('role', 'admin')->count(),
         ]);
 
-        $config->addStatCard('Inactivos', 0, [
-            'icon' => 'bi-x-circle',
-            'color' => 'danger',
-            'value_resolver' => fn ($items) => $items->where('is_active', false)
-                ->count(),
+        $config->addStatCard(__('sport-competition::messages.user.stat_cards.inactive'), 0, [
+            'icon'           => 'bi-x-circle',
+            'color'          => 'danger',
+            'value_resolver' => fn ($items) => $items->where('is_active', false)->count(),
         ]);
 
-        // Columnas
         $config->columns([
             'id' => [
-                'label' => 'ID',
+                'label'    => __('admin.columns.id'),
                 'sortable' => true,
-                'class' => 'text-center',
+                'class'    => 'text-center',
             ],
             'name' => [
-                'label' => 'Nombre',
-                'sortable' => true,
+                'label'      => __('admin.columns.name'),
+                'sortable'   => true,
                 'searchable' => true,
             ],
             'email' => [
-                'label' => 'Email',
-                'sortable' => true,
+                'label'      => __('admin.columns.email'),
+                'sortable'   => true,
                 'searchable' => true,
             ],
             'enabled' => [
-                'label' => 'Activo',
+                'label'  => __('admin.columns.active'),
                 'format' => 'boolean',
-                'class' => 'text-center',
+                'class'  => 'text-center',
             ],
             'created_at' => [
-                'label' => 'Fecha Registro',
-                'format' => 'datetime',
+                'label'    => __('admin.columns.registered_at'),
+                'format'   => 'datetime',
                 'sortable' => true,
             ],
         ]);
 
-        // Acciones por fila
-        $config->addAction('Editar', $this->getUrlName('edit'), [
-            'icon' => 'bi-pencil text-primary',
-            'route_params' => [
-                'id' => 'id',
-            ],
+        $config->addAction(__('admin.actions.edit'), $this->getUrlName('edit'), [
+            'icon'         => 'bi-pencil text-primary',
+            'route_params' => ['id' => 'id'],
         ]);
 
-        $config->addAction('Eliminar', $this->getUrlName('delete'), [
-            'icon' => 'bi-trash text-danger',
-            'route_params' => [
-                'id' => 'id',
-            ],
+        $config->addAction(__('admin.actions.delete'), $this->getUrlName('delete'), [
+            'icon'         => 'bi-trash text-danger',
+            'route_params' => ['id' => 'id'],
         ]);
 
-        // Paginación
         $config->perPage(20);
-
-        // Mensaje vacío
-        $config->emptyMessage('No hay usuarios registrados');
+        $config->emptyMessage(__('sport-competition::messages.user.empty'));
 
         return $config;
     }
@@ -119,10 +107,10 @@ class UserAdmin extends AdminBaseAdapter
     protected function getDeleteDisplayFields(): array
     {
         return [
-            'id' => 'ID',
-            'name' => 'Nombre',
-            'email' => 'Email',
-            'created_at' => 'Fecha de Registro',
+            'id'         => __('admin.columns.id'),
+            'name'       => __('admin.columns.name'),
+            'email'      => __('admin.columns.email'),
+            'created_at' => __('admin.columns.registered_at'),
         ];
     }
 }

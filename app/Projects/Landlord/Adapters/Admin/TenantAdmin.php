@@ -6,12 +6,12 @@ use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Common\Admin\Config\CreateViewConfig;
 use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
-use App\Models\Tenant;
-use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
-use App\Projects\Landlord\FormRequests\TenantFormRequest;
-use App\Projects\Landlord\Services\Model\TenantService;
-use App\ProjectManager;
 use App\Contracts\ProjectInterface;
+use App\Models\Tenant;
+use App\ProjectManager;
+use App\Projects\Landlord\FormRequests\TenantFormRequest;
+use App\Projects\Landlord\Http\Controller\Admin\TenantAdminController;
+use App\Projects\Landlord\Services\Model\TenantService;
 
 class TenantAdmin extends AdminBaseAdapter
 {
@@ -33,69 +33,67 @@ class TenantAdmin extends AdminBaseAdapter
 
     public function getTitle(): string
     {
-        return 'Clientes';
+        return __('landlord::messages.tenant.title');
     }
 
     public function getListViewConfig(): ListViewConfig
     {
         $config = new ListViewConfig();
 
-        // Tarjetas de estadísticas
-        $config->addStatCard('Total Registros', 0, [
-            'icon' => 'bi-building',
-            'color' => 'primary',
+        $config->addStatCard(__('landlord::messages.tenant.stat_cards.total'), 0, [
+            'icon'           => 'bi-building',
+            'color'          => 'primary',
             'value_resolver' => fn ($items) => $items->total(),
         ]);
 
-        $config->addStatCard('Activos', 0, [
-            'icon' => 'bi-check-circle',
-            'color' => 'success',
+        $config->addStatCard(__('landlord::messages.tenant.stat_cards.active'), 0, [
+            'icon'           => 'bi-check-circle',
+            'color'          => 'success',
             'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'active')->count(),
         ]);
 
-        $config->addStatCard('Pendientes', 0, [
-            'icon' => 'bi-clock',
-            'color' => 'warning',
+        $config->addStatCard(__('landlord::messages.tenant.stat_cards.pending'), 0, [
+            'icon'           => 'bi-clock',
+            'color'          => 'warning',
             'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'pending')->count(),
         ]);
 
-        $config->addStatCard('Inactivos', 0, [
-            'icon' => 'bi-x-circle',
-            'color' => 'danger',
+        $config->addStatCard(__('landlord::messages.tenant.stat_cards.inactive'), 0, [
+            'icon'           => 'bi-x-circle',
+            'color'          => 'danger',
             'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'inactive')->count(),
         ]);
 
-        // Columnas
         $config->columns([
             'id' => [
-                'label' => 'ID',
+                'label'    => __('admin.columns.id'),
                 'sortable' => true,
-                'class' => 'text-center',
+                'class'    => 'text-center',
             ],
             'name' => [
-                'label' => 'Nombre',
-                'sortable' => true,
+                'label'      => __('admin.columns.name'),
+                'sortable'   => true,
                 'searchable' => true,
             ],
             'domains.0.subdomain' => [
-                'label' => 'Subdominio',
-                'sortable' => false,
+                'label'      => __('admin.columns.subdomain'),
+                'sortable'   => false,
                 'searchable' => false,
             ],
             'data.email' => [
-                'label' => 'Email',
-                'sortable' => false,
+                'label'      => __('admin.columns.email'),
+                'sortable'   => false,
                 'searchable' => false,
             ],
             'current_project' => [
-                'label' => 'Proyecto',
-                'sortable' => true,
+                'label'      => __('admin.columns.project'),
+                'sortable'   => true,
                 'searchable' => false,
-                'formatter' => function ($value) {
-                    if (!$value) {
-                        return '<span class="badge bg-secondary">Sin asignar</span>';
+                'formatter'  => function ($value) {
+                    if (! $value) {
+                        return '<span class="badge bg-secondary">' . __('common.no_results') . '</span>';
                     }
-                    
+
                     $projects = ProjectManager::getProjects();
                     /** @var class-string<ProjectInterface> $projectClass */
                     foreach ($projects as $projectClass) {
@@ -103,38 +101,34 @@ class TenantAdmin extends AdminBaseAdapter
                             return '<span class="badge bg-primary">' . $projectClass::getTitle() . '</span>';
                         }
                     }
-                    
+
                     return '<span class="badge bg-warning">' . $value . '</span>';
                 },
             ],
             'data.status' => [
-                'label' => 'Estado',
+                'label'  => __('admin.columns.status'),
                 'format' => 'badge',
-                'class' => 'text-center',
+                'class'  => 'text-center',
             ],
             'created_at' => [
-                'label' => 'Fecha Creación',
-                'format' => 'datetime',
+                'label'    => __('admin.columns.created_at'),
+                'format'   => 'datetime',
                 'sortable' => true,
             ],
         ]);
 
-        $config->addAction('Editar', $this->getUrlName('edit'), [
-            'icon' => 'bi-pencil text-primary',
-            'route_params' => [
-                'id' => 'id',
-            ],
+        $config->addAction(__('admin.actions.edit'), $this->getUrlName('edit'), [
+            'icon'         => 'bi-pencil text-primary',
+            'route_params' => ['id' => 'id'],
         ]);
 
-        $config->addAction('Eliminar', $this->getUrlName('delete'), [
-            'icon' => 'bi-trash text-danger',
-            'route_params' => [
-                'id' => 'id',
-            ],
+        $config->addAction(__('admin.actions.delete'), $this->getUrlName('delete'), [
+            'icon'         => 'bi-trash text-danger',
+            'route_params' => ['id' => 'id'],
         ]);
 
         $config->perPage(15);
-        $config->emptyMessage('No hay tenants registrados');
+        $config->emptyMessage(__('landlord::messages.tenant.empty'));
 
         return $config;
     }
@@ -144,8 +138,8 @@ class TenantAdmin extends AdminBaseAdapter
         $config = parent::getCreateViewConfig();
 
         $config
-            ->title('Crear Nuevo Tenant')
-            ->submitLabel('Crear Tenant');
+            ->title(__('landlord::messages.tenant.create_title'))
+            ->submitLabel(__('landlord::messages.tenant.create_submit'));
 
         return $config;
     }
@@ -154,19 +148,18 @@ class TenantAdmin extends AdminBaseAdapter
     {
         $config = parent::getEditViewConfig($item);
 
-        // Pre-cargar valores desde la data JSON y domain
-        $itemData = $item->toArray();
-        $itemData['email'] = $item->data['email'] ?? '';
-        $itemData['status'] = $item->data['status'] ?? 'pending';
-        $itemData['description'] = $item->data['description'] ?? '';
-        $itemData['subdomain'] = $item->domains->first()->subdomain ?? '';
+        $itemData                    = $item->toArray();
+        $itemData['email']           = $item->data['email'] ?? '';
+        $itemData['status']          = $item->data['status'] ?? 'pending';
+        $itemData['description']     = $item->data['description'] ?? '';
+        $itemData['subdomain']       = $item->domains->first()->subdomain ?? '';
         $itemData['current_project'] = $item->current_project ?? '';
-        $itemData['timezone'] = $item->timezone ?? 'UTC';
-        $itemData['locale'] = $item->locale ?? 'es';
+        $itemData['timezone']        = $item->timezone ?? 'UTC';
+        $itemData['locale']          = $item->locale ?? 'es';
 
         $config
-            ->title('Editar Cliente: ' . $item->name)
-            ->submitLabel('Actualizar Cliente')
+            ->title(__('landlord::messages.tenant.edit_title', ['name' => $item->name]))
+            ->submitLabel(__('landlord::messages.tenant.edit_submit'))
             ->item((object) $itemData);
 
         return $config;
@@ -175,12 +168,12 @@ class TenantAdmin extends AdminBaseAdapter
     protected function getDeleteDisplayFields(): array
     {
         return [
-            'id' => 'ID',
-            'name' => 'Nombre',
-            'identifier' => 'Identificador',
-            'data.email' => 'Email',
-            'data.status' => 'Estado',
-            'created_at' => 'Fecha de Creación',
+            'id'         => __('landlord::messages.tenant.delete.id'),
+            'name'       => __('landlord::messages.tenant.delete.name'),
+            'identifier' => __('landlord::messages.tenant.delete.identifier'),
+            'data.email' => __('landlord::messages.tenant.delete.email'),
+            'data.status'=> __('landlord::messages.tenant.delete.status'),
+            'created_at' => __('landlord::messages.tenant.delete.created_at'),
         ];
     }
 }

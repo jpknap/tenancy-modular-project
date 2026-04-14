@@ -45,6 +45,6 @@ abstract class ProfileController extends Controller
 
         return redirect()
             ->route($this->profileRoute())
-            ->with('success', 'Perfil actualizado correctamente.');
+            ->with('success', __('profile.updated'));
     }
 }

@@ -12,13 +12,13 @@ class ActivityFormRequest extends BaseFormRequest
         return $this->formBuilder
             ->setMethod('POST')
             ->setAction('#')
-            ->text('name', 'Nombre de la Actividad', [
-                'placeholder' => 'Ej: Reunión de equipo',
-                'required' => true,
+            ->text('name', __('activities-board::messages.activity.fields.name'), [
+                'placeholder' => __('activities-board::messages.activity.placeholders.name'),
+                'required'    => true,
             ])
-            ->textarea('description', 'Descripción', [
-                'placeholder' => 'Descripción detallada de la actividad',
-                'rows' => 4,
+            ->textarea('description', __('activities-board::messages.activity.fields.description'), [
+                'placeholder' => __('activities-board::messages.activity.placeholders.description'),
+                'rows'        => 4,
             ]);
     }
 
@@ -30,7 +30,7 @@ class ActivityFormRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
         ];
     }
@@ -38,9 +38,9 @@ class ActivityFormRequest extends BaseFormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'El nombre de la actividad es obligatorio',
-            'name.max' => 'El nombre no puede exceder 255 caracteres',
-            'description.max' => 'La descripción no puede exceder 2000 caracteres',
+            'name.required'   => __('activities-board::messages.activity.validation.name_required'),
+            'name.max'        => __('activities-board::messages.activity.validation.name_max'),
+            'description.max' => __('activities-board::messages.activity.validation.description_max'),
         ];
     }
 }

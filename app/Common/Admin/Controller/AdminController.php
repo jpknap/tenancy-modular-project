@@ -51,8 +51,8 @@ abstract class AdminController extends Controller
         resolve($this->admin->getService())->create($validated);
 
         $this->alertManager->success(
-            'El registro ha sido creado correctamente',
-            '¡Registro creado!'
+            __('admin.feedback.created'),
+            __('admin.feedback.created_title')
         );
 
         return redirect()->route($this->admin->getUrlName('list'));
@@ -82,8 +82,8 @@ abstract class AdminController extends Controller
         resolve($this->admin->getService())->update($id, $validated);
 
         $this->alertManager->success(
-            'Los cambios han sido guardados correctamente',
-            '¡Registro actualizado!'
+            __('admin.feedback.updated'),
+            __('admin.feedback.updated_title')
         );
 
         return redirect()->route($this->admin->getUrlName('list'));
@@ -110,8 +110,8 @@ abstract class AdminController extends Controller
         resolve($this->admin->getService())->delete($id);
 
         $this->alertManager->success(
-            'El registro ha sido eliminado permanentemente',
-            '¡Registro eliminado!'
+            __('admin.feedback.deleted'),
+            __('admin.feedback.deleted_title')
         );
 
         return redirect()->route($this->admin->getUrlName('list'));

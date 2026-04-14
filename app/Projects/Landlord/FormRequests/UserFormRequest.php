@@ -12,27 +12,27 @@ class UserFormRequest extends BaseFormRequest
         return $this->formBuilder
             ->setMethod('POST')
             ->setAction('#')
-            ->text('name', 'Nombre Completo', [
-                'placeholder' => 'Ingrese el nombre completo',
-                'required' => true,
+            ->text('name', __('fields.name'), [
+                'placeholder' => __('fields.placeholders.name'),
+                'required'    => true,
             ])
-            ->email('email', 'Email', [
-                'placeholder' => 'correo@ejemplo.com',
-                'required' => true,
+            ->email('email', __('fields.email'), [
+                'placeholder' => __('fields.placeholders.email'),
+                'required'    => true,
             ])
-            ->password('password', 'Contraseña', [
-                'placeholder' => 'Mínimo 8 caracteres',
-                'required' => true,
+            ->password('password', __('fields.password'), [
+                'placeholder' => __('fields.placeholders.password'),
+                'required'    => true,
             ])
-            ->password('password_confirmation', 'Confirmar Contraseña', [
-                'placeholder' => 'Repita la contraseña',
-                'required' => true,
+            ->password('password_confirmation', __('fields.password_confirmation'), [
+                'placeholder' => __('fields.placeholders.password_confirmation'),
+                'required'    => true,
             ])
-            ->checkbox('enabled', 'Usuario Activo', [
+            ->checkbox('enabled', __('fields.enabled'), [
                 'checked' => true,
             ])
-            ->select('timezone', 'Zona Horaria', timezone_options(withBlank: true), [
-                'help' => 'Si no se selecciona, hereda la zona horaria del tenant',
+            ->select('timezone', __('fields.timezone'), timezone_options(withBlank: true), [
+                'help' => __('fields.help.timezone_inherit'),
             ]);
     }
 
@@ -41,17 +41,17 @@ class UserFormRequest extends BaseFormRequest
         return $this->formBuilder
             ->setMethod('PUT')
             ->setAction('#')
-            ->text('name', 'Nombre Completo', [
-                'placeholder' => 'Ingrese el nombre completo',
-                'required' => true,
+            ->text('name', __('fields.name'), [
+                'placeholder' => __('fields.placeholders.name'),
+                'required'    => true,
             ])
-            ->email('email', 'Email', [
-                'placeholder' => 'correo@ejemplo.com',
-                'required' => true,
+            ->email('email', __('fields.email'), [
+                'placeholder' => __('fields.placeholders.email'),
+                'required'    => true,
             ])
-            ->checkbox('enabled', 'Usuario Activo')
-            ->select('timezone', 'Zona Horaria', timezone_options(withBlank: true), [
-                'help' => 'Si no se selecciona, hereda la zona horaria del tenant',
+            ->checkbox('enabled', __('fields.enabled'))
+            ->select('timezone', __('fields.timezone'), timezone_options(withBlank: true), [
+                'help' => __('fields.help.timezone_inherit'),
             ]);
     }
 
@@ -60,12 +60,12 @@ class UserFormRequest extends BaseFormRequest
         $userId = $this->route('id');
 
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => [
                 'required',
                 'email',
                 'max:255',
-                $userId ? "unique:users,email,{$userId}" : 'unique:users,email'
+                $userId ? "unique:users,email,{$userId}" : 'unique:users,email',
             ],
             'enabled'  => ['nullable', 'boolean'],
             'timezone' => ['nullable', 'string', 'timezone:all'],
@@ -81,24 +81,23 @@ class UserFormRequest extends BaseFormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'El nombre es obligatorio',
-            'email.required' => 'El email es obligatorio',
-            'email.unique' => 'Este email ya está registrado',
-            'password.required' => 'La contraseña es obligatoria',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres',
+            'name.required'      => __('fields.name') . ' ' . __('common.error'),
+            'email.required'     => __('fields.email') . ' ' . __('common.error'),
+            'email.unique'       => __('fields.email') . ' ya está registrado',
+            'password.required'  => __('fields.password') . ' es obligatoria',
+            'password.min'       => __('fields.help.password_min'),
             'password.confirmed' => 'Las contraseñas no coinciden',
-            'role.required' => 'Debe seleccionar un rol',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'name' => 'nombre',
-            'email' => 'correo electrónico',
-            'password' => 'contraseña',
-            'role' => 'rol',
-            'active' => 'activo',
+            'name'     => __('fields.name'),
+            'email'    => __('fields.email'),
+            'password' => __('fields.password'),
+            'timezone' => __('fields.timezone'),
+            'enabled'  => __('fields.enabled'),
         ];
     }
 }
