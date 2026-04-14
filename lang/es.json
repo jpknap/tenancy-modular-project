@@ -1,0 +1,6 @@
+{
+    "User does not have the right roles.": "El usuario no tiene los roles necesarios.",
+    "Necessary roles are :roles": "Los roles necesarios son: :roles",
+    "User does not have the right permissions.": "El usuario no tiene los permisos necesarios.",
+    "Necessary permissions are :permissions": "Los permisos necesarios son: :permissions"
+}
