@@ -29,6 +29,8 @@ class ListAction
 
     private string $target;
 
+    private mixed $condition;
+
     public function __construct(string $label, string $route, array $options = [])
     {
         $this->label = $label;
@@ -42,6 +44,7 @@ class ListAction
         $this->permission = $options['permission'] ?? null;
         $this->formMethod = $options['form_method'] ?? 'DELETE';
         $this->target = $options['target'] ?? '';
+        $this->condition = $options['condition'] ?? null;
     }
 
     public function getLabel(): string
@@ -102,6 +105,20 @@ class ListAction
     public function getTarget(): string
     {
         return $this->target;
+    }
+
+    public function hasCondition(): bool
+    {
+        return $this->condition !== null;
+    }
+
+    public function meetsCondition(mixed $currentUser): bool
+    {
+        if ($this->condition === null) {
+            return true;
+        }
+
+        return (bool) ($this->condition)($currentUser);
     }
 
     public function getUrl($item): string

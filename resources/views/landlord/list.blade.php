@@ -80,7 +80,7 @@
                                     <div class="d-flex gap-2 justify-content-end">
                                         @foreach($config->getActions() as $action)
                                             @php $adminUser = auth('landlord')->user() ?? auth()->user(); @endphp
-                                            @if(!$action->hasPermission() || $adminUser?->can($action->getPermission()))
+                                            @if((!$action->hasPermission() || $adminUser?->can($action->getPermission())) && $action->meetsCondition($adminUser))
                                                 @if($action->getType() === 'form')
                                                     <form
                                                         method="POST"

@@ -88,6 +88,14 @@ class UserAdmin extends AdminBaseAdapter
             'route_params' => ['id' => 'id'],
         ]);
 
+        $config->addAction('Suplantar', 'activities-board.admin.users.impersonate', [
+            'icon'         => 'bi-person-fill-gear text-warning',
+            'type'         => 'form',
+            'form_method'  => 'POST',
+            'route_params' => ['id' => 'id'],
+            'condition'    => fn ($user) => $user?->is_system_user === true,
+        ]);
+
         $config->perPage(15);
         $config->emptyMessage(__('activities-board::messages.user.empty'));
 
