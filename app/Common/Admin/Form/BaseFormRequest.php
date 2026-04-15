@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 abstract class BaseFormRequest extends FormRequest
 {
     protected ?FormBuilder $formBuilder = null;
+
     protected \UnitEnum $currentContext;
 
     public function __construct()

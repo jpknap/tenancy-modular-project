@@ -12,18 +12,12 @@ use Illuminate\Support\Facades\Auth;
 #[RoutePrefix('profile')]
 abstract class ProfileController extends Controller
 {
-    abstract protected function guard(): string;
-
-    abstract protected function profileView(): string;
-
-    abstract protected function profileRoute(): string;
-
     #[Route('/edit', methods: ['GET'], name: 'edit')]
     public function show(): mixed
     {
-        $user        = Auth::guard($this->guard())->user();
+        $user = Auth::guard($this->guard())->user();
         $formRequest = new ProfileFormRequest();
-        $form        = $formRequest->getFormBuilder();
+        $form = $formRequest->getFormBuilder();
 
         return view($this->profileView(), [
             'user' => $user,
@@ -40,11 +34,19 @@ abstract class ProfileController extends Controller
         $user->update($data);
 
         if (! empty($data['locale'])) {
-            session(['locale' => $data['locale']]);
+            session([
+                'locale' => $data['locale'],
+            ]);
         }
 
         return redirect()
             ->route($this->profileRoute())
             ->with('success', __('profile.updated'));
     }
+
+    abstract protected function guard(): string;
+
+    abstract protected function profileView(): string;
+
+    abstract protected function profileRoute(): string;
 }

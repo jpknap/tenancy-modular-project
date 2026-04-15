@@ -25,18 +25,6 @@ class SportCompetitionProject implements ProjectInterface
         $this->registerTranslations();
     }
 
-    /**
-     * Registrar el ServiceProvider del proyecto
-     */
-    private function registerServiceProvider(): void
-    {
-        $app = app();
-        
-        if (!$app->providerIsLoaded(SportCompetitionServiceProvider::class)) {
-            $app->register(SportCompetitionServiceProvider::class);
-        }
-    }
-
     public static function getTitle(): string
     {
         return self::$title;
@@ -71,19 +59,31 @@ class SportCompetitionProject implements ProjectInterface
         return $processor->process($allControllers, self::$prefix);
     }
 
-    private function initMenu(): void
-    {
-        $this->menuBuilder = MenuBuilderService::buildMenu();
-    }
-
     public function getPathMigration(): string
     {
-        return "SportCompetition";
+        return 'SportCompetition';
     }
 
     public function getLangPath(): string
     {
         return lang_path('projects/sport-competition');
+    }
+
+    /**
+     * Registrar el ServiceProvider del proyecto
+     */
+    private function registerServiceProvider(): void
+    {
+        $app = app();
+
+        if (! $app->providerIsLoaded(SportCompetitionServiceProvider::class)) {
+            $app->register(SportCompetitionServiceProvider::class);
+        }
+    }
+
+    private function initMenu(): void
+    {
+        $this->menuBuilder = MenuBuilderService::buildMenu();
     }
 
     private function registerTranslations(): void

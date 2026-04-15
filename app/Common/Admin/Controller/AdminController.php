@@ -46,14 +46,13 @@ abstract class AdminController extends Controller
         }
 
         $formRequestClass = $this->admin->getFormRequest();
-        $validated = app($formRequestClass)->validated();
+        $validated = app($formRequestClass)
+            ->validated();
 
-        resolve($this->admin->getService())->create($validated);
+        resolve($this->admin->getService())
+            ->create($validated);
 
-        $this->alertManager->success(
-            __('admin.feedback.created'),
-            __('admin.feedback.created_title')
-        );
+        $this->alertManager->success(__('admin.feedback.created'), __('admin.feedback.created_title'));
 
         return redirect()->route($this->admin->getUrlName('list'));
     }
@@ -77,14 +76,13 @@ abstract class AdminController extends Controller
         }
 
         $formRequestClass = $this->admin->getFormRequest();
-        $validated = app($formRequestClass)->validated();
+        $validated = app($formRequestClass)
+            ->validated();
 
-        resolve($this->admin->getService())->update($id, $validated);
+        resolve($this->admin->getService())
+            ->update($id, $validated);
 
-        $this->alertManager->success(
-            __('admin.feedback.updated'),
-            __('admin.feedback.updated_title')
-        );
+        $this->alertManager->success(__('admin.feedback.updated'), __('admin.feedback.updated_title'));
 
         return redirect()->route($this->admin->getUrlName('list'));
     }
@@ -107,12 +105,10 @@ abstract class AdminController extends Controller
             ]);
         }
 
-        resolve($this->admin->getService())->delete($id);
+        resolve($this->admin->getService())
+            ->delete($id);
 
-        $this->alertManager->success(
-            __('admin.feedback.deleted'),
-            __('admin.feedback.deleted_title')
-        );
+        $this->alertManager->success(__('admin.feedback.deleted'), __('admin.feedback.deleted_title'));
 
         return redirect()->route($this->admin->getUrlName('list'));
     }

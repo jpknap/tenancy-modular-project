@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Log;
 
 class MigrateProjectDatabase implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected Tenant $tenant;
 
@@ -82,7 +85,7 @@ class MigrateProjectDatabase implements ShouldQueue
         }
 
         // migraciones del proyecto específico si está definido
-        if (!empty($tenant->current_project)) {
+        if (! empty($tenant->current_project)) {
             $projectPath = $this->getProjectMigrationPath($tenant->current_project);
             if ($projectPath && file_exists($projectPath)) {
                 $paths[] = [
@@ -108,7 +111,7 @@ class MigrateProjectDatabase implements ShouldQueue
                 $projectInstance = new $projectClass();
                 $migrationFolder = $projectInstance->getPathMigration();
 
-                if (!empty($migrationFolder)) {
+                if (! empty($migrationFolder)) {
                     return database_path("migrations/projects/{$migrationFolder}");
                 }
             }

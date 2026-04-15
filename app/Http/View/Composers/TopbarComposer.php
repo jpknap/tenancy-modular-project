@@ -26,18 +26,18 @@ class TopbarComposer
 
         $project = ProjectManager::getCurrentProject();
 
-        $profileRoute = match(true) {
-            $project instanceof LandlordProject      => LandlordRoutes::ProfileEdit->value,
+        $profileRoute = match (true) {
+            $project instanceof LandlordProject => LandlordRoutes::ProfileEdit->value,
             $project instanceof ActivitiesBoardProject => ActivitiesBoardRoutes::ProfileEdit->value,
-            default                                  => null,
+            default => null,
         };
 
         $topbarData = [
-            'title'         => '',
-            'user'          => $user,
+            'title' => '',
+            'user' => $user,
             'notifications' => $this->getNotifications(),
-            'logoutUrl'     => $project ? '/' . $project->getPrefix() . '/auth/logout' : null,
-            'profileUrl'    => $profileRoute ? route($profileRoute) : null,
+            'logoutUrl' => $project ? '/' . $project->getPrefix() . '/auth/logout' : null,
+            'profileUrl' => $profileRoute ? route($profileRoute) : null,
         ];
 
         $view->with('topbarData', $topbarData);

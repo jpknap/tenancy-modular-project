@@ -19,8 +19,10 @@ return new class() extends Migration {
                 ->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->string('timezone', 50)->nullable();
-            $table->string('locale', 10)->nullable();
+            $table->string('timezone', 50)
+                ->nullable();
+            $table->string('locale', 10)
+                ->nullable();
             $table->timestamps();
         });
 

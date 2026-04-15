@@ -21,7 +21,7 @@ class LandlordServiceProvider extends ServiceProvider
     {
         // Registrar repositorios
         $this->registerRepositories();
-        
+
         // Registrar servicios
         $this->registerServices();
     }
@@ -58,10 +58,7 @@ class LandlordServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(UserService::class, function ($app) {
-            return new UserService(
-                $app->make(TransactionService::class),
-                $app->make(UserRepository::class)
-            );
+            return new UserService($app->make(TransactionService::class), $app->make(UserRepository::class));
         });
     }
 }

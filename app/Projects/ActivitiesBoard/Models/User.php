@@ -9,28 +9,13 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory;
+    use Notifiable;
+    use HasRoles;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'timezone',
-    ];
+    protected $fillable = ['name', 'email', 'password', 'timezone'];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_system_user' => 'boolean',
-        ];
-    }
+    protected $hidden = ['password', 'remember_token'];
 
     public function canImpersonate(): bool
     {
@@ -45,5 +30,14 @@ class User extends Authenticatable
     {
         return ! (isset($this->is_system_user) && $this->is_system_user)
             && ! $this->hasRole('superadmin');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_system_user' => 'boolean',
+        ];
     }
 }

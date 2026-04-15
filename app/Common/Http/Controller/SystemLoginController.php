@@ -40,7 +40,8 @@ class SystemLoginController extends Controller
         Auth::guard('web')->loginUsingId((int) $uid);
 
         // Regenerar sesión para prevenir session fixation en el tenant
-        $request->session()->regenerate();
+        $request->session()
+            ->regenerate();
 
         $project = ProjectManager::getCurrentProject();
         $redirectUrl = '/';

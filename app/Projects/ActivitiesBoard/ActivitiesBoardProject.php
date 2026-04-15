@@ -16,25 +16,13 @@ class ActivitiesBoardProject implements ProjectInterface
 
     private static string $title = 'Activities Board';
 
-private MenuBuilder $menuBuilder;
+    private MenuBuilder $menuBuilder;
 
     public function init(): void
     {
         $this->registerServiceProvider();
         $this->initMenu();
         $this->registerTranslations();
-    }
-
-    /**
-     * Registrar el ServiceProvider del proyecto
-     */
-    private function registerServiceProvider(): void
-    {
-        $app = app();
-        
-        if (!$app->providerIsLoaded(ActivitiesBoardServiceProvider::class)) {
-            $app->register(ActivitiesBoardServiceProvider::class);
-        }
     }
 
     public static function getTitle(): string
@@ -71,19 +59,31 @@ private MenuBuilder $menuBuilder;
         return $processor->process($allControllers, self::$prefix);
     }
 
-    private function initMenu(): void
-    {
-        $this->menuBuilder = MenuBuilderService::buildMenu();
-    }
-
     public function getPathMigration(): string
     {
-        return "ActivitiesBoard";
+        return 'ActivitiesBoard';
     }
 
     public function getLangPath(): string
     {
         return lang_path('projects/activities-board');
+    }
+
+    /**
+     * Registrar el ServiceProvider del proyecto
+     */
+    private function registerServiceProvider(): void
+    {
+        $app = app();
+
+        if (! $app->providerIsLoaded(ActivitiesBoardServiceProvider::class)) {
+            $app->register(ActivitiesBoardServiceProvider::class);
+        }
+    }
+
+    private function initMenu(): void
+    {
+        $this->menuBuilder = MenuBuilderService::buildMenu();
     }
 
     private function registerTranslations(): void

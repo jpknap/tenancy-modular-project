@@ -32,7 +32,9 @@ class TenantAccessController extends Controller
             $userId = $user->id;
         });
 
-        $expires = now()->addMinutes(2)->timestamp;
+        $expires = now()
+            ->addMinutes(2)
+            ->timestamp;
         $payload = "{$userId}:{$expires}";
         $sig = hash_hmac('sha256', $payload, config('app.key'));
 

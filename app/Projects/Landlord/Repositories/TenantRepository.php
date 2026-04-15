@@ -26,12 +26,14 @@ class TenantRepository extends BaseRepository
 
     public function all(): Collection
     {
-        return $this->model->with('domains')->get();
+        return $this->model->with('domains')
+            ->get();
     }
 
     public function find(int $id): ?Model
     {
-        return $this->model->with('domains')->find($id);
+        return $this->model->with('domains')
+            ->find($id);
     }
 
     protected function model(): string

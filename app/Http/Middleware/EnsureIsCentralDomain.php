@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class EnsureIsCentralDomain
 {
@@ -14,7 +13,7 @@ class EnsureIsCentralDomain
         $centralDomains = Config::get('tenancy.central_domains', []);
         $host = $request->getHost();
 
-        if (!in_array($host, $centralDomains)) {
+        if (! in_array($host, $centralDomains)) {
             abort(404);
         }
 

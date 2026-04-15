@@ -16,12 +16,16 @@ use Illuminate\Support\Facades\Auth;
 #[Middleware(['auth.landlord'])]
 class ImpersonationController extends Controller
 {
-    public function __construct(private readonly AlertManager $alertManager) {}
+    public function __construct(
+        private readonly AlertManager $alertManager
+    ) {
+    }
 
     #[Route('{id}/impersonate', methods: ['POST'], name: 'impersonate')]
     public function impersonate(int $id): RedirectResponse
     {
-        $actor = auth('landlord')->user();
+        $actor = auth('landlord')
+            ->user();
         abort_unless($actor?->can('users:impersonate'), 403);
 
         $target = User::findOrFail($id);
@@ -31,7 +35,9 @@ class ImpersonationController extends Controller
             return redirect()->route(Routes::UserList->value);
         }
 
-        session(['impersonator_id' => $actor->id]);
+        session([
+            'impersonator_id' => $actor->id,
+        ]);
         Auth::guard('landlord')->loginUsingId($target->id);
 
         $this->alertManager->warning(
@@ -52,7 +58,8 @@ class ImpersonationController extends Controller
         }
 
         Auth::guard('landlord')->loginUsingId($impersonatorId);
-        session()->forget('impersonator_id');
+        session()
+            ->forget('impersonator_id');
 
         $this->alertManager->success('Has vuelto a tu sesión original.', 'Suplantación detenida');
 

@@ -39,61 +39,68 @@ class UserAdmin extends AdminBaseAdapter
         $config = new ListViewConfig();
 
         $config->addStatCard(__('activities-board::messages.user.stat_cards.total'), 0, [
-            'icon'           => 'bi-people-fill',
-            'color'          => 'primary',
+            'icon' => 'bi-people-fill',
+            'color' => 'primary',
             'value_resolver' => fn ($items) => $items->total(),
         ]);
 
         $config->addStatCard(__('activities-board::messages.user.stat_cards.active'), 0, [
-            'icon'           => 'bi-person-check',
-            'color'          => 'success',
+            'icon' => 'bi-person-check',
+            'color' => 'success',
             'value_resolver' => fn ($items) => $items->total(),
         ]);
 
         $config->columns([
             'id' => [
-                'label'    => __('admin.columns.id'),
+                'label' => __('admin.columns.id'),
                 'sortable' => true,
-                'class'    => 'text-center',
+                'class' => 'text-center',
             ],
             'name' => [
-                'label'      => __('admin.columns.name'),
-                'sortable'   => true,
+                'label' => __('admin.columns.name'),
+                'sortable' => true,
                 'searchable' => true,
             ],
             'email' => [
-                'label'      => __('admin.columns.email'),
-                'sortable'   => true,
+                'label' => __('admin.columns.email'),
+                'sortable' => true,
                 'searchable' => true,
             ],
             'role' => [
                 'label' => 'Rol',
                 'sortable' => false,
-                'value_resolver' => fn ($user) => $user->getRoleNames()->first() ?? 'Sin rol',
+                'value_resolver' => fn ($user) => $user->getRoleNames()
+                    ->first() ?? 'Sin rol',
             ],
             'created_at' => [
-                'label'    => __('admin.columns.registered_at'),
-                'format'   => 'datetime',
+                'label' => __('admin.columns.registered_at'),
+                'format' => 'datetime',
                 'sortable' => true,
             ],
         ]);
 
         $config->addAction(__('admin.actions.edit'), $this->getUrlName('edit'), [
-            'icon'         => 'bi-pencil text-primary',
-            'route_params' => ['id' => 'id'],
+            'icon' => 'bi-pencil text-primary',
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         $config->addAction(__('admin.actions.delete'), $this->getUrlName('delete'), [
-            'icon'         => 'bi-trash text-danger',
-            'route_params' => ['id' => 'id'],
+            'icon' => 'bi-trash text-danger',
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         $config->addAction('Suplantar', 'activities-board.admin.users.impersonate', [
-            'icon'         => 'bi-person-fill-gear text-warning',
-            'type'         => 'form',
-            'form_method'  => 'POST',
-            'route_params' => ['id' => 'id'],
-            'condition'    => fn ($user) => $user?->is_system_user === true,
+            'icon' => 'bi-person-fill-gear text-warning',
+            'type' => 'form',
+            'form_method' => 'POST',
+            'route_params' => [
+                'id' => 'id',
+            ],
+            'condition' => fn ($user) => $user?->is_system_user === true,
         ]);
 
         $config->perPage(15);
@@ -120,7 +127,9 @@ class UserAdmin extends AdminBaseAdapter
 
         $config = parent::getEditViewConfig($item);
         $config
-            ->title(__('activities-board::messages.user.edit_title', ['name' => $item->name]))
+            ->title(__('activities-board::messages.user.edit_title', [
+                'name' => $item->name,
+            ]))
             ->submitLabel(__('activities-board::messages.user.edit_submit'));
 
         return $config;
@@ -129,8 +138,8 @@ class UserAdmin extends AdminBaseAdapter
     protected function getDeleteDisplayFields(): array
     {
         return [
-            'id'    => __('admin.columns.id'),
-            'name'  => __('admin.columns.name'),
+            'id' => __('admin.columns.id'),
+            'name' => __('admin.columns.name'),
             'email' => __('admin.columns.email'),
         ];
     }

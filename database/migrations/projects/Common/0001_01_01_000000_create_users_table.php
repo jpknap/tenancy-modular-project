@@ -19,9 +19,13 @@ return new class() extends Migration {
                 ->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->string('timezone', 50)->nullable();
-            $table->string('locale', 10)->nullable();
-            $table->boolean('is_system_user')->default(false)->after('locale');
+            $table->string('timezone', 50)
+                ->nullable();
+            $table->string('locale', 10)
+                ->nullable();
+            $table->boolean('is_system_user')
+                ->default(false)
+                ->after('locale');
             $table->timestamps();
         });
 

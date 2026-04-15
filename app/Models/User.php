@@ -29,20 +29,6 @@ class User extends Authenticatable
      */
     protected $hidden = ['password', 'remember_token'];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_system_user' => 'boolean',
-        ];
-    }
-
     public function canImpersonate(): bool
     {
         if (isset($this->is_system_user) && $this->is_system_user) {
@@ -56,5 +42,19 @@ class User extends Authenticatable
     {
         return ! (isset($this->is_system_user) && $this->is_system_user)
             && ! $this->hasRole('superadmin');
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_system_user' => 'boolean',
+        ];
     }
 }

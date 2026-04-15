@@ -41,55 +41,61 @@ class TenantAdmin extends AdminBaseAdapter
         $config = new ListViewConfig();
 
         $config->addStatCard(__('landlord::messages.tenant.stat_cards.total'), 0, [
-            'icon'           => 'bi-building',
-            'color'          => 'primary',
+            'icon' => 'bi-building',
+            'color' => 'primary',
             'value_resolver' => fn ($items) => $items->total(),
         ]);
 
         $config->addStatCard(__('landlord::messages.tenant.stat_cards.active'), 0, [
-            'icon'           => 'bi-check-circle',
-            'color'          => 'success',
-            'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'active')->count(),
+            'icon' => 'bi-check-circle',
+            'color' => 'success',
+            'value_resolver' => fn ($items) => $items->filter(
+                fn ($item) => ($item->data['status'] ?? null) === 'active'
+            )->count(),
         ]);
 
         $config->addStatCard(__('landlord::messages.tenant.stat_cards.pending'), 0, [
-            'icon'           => 'bi-clock',
-            'color'          => 'warning',
-            'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'pending')->count(),
+            'icon' => 'bi-clock',
+            'color' => 'warning',
+            'value_resolver' => fn ($items) => $items->filter(
+                fn ($item) => ($item->data['status'] ?? null) === 'pending'
+            )->count(),
         ]);
 
         $config->addStatCard(__('landlord::messages.tenant.stat_cards.inactive'), 0, [
-            'icon'           => 'bi-x-circle',
-            'color'          => 'danger',
-            'value_resolver' => fn ($items) => $items->filter(fn ($item) => ($item->data['status'] ?? null) === 'inactive')->count(),
+            'icon' => 'bi-x-circle',
+            'color' => 'danger',
+            'value_resolver' => fn ($items) => $items->filter(
+                fn ($item) => ($item->data['status'] ?? null) === 'inactive'
+            )->count(),
         ]);
 
         $config->columns([
             'id' => [
-                'label'    => __('admin.columns.id'),
+                'label' => __('admin.columns.id'),
                 'sortable' => true,
-                'class'    => 'text-center',
+                'class' => 'text-center',
             ],
             'name' => [
-                'label'      => __('admin.columns.name'),
-                'sortable'   => true,
+                'label' => __('admin.columns.name'),
+                'sortable' => true,
                 'searchable' => true,
             ],
             'domains.0.subdomain' => [
-                'label'      => __('admin.columns.subdomain'),
-                'sortable'   => false,
+                'label' => __('admin.columns.subdomain'),
+                'sortable' => false,
                 'searchable' => false,
             ],
             'data.email' => [
-                'label'      => __('admin.columns.email'),
-                'sortable'   => false,
+                'label' => __('admin.columns.email'),
+                'sortable' => false,
                 'searchable' => false,
             ],
             'current_project' => [
-                'label'      => __('admin.columns.project'),
-                'sortable'   => true,
+                'label' => __('admin.columns.project'),
+                'sortable' => true,
                 'searchable' => false,
-                'formatter'  => function ($value) {
+                'formatter' => function ($value) {
                     if (! $value) {
                         return '<span class="badge bg-secondary">' . __('common.no_results') . '</span>';
                     }
@@ -106,32 +112,38 @@ class TenantAdmin extends AdminBaseAdapter
                 },
             ],
             'data.status' => [
-                'label'  => __('admin.columns.status'),
+                'label' => __('admin.columns.status'),
                 'format' => 'badge',
-                'class'  => 'text-center',
+                'class' => 'text-center',
             ],
             'created_at' => [
-                'label'    => __('admin.columns.created_at'),
-                'format'   => 'datetime',
+                'label' => __('admin.columns.created_at'),
+                'format' => 'datetime',
                 'sortable' => true,
             ],
         ]);
 
         $config->addAction('Acceder', 'landlord.admin.tenants.system-access', [
-            'icon'         => 'bi-box-arrow-in-right text-success',
-            'type'         => 'link',
-            'target'       => '_blank',
-            'route_params' => ['id' => 'id'],
+            'icon' => 'bi-box-arrow-in-right text-success',
+            'type' => 'link',
+            'target' => '_blank',
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         $config->addAction(__('admin.actions.edit'), $this->getUrlName('edit'), [
-            'icon'         => 'bi-pencil text-primary',
-            'route_params' => ['id' => 'id'],
+            'icon' => 'bi-pencil text-primary',
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         $config->addAction(__('admin.actions.delete'), $this->getUrlName('delete'), [
-            'icon'         => 'bi-trash text-danger',
-            'route_params' => ['id' => 'id'],
+            'icon' => 'bi-trash text-danger',
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         $config->perPage(15);
@@ -155,17 +167,19 @@ class TenantAdmin extends AdminBaseAdapter
     {
         $config = parent::getEditViewConfig($item);
 
-        $itemData                    = $item->toArray();
-        $itemData['email']           = $item->data['email'] ?? '';
-        $itemData['status']          = $item->data['status'] ?? 'pending';
-        $itemData['description']     = $item->data['description'] ?? '';
-        $itemData['subdomain']       = $item->domains->first()->subdomain ?? '';
+        $itemData = $item->toArray();
+        $itemData['email'] = $item->data['email'] ?? '';
+        $itemData['status'] = $item->data['status'] ?? 'pending';
+        $itemData['description'] = $item->data['description'] ?? '';
+        $itemData['subdomain'] = $item->domains->first()->subdomain ?? '';
         $itemData['current_project'] = $item->current_project ?? '';
-        $itemData['timezone']        = $item->timezone ?? 'UTC';
-        $itemData['locale']          = $item->locale ?? 'es';
+        $itemData['timezone'] = $item->timezone ?? 'UTC';
+        $itemData['locale'] = $item->locale ?? 'es';
 
         $config
-            ->title(__('landlord::messages.tenant.edit_title', ['name' => $item->name]))
+            ->title(__('landlord::messages.tenant.edit_title', [
+                'name' => $item->name,
+            ]))
             ->submitLabel(__('landlord::messages.tenant.edit_submit'))
             ->item((object) $itemData);
 
@@ -175,11 +189,11 @@ class TenantAdmin extends AdminBaseAdapter
     protected function getDeleteDisplayFields(): array
     {
         return [
-            'id'         => __('landlord::messages.tenant.delete.id'),
-            'name'       => __('landlord::messages.tenant.delete.name'),
+            'id' => __('landlord::messages.tenant.delete.id'),
+            'name' => __('landlord::messages.tenant.delete.name'),
             'identifier' => __('landlord::messages.tenant.delete.identifier'),
             'data.email' => __('landlord::messages.tenant.delete.email'),
-            'data.status'=> __('landlord::messages.tenant.delete.status'),
+            'data.status' => __('landlord::messages.tenant.delete.status'),
             'created_at' => __('landlord::messages.tenant.delete.created_at'),
         ];
     }

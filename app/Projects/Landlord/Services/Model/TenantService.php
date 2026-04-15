@@ -3,11 +3,8 @@
 namespace App\Projects\Landlord\Services\Model;
 
 use App\Common\Repository\Service\TransactionService;
-use App\ProjectManager;
-use App\Projects\Landlord\LandlordProject;
 use App\Projects\Landlord\Repositories\TenantRepository;
 use App\Projects\Landlord\Repositories\UserRepository;
-use App\Services\ProjectInitService;
 use Illuminate\Support\Str;
 
 class TenantService
@@ -27,22 +24,21 @@ class TenantService
         $subdomain = $data['subdomain'];
 
         $tenantData = [
-            'name'            => $data['name'],
-            'identifier'      => $identifier,
+            'name' => $data['name'],
+            'identifier' => $identifier,
             'current_project' => $data['current_project'] ?? null,
-            'timezone'        => $data['timezone'] ?? 'UTC',
-            'locale'          => $data['locale'] ?? 'es',
-            'data'            => [
-                'email'       => $data['email'] ?? null,
-                'status'      => $data['status'] ?? 'pending',
+            'timezone' => $data['timezone'] ?? 'UTC',
+            'locale' => $data['locale'] ?? 'es',
+            'data' => [
+                'email' => $data['email'] ?? null,
+                'status' => $data['status'] ?? 'pending',
                 'description' => $data['description'] ?? null,
             ],
         ];
 
-
         $tenant = $this->tenantRepository->create($tenantData);
         $this->createDomain($tenant, $subdomain);
-        
+
         $this->setupDefaultSettings($tenant);
 
         return $tenant;
@@ -53,20 +49,20 @@ class TenantService
         return $this->transactionService->execute(function () use ($id, $data) {
             $tenant = $this->tenantRepository->find($id);
 
-            if (!$tenant) {
+            if (! $tenant) {
                 throw new \Exception('Tenant not found');
             }
 
             $currentData = $tenant->data ?? [];
 
             $tenantData = [
-                'name'            => $data['name'],
+                'name' => $data['name'],
                 'current_project' => $data['current_project'] ?? $tenant->current_project,
-                'timezone'        => $data['timezone'] ?? $tenant->timezone,
-                'locale'          => $data['locale'] ?? $tenant->locale,
-                'data'            => array_merge($currentData, [
-                    'email'       => $data['email'] ?? null,
-                    'status'      => $data['status'] ?? 'pending',
+                'timezone' => $data['timezone'] ?? $tenant->timezone,
+                'locale' => $data['locale'] ?? $tenant->locale,
+                'data' => array_merge($currentData, [
+                    'email' => $data['email'] ?? null,
+                    'status' => $data['status'] ?? 'pending',
                     'description' => $data['description'] ?? null,
                 ]),
             ];
@@ -80,16 +76,6 @@ class TenantService
         // NO usar transacción porque PostgreSQL no permite DROP SCHEMA dentro de transacciones
         // El evento TenantDeleted disparará la eliminación del schema automáticamente
         return $this->tenantRepository->delete($id);
-    }
-
-    private function createDomain($tenant, string $subdomain): void
-    {
-        $domain = $subdomain . '.' . config('app.domain', 'localhost');
-
-        $tenant->domains()->create([
-            'domain' => $domain,
-            'subdomain' => $subdomain,
-        ]);
     }
 
     public function createTenantWithAdmin(array $tenantData, array $adminData): array
@@ -191,6 +177,17 @@ class TenantService
 
             return $results;
         });
+    }
+
+    private function createDomain($tenant, string $subdomain): void
+    {
+        $domain = $subdomain . '.' . config('app.domain', 'localhost');
+
+        $tenant->domains()
+            ->create([
+                'domain' => $domain,
+                'subdomain' => $subdomain,
+            ]);
     }
 
     /**

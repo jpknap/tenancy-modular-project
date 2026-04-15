@@ -14,14 +14,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
     public $incrementing = true;
 
-    protected $fillable = [
-        'name',
-        'identifier',
-        'current_project',
-        'timezone',
-        'locale',
-        'data',
-    ];
+    protected $fillable = ['name', 'identifier', 'current_project', 'timezone', 'locale', 'data'];
 
     protected $casts = [
         'data' => 'array',
@@ -29,13 +22,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
     public static function getCustomColumns(): array
     {
-        return [
-            'id',
-            'name',
-            'identifier',
-            'current_project',
-            'timezone',
-            'locale',
-        ];
+        return ['id', 'name', 'identifier', 'current_project', 'timezone', 'locale'];
     }
 }

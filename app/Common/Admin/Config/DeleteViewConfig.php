@@ -5,10 +5,15 @@ namespace App\Common\Admin\Config;
 class DeleteViewConfig
 {
     private string $title = 'Eliminar Registro';
+
     private string $message = '¿Está seguro que desea eliminar este registro?';
+
     private string $submitLabel = 'Eliminar';
+
     private string $cancelLabel = 'Cancelar';
+
     private mixed $item = null;
+
     private array $displayFields = [];
 
     public function title(string $title): self

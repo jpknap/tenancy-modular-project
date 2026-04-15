@@ -14,19 +14,19 @@ class UserFormRequest extends BaseFormRequest
             ->setAction('#')
             ->text('name', __('fields.name'), [
                 'placeholder' => __('fields.placeholders.name'),
-                'required'    => true,
+                'required' => true,
             ])
             ->email('email', __('fields.email'), [
                 'placeholder' => __('fields.placeholders.email'),
-                'required'    => true,
+                'required' => true,
             ])
             ->password('password', __('fields.password'), [
                 'placeholder' => __('fields.placeholders.password'),
-                'required'    => true,
+                'required' => true,
             ])
             ->password('password_confirmation', __('fields.password_confirmation'), [
                 'placeholder' => __('fields.placeholders.password_confirmation'),
-                'required'    => true,
+                'required' => true,
             ])
             ->checkbox('enabled', __('fields.enabled'), [
                 'checked' => true,
@@ -43,11 +43,11 @@ class UserFormRequest extends BaseFormRequest
             ->setAction('#')
             ->text('name', __('fields.name'), [
                 'placeholder' => __('fields.placeholders.name'),
-                'required'    => true,
+                'required' => true,
             ])
             ->email('email', __('fields.email'), [
                 'placeholder' => __('fields.placeholders.email'),
-                'required'    => true,
+                'required' => true,
             ])
             ->checkbox('enabled', __('fields.enabled'))
             ->select('timezone', __('fields.timezone'), timezone_options(withBlank: true), [
@@ -60,14 +60,14 @@ class UserFormRequest extends BaseFormRequest
         $userId = $this->route('id');
 
         $rules = [
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
                 'required',
                 'email',
                 'max:255',
                 $userId ? "unique:users,email,{$userId}" : 'unique:users,email',
             ],
-            'enabled'  => ['nullable', 'boolean'],
+            'enabled' => ['nullable', 'boolean'],
             'timezone' => ['nullable', 'string', 'timezone:all'],
         ];
 
@@ -81,11 +81,11 @@ class UserFormRequest extends BaseFormRequest
     public function messages(): array
     {
         return [
-            'name.required'      => __('fields.name') . ' ' . __('common.error'),
-            'email.required'     => __('fields.email') . ' ' . __('common.error'),
-            'email.unique'       => __('fields.email') . ' ya está registrado',
-            'password.required'  => __('fields.password') . ' es obligatoria',
-            'password.min'       => __('fields.help.password_min'),
+            'name.required' => __('fields.name') . ' ' . __('common.error'),
+            'email.required' => __('fields.email') . ' ' . __('common.error'),
+            'email.unique' => __('fields.email') . ' ya está registrado',
+            'password.required' => __('fields.password') . ' es obligatoria',
+            'password.min' => __('fields.help.password_min'),
             'password.confirmed' => 'Las contraseñas no coinciden',
         ];
     }
@@ -93,11 +93,11 @@ class UserFormRequest extends BaseFormRequest
     public function attributes(): array
     {
         return [
-            'name'     => __('fields.name'),
-            'email'    => __('fields.email'),
+            'name' => __('fields.name'),
+            'email' => __('fields.email'),
             'password' => __('fields.password'),
             'timezone' => __('fields.timezone'),
-            'enabled'  => __('fields.enabled'),
+            'enabled' => __('fields.enabled'),
         ];
     }
 }

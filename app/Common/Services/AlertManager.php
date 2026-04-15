@@ -26,22 +26,6 @@ class AlertManager
         return $this->add('info', $message, $title);
     }
 
-    private function add(string $type, string $message, ?string $title): self
-    {
-        $this->alerts[] = [
-            'type' => $type,
-            'message' => $message,
-            'title' => $title,
-        ];
-
-        session()->flash("alert_{$type}", [
-            'message' => $message,
-            'title' => $title,
-        ]);
-
-        return $this;
-    }
-
     public function getAlerts(): array
     {
         return $this->alerts;
@@ -50,5 +34,22 @@ class AlertManager
     public function hasAlerts(): bool
     {
         return count($this->alerts) > 0;
+    }
+
+    private function add(string $type, string $message, ?string $title): self
+    {
+        $this->alerts[] = [
+            'type' => $type,
+            'message' => $message,
+            'title' => $title,
+        ];
+
+        session()
+            ->flash("alert_{$type}", [
+                'message' => $message,
+                'title' => $title,
+            ]);
+
+        return $this;
     }
 }

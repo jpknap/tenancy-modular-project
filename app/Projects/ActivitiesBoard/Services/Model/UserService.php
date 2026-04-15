@@ -47,7 +47,8 @@ class UserService
                 unset($data['role']);
                 $user = $this->userRepository->update($id, $data);
                 // No permitir que superadmin se cambie el rol a sí mismo
-                $currentUser = auth()->user();
+                $currentUser = auth()
+                    ->user();
                 if (! $currentUser || $currentUser->id !== $user->id) {
                     $user->syncRoles([$role]);
                 }

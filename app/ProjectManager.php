@@ -26,9 +26,6 @@ class ProjectManager
         return self::$projects;
     }
 
-    /**
-     * @throws Exception
-     */
     public static function getProject(string $prefix): string
     {
         foreach (self::$projects as $project) {
@@ -36,12 +33,12 @@ class ProjectManager
                 return $project;
             }
         }
-        throw new Exception("Project not found");
+        throw new Exception('Project not found');
     }
 
     public static function setCurrentProject(ProjectInterface $project): void
     {
-        if(null != self::$currentProject) {
+        if (self::$currentProject != null) {
             return;
         }
         self::$currentProject = $project;

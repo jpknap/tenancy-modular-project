@@ -13,7 +13,7 @@ class ProjectInitService
 {
     public function init(): void
     {
-        if (!tenancy()->initialized) {
+        if (! tenancy()->initialized) {
             ProjectManager::setCurrentProject(new LandlordProject());
             ProjectManager::getCurrentProject()->init();
             $this->applyLocale(null);
@@ -21,7 +21,8 @@ class ProjectInitService
         }
 
         /** @var Tenant $tenant */
-        $tenant = tenancy()->tenant;
+        $tenant = tenancy()
+            ->tenant;
         $project = ProjectManager::getProject(prefix: $tenant->current_project);
 
         ProjectManager::setCurrentProject(new $project());

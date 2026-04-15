@@ -3,12 +3,9 @@
 use App\Common\Http\Controller\LocaleSwitchController;
 use App\Http\Middleware\EnsureIsCentralDomain;
 use App\Http\Middleware\ProjectInitialized;
-use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use App\Projects\Landlord\LandlordProject;
 use App\Projects\SportCompetition\SportCompetitionProject;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 // Cambio de idioma de sesión (disponible en dominio central)
 Route::middleware(['web', EnsureIsCentralDomain::class])
@@ -16,15 +13,8 @@ Route::middleware(['web', EnsureIsCentralDomain::class])
     ->name('locale.switch');
 
 // Rutas del Landlord (dominios centrales: localhost, admin.localhost, etc.)
-Route::middleware([
-    'web',
-    EnsureIsCentralDomain::class,
-    ProjectInitialized::class,
-])->group(function () {
-    $routes = [
-        ...LandlordProject::getEndpoints(),
-        ...SportCompetitionProject::getEndpoints(),
-    ];
+Route::middleware(['web', EnsureIsCentralDomain::class, ProjectInitialized::class])->group(function () {
+    $routes = [...LandlordProject::getEndpoints(), ...SportCompetitionProject::getEndpoints()];
 
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
@@ -43,4 +33,3 @@ Route::middleware([
         }
     }
 });
-

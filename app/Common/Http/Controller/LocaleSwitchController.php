@@ -15,7 +15,9 @@ class LocaleSwitchController extends Controller
         $locale = $request->input('locale');
 
         if (in_array($locale, LocaleService::SUPPORTED, true)) {
-            session(['locale' => $locale]);
+            session([
+                'locale' => $locale,
+            ]);
             App::setLocale($locale);
         }
 

@@ -20,7 +20,9 @@ enum UserRole: string
     public static function options(): array
     {
         return collect(self::cases())
-            ->mapWithKeys(fn (self $role) => [$role->value => $role->label()])
+            ->mapWithKeys(fn (self $role) => [
+                $role->value => $role->label(),
+            ])
             ->toArray();
     }
 

@@ -7,8 +7,8 @@ use App\Common\Repository\Service\TransactionService;
 use App\Common\Services\AlertManager;
 use App\Http\View\Composers\SidebarComposer;
 use App\Http\View\Composers\TopbarComposer;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 

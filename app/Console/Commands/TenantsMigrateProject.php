@@ -68,7 +68,7 @@ class TenantsMigrateProject extends Command
     {
         $query = Tenant::query();
 
-        if (!empty($tenantIds)) {
+        if (! empty($tenantIds)) {
             $query->whereIn('id', $tenantIds);
         }
 
@@ -84,16 +84,20 @@ class TenantsMigrateProject extends Command
      */
     protected function processTenant(Tenant $tenant, bool $commonOnly, bool $fresh, bool $seed): void
     {
-        $this->line("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        $this->line(
+            '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
+        );
         $this->info("📦 Tenant: {$tenant->name} (ID: {$tenant->id})");
-        $this->line("   Proyecto: " . ($tenant->current_project ?? 'Sin asignar'));
+        $this->line('   Proyecto: ' . ($tenant->current_project ?? 'Sin asignar'));
         $this->newLine();
 
         $tenant->run(function ($tenant) use ($commonOnly, $fresh, $seed) {
             // Fresh si se solicitó
             if ($fresh) {
                 $this->warn('⚠️  Ejecutando migrate:fresh...');
-                Artisan::call('migrate:fresh', ['--force' => true]);
+                Artisan::call('migrate:fresh', [
+                    '--force' => true,
+                ]);
                 $this->line('   ✓ Fresh completado');
             }
 
@@ -111,7 +115,9 @@ class TenantsMigrateProject extends Command
             // Seed si se solicitó
             if ($seed) {
                 $this->info('   🌱 Ejecutando seeders...');
-                Artisan::call('db:seed', ['--force' => true]);
+                Artisan::call('db:seed', [
+                    '--force' => true,
+                ]);
                 $this->line('   ✓ Seeders completados');
             }
         });
@@ -125,7 +131,7 @@ class TenantsMigrateProject extends Command
      */
     protected function migratePath(string $type, string $path): void
     {
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             $this->warn("   ⚠️  Path [{$type}] no existe: {$path}");
             return;
         }
@@ -134,7 +140,7 @@ class TenantsMigrateProject extends Command
         $count = count($files);
 
         $this->line("   🔄 Migrando [{$type}] ({$count} archivo(s))...");
-        
+
         $exitCode = Artisan::call('migrate', [
             '--path' => $path,
             '--force' => true,
@@ -143,15 +149,15 @@ class TenantsMigrateProject extends Command
 
         if ($exitCode === 0) {
             $output = Artisan::output();
-            
+
             // Mostrar solo mensajes importantes
             $lines = explode("\n", trim($output));
             foreach ($lines as $line) {
                 if (str_contains($line, 'Migrating') || str_contains($line, 'Migrated')) {
-                    $this->line("      " . trim($line));
+                    $this->line('      ' . trim($line));
                 }
             }
-            
+
             $this->info("   ✓ [{$type}] completado");
         } else {
             $this->error("   ✗ Error en [{$type}]");
@@ -164,7 +170,7 @@ class TenantsMigrateProject extends Command
     protected function getMigrationPaths(Tenant $tenant, bool $commonOnly): array
     {
         $paths = [];
-        
+
         // 1. Siempre incluir migraciones Common
         $commonPath = database_path('migrations/projects/Common');
         if (file_exists($commonPath)) {
@@ -175,7 +181,7 @@ class TenantsMigrateProject extends Command
         }
 
         // 2. Si no es commonOnly, incluir migraciones del proyecto específico
-        if (!$commonOnly && !empty($tenant->current_project)) {
+        if (! $commonOnly && ! empty($tenant->current_project)) {
             $projectPath = $this->getProjectMigrationPath($tenant->current_project);
             if ($projectPath && file_exists($projectPath)) {
                 $paths[] = [
@@ -194,14 +200,14 @@ class TenantsMigrateProject extends Command
     protected function getProjectMigrationPath(string $projectPrefix): ?string
     {
         $projects = ProjectManager::getProjects();
-        
+
         /** @var class-string<ProjectInterface> $projectClass */
         foreach ($projects as $projectClass) {
             if ($projectClass::getPrefix() === $projectPrefix) {
                 $projectInstance = new $projectClass();
                 $migrationFolder = $projectInstance->getPathMigration();
-                
-                if (!empty($migrationFolder)) {
+
+                if (! empty($migrationFolder)) {
                     return database_path("migrations/projects/{$migrationFolder}");
                 }
             }

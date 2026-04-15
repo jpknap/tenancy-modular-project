@@ -39,50 +39,52 @@ class ActivityAdmin extends AdminBaseAdapter
         $config = new ListViewConfig();
 
         $config->addStatCard(__('activities-board::messages.activity.stat_cards.total'), 0, [
-            'icon'           => 'bi-list-check',
-            'color'          => 'primary',
+            'icon' => 'bi-list-check',
+            'color' => 'primary',
             'value_resolver' => fn ($items) => $items->total(),
         ]);
 
         $config->addStatCard(__('activities-board::messages.activity.stat_cards.today'), 0, [
-            'icon'           => 'bi-calendar-check',
-            'color'          => 'success',
-            'value_resolver' => fn ($items) => $items->filter(
-                fn ($item) => $item->created_at->isToday()
-            )->count(),
+            'icon' => 'bi-calendar-check',
+            'color' => 'success',
+            'value_resolver' => fn ($items) => $items->filter(fn ($item) => $item->created_at->isToday())->count(),
         ]);
 
         $config->columns([
             'id' => [
-                'label'    => __('admin.columns.id'),
+                'label' => __('admin.columns.id'),
                 'sortable' => true,
-                'class'    => 'text-center',
+                'class' => 'text-center',
             ],
             'name' => [
-                'label'      => __('admin.columns.name'),
-                'sortable'   => true,
+                'label' => __('admin.columns.name'),
+                'sortable' => true,
                 'searchable' => true,
             ],
             'description' => [
-                'label'    => __('admin.columns.description'),
+                'label' => __('admin.columns.description'),
                 'sortable' => false,
                 'truncate' => 50,
             ],
             'created_at' => [
-                'label'    => __('admin.columns.created_at'),
-                'format'   => 'datetime',
+                'label' => __('admin.columns.created_at'),
+                'format' => 'datetime',
                 'sortable' => true,
             ],
         ]);
 
         $config->addAction(__('admin.actions.edit'), $this->getUrlName('edit'), [
-            'icon'         => 'bi-pencil text-primary',
-            'route_params' => ['id' => 'id'],
+            'icon' => 'bi-pencil text-primary',
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         $config->addAction(__('admin.actions.delete'), $this->getUrlName('delete'), [
-            'icon'         => 'bi-trash text-danger',
-            'route_params' => ['id' => 'id'],
+            'icon' => 'bi-trash text-danger',
+            'route_params' => [
+                'id' => 'id',
+            ],
         ]);
 
         $config->perPage(15);
@@ -105,7 +107,9 @@ class ActivityAdmin extends AdminBaseAdapter
     {
         $config = parent::getEditViewConfig($item);
         $config
-            ->title(__('activities-board::messages.activity.edit_title', ['name' => $item->name]))
+            ->title(__('activities-board::messages.activity.edit_title', [
+                'name' => $item->name,
+            ]))
             ->submitLabel(__('activities-board::messages.activity.edit_submit'));
 
         return $config;
@@ -114,8 +118,8 @@ class ActivityAdmin extends AdminBaseAdapter
     protected function getDeleteDisplayFields(): array
     {
         return [
-            'id'          => __('admin.columns.id'),
-            'name'        => __('admin.columns.name'),
+            'id' => __('admin.columns.id'),
+            'name' => __('admin.columns.name'),
             'description' => __('admin.columns.description'),
         ];
     }

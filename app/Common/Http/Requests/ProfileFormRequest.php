@@ -18,23 +18,6 @@ class ProfileFormRequest extends BaseFormRequest
         return $this->buildProfileForm();
     }
 
-    private function buildProfileForm(): FormBuilder
-    {
-        return $this->formBuilder
-            ->setMethod('PUT')
-            ->text('name', __('profile.fields.name'), [
-                'placeholder' => __('fields.placeholders.name'),
-                'required'    => true,
-            ])
-            ->email('email', __('profile.fields.email'), [
-                'placeholder' => __('fields.placeholders.email'),
-                'required'    => true,
-            ])
-            ->select('locale', __('profile.fields.locale'), LocaleService::options(), [
-                'help' => __('profile.fields.locale_help'),
-            ]);
-    }
-
     public function rules(): array
     {
         $userId = collect(array_keys(config('auth.guards')))
@@ -43,8 +26,8 @@ class ProfileFormRequest extends BaseFormRequest
             ->first();
 
         return [
-            'name'   => ['required', 'string', 'max:255'],
-            'email'  => ['required', 'email', 'max:255', "unique:users,email,{$userId}"],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', "unique:users,email,{$userId}"],
             'locale' => ['nullable', 'string', 'in:' . implode(',', LocaleService::SUPPORTED)],
         ];
     }
@@ -52,18 +35,35 @@ class ProfileFormRequest extends BaseFormRequest
     public function messages(): array
     {
         return [
-            'name.required'  => __('fields.name') . ' es obligatorio.',
+            'name.required' => __('fields.name') . ' es obligatorio.',
             'email.required' => __('fields.email') . ' es obligatorio.',
-            'email.unique'   => __('fields.email') . ' ya está en uso por otra cuenta.',
+            'email.unique' => __('fields.email') . ' ya está en uso por otra cuenta.',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'name'   => __('fields.name'),
-            'email'  => __('fields.email'),
+            'name' => __('fields.name'),
+            'email' => __('fields.email'),
             'locale' => __('fields.locale'),
         ];
+    }
+
+    private function buildProfileForm(): FormBuilder
+    {
+        return $this->formBuilder
+            ->setMethod('PUT')
+            ->text('name', __('profile.fields.name'), [
+                'placeholder' => __('fields.placeholders.name'),
+                'required' => true,
+            ])
+            ->email('email', __('profile.fields.email'), [
+                'placeholder' => __('fields.placeholders.email'),
+                'required' => true,
+            ])
+            ->select('locale', __('profile.fields.locale'), LocaleService::options(), [
+                'help' => __('profile.fields.locale_help'),
+            ]);
     }
 }

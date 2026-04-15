@@ -23,9 +23,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
     ProjectInitialized::class,
 ])->group(function () {
-    $routes = [
-        ...ActivitiesBoardProject::getEndpoints(),
-    ];
+    $routes = [...ActivitiesBoardProject::getEndpoints()];
 
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();

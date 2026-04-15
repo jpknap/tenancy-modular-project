@@ -101,11 +101,6 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
         return $config;
     }
 
-    protected function getDeleteDisplayFields(): array
-    {
-        return [];
-    }
-
     /**
      * @deprecated Usar getListViewConfig() en su lugar
      */
@@ -157,5 +152,10 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
     public function getRoutePrefix(): string
     {
         return $this->routePrefix;
+    }
+
+    protected function getDeleteDisplayFields(): array
+    {
+        return [];
     }
 }

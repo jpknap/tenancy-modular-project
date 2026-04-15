@@ -60,7 +60,7 @@
                         Estás actuando como <strong>{{ auth()->user()?->name }}</strong> dentro del tenant.
                     </div>
                     <div class="d-flex gap-2">
-                        @php $stopRoute = 'activities-board.admin.users.stop-impersonation'; @endphp
+                        @php $stopRoute = \App\ProjectManager::getCurrentProject()?->getPrefix() . '.admin.users.stop-impersonation'; @endphp
                         @if(\Illuminate\Support\Facades\Route::has($stopRoute))
                             <form method="POST" action="{{ route($stopRoute) }}" style="display:inline;">
                                 @csrf
