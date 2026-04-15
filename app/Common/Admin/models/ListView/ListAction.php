@@ -27,6 +27,8 @@ class ListAction
 
     private string $formMethod;
 
+    private string $target;
+
     public function __construct(string $label, string $route, array $options = [])
     {
         $this->label = $label;
@@ -39,6 +41,7 @@ class ListAction
         $this->routeParams = $options['route_params'] ?? [];
         $this->permission = $options['permission'] ?? null;
         $this->formMethod = $options['form_method'] ?? 'DELETE';
+        $this->target = $options['target'] ?? '';
     }
 
     public function getLabel(): string
@@ -94,6 +97,11 @@ class ListAction
     public function getFormMethod(): string
     {
         return $this->formMethod;
+    }
+
+    public function getTarget(): string
+    {
+        return $this->target;
     }
 
     public function getUrl($item): string

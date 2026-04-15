@@ -107,6 +107,7 @@
                                                         href="{{ $action->getUrl($item) }}"
                                                         class="text-decoration-none"
                                                         title="{{ $action->getLabel() }}"
+                                                        @if($action->getTarget()) target="{{ $action->getTarget() }}" @endif
                                                         @if($action->requiresConfirmation())
                                                             onclick="return confirm('{{ $action->getConfirmMessage() }}')"
                                                         @endif
