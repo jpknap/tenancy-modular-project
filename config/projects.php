@@ -10,15 +10,17 @@ use App\Projects\Landlord\Http\Controller\ProfileController as LandlordProfileCo
 use App\Projects\ActivitiesBoard\Http\Controller\ProfileController as ActivitiesBoardProfileController;
 use App\Projects\SportCompetition\Adapters\Admin\UserAdmin as SportCompetitionUserAdmin;
 use App\Projects\SportCompetition\Http\Controller\Auth\AuthController as SportCompetitionAuthController;
+use App\Projects\SportCompetition\Http\Controller\Admin\ImpersonationController as SportCompetitionImpersonationController;
+use App\Projects\Landlord\Http\Controller\Admin\ImpersonationController as LandlordImpersonationController;
 
 return [
     'landlord' => [
         'admins' => [UserAdmin::class, TenantAdmin::class],
-        'controllers' => [AuthController::class, LandlordProfileController::class],
+        'controllers' => [AuthController::class, LandlordProfileController::class, LandlordImpersonationController::class],
     ],
     'sport-competition' => [
         'admins' => [SportCompetitionUserAdmin::class],
-        'controllers' => [SportCompetitionAuthController::class],
+        'controllers' => [SportCompetitionAuthController::class, SportCompetitionImpersonationController::class],
     ],
     'activities-board' => [
         'admins' => [ActivityAdmin::class, ActivitiesBoardUserAdmin::class],

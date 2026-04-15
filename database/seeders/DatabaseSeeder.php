@@ -12,11 +12,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(RolesAndPermissionsSeeder::class);
+
         User::factory(10)->create();
-        User::factory()->create([
+
+        $testUser = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+        $testUser->assignRole('superadmin');
 
         // $this->call(TenantsSeeder::class);  // Deshabilitado: los tenants se crean desde el admin
         $this->call(TenantUsersSeeder::class);

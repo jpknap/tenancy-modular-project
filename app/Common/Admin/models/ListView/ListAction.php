@@ -23,6 +23,10 @@ class ListAction
 
     private array $routeParams;
 
+    private ?string $permission;
+
+    private string $formMethod;
+
     public function __construct(string $label, string $route, array $options = [])
     {
         $this->label = $label;
@@ -33,6 +37,8 @@ class ListAction
         $this->requiresConfirmation = $options['confirm'] ?? false;
         $this->confirmMessage = $options['confirm_message'] ?? '¿Está seguro?';
         $this->routeParams = $options['route_params'] ?? [];
+        $this->permission = $options['permission'] ?? null;
+        $this->formMethod = $options['form_method'] ?? 'DELETE';
     }
 
     public function getLabel(): string
@@ -73,6 +79,21 @@ class ListAction
     public function getRouteParams(): array
     {
         return $this->routeParams;
+    }
+
+    public function getPermission(): ?string
+    {
+        return $this->permission;
+    }
+
+    public function hasPermission(): bool
+    {
+        return $this->permission !== null;
+    }
+
+    public function getFormMethod(): string
+    {
+        return $this->formMethod;
     }
 
     public function getUrl($item): string

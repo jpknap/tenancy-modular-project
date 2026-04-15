@@ -31,6 +31,27 @@
     <!-- Contenido -->
     <main class="main-content">
         <div class="container-fluid">
+            @if(session('impersonator_id'))
+                @php
+                    $stopRoute = \App\ProjectManager::getCurrentProject()?->getPrefix() . '.admin.users.stop-impersonation';
+                @endphp
+                <div class="alert alert-warning d-flex align-items-center justify-content-between mb-3 border border-warning shadow-sm" role="alert">
+                    <div>
+                        <i class="bi bi-person-fill-gear me-2"></i>
+                        <strong>Modo suplantación:</strong>
+                        Estás actuando como <strong>{{ auth()->user()?->name }}</strong>.
+                    </div>
+                    @if(\Illuminate\Support\Facades\Route::has($stopRoute))
+                        <form method="POST" action="{{ route($stopRoute) }}" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-warning fw-semibold">
+                                <i class="bi bi-box-arrow-left me-1"></i>Detener suplantación
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </main>

@@ -9,13 +9,16 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
-// Rutas del Landlord (dominios centrales: localhost, admin.localhost, etc.)
+// Rutas del Landlord y SportCompetition (dominios centrales)
 Route::middleware([
     'web',
     EnsureIsCentralDomain::class,
     ProjectInitialized::class,
 ])->group(function () {
-    $routes = LandlordProject::getEndpoints();
+    $routes = [
+        ...LandlordProject::getEndpoints(),
+        ...SportCompetitionProject::getEndpoints(),
+    ];
 
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
