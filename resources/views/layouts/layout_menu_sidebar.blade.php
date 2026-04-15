@@ -52,6 +52,27 @@
                 </div>
             @endif
 
+            @if(session('system_impersonator_id'))
+                <div class="alert alert-danger d-flex align-items-center justify-content-between mb-3 border border-danger shadow-sm" role="alert">
+                    <div>
+                        <i class="bi bi-incognito me-2"></i>
+                        <strong>Suplantando:</strong>
+                        Estás actuando como <strong>{{ auth()->user()?->name }}</strong> dentro del tenant.
+                    </div>
+                    <div class="d-flex gap-2">
+                        @php $stopRoute = 'activities-board.admin.users.stop-impersonation'; @endphp
+                        @if(\Illuminate\Support\Facades\Route::has($stopRoute))
+                            <form method="POST" action="{{ route($stopRoute) }}" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-outline-danger fw-semibold">
+                                    <i class="bi bi-person-x me-1"></i>Salir de suplantación
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </main>
