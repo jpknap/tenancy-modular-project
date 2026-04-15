@@ -12,11 +12,12 @@ use App\Projects\SportCompetition\Adapters\Admin\UserAdmin as SportCompetitionUs
 use App\Projects\SportCompetition\Http\Controller\Auth\AuthController as SportCompetitionAuthController;
 use App\Projects\SportCompetition\Http\Controller\Admin\ImpersonationController as SportCompetitionImpersonationController;
 use App\Projects\Landlord\Http\Controller\Admin\ImpersonationController as LandlordImpersonationController;
+use App\Projects\Landlord\Http\Controller\Admin\TenantAccessController as LandlordTenantAccessController;
 
 return [
     'landlord' => [
         'admins' => [UserAdmin::class, TenantAdmin::class],
-        'controllers' => [AuthController::class, LandlordProfileController::class, LandlordImpersonationController::class],
+        'controllers' => [AuthController::class, LandlordProfileController::class, LandlordImpersonationController::class, LandlordTenantAccessController::class],
     ],
     'sport-competition' => [
         'admins' => [SportCompetitionUserAdmin::class],

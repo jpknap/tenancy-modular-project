@@ -117,6 +117,13 @@ class TenantAdmin extends AdminBaseAdapter
             ],
         ]);
 
+        $config->addAction('Acceder', 'landlord.admin.tenants.system-access', [
+            'icon'         => 'bi-box-arrow-in-right text-success',
+            'type'         => 'link',
+            'target'       => '_blank',
+            'route_params' => ['id' => 'id'],
+        ]);
+
         $config->addAction(__('admin.actions.edit'), $this->getUrlName('edit'), [
             'icon'         => 'bi-pencil text-primary',
             'route_params' => ['id' => 'id'],

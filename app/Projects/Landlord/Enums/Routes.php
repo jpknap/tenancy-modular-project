@@ -17,6 +17,7 @@ enum Routes: string
     case TenantCreate = 'landlord.admin.tenants.create';
     case TenantEdit   = 'landlord.admin.tenants.edit';
     case TenantDelete = 'landlord.admin.tenants.delete';
+    case TenantAccess = 'landlord.admin.tenants.system-access';
 
     // Users
     case UserList            = 'landlord.admin.users.list';
