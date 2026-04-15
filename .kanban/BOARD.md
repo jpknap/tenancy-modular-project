@@ -1,7 +1,4 @@
 ## backlog
-- [ ] #020 | Vista selección de usuario para suplantar | core | high | user-impersonation | SystemImpersonationController protegido por EnsureIsSystemUser
-- [ ] #021 | Impersonation service start/stop en tenant | core | high | user-impersonation | start/stop sin paquete, sesión, BaseImpersonationController en Common
-- [ ] #022 | Banner visual de suplantación activa | core | medium | user-impersonation | Banner naranja, directiva @impersonating
 - [ ] #023 | Log de auditoría de suplantaciones | landlord | low | user-impersonation | Tabla central impersonation_logs, vista en landlord admin
 - [ ] #029 | UI permisos extra al rol admin (fase 2) | core | low | permission-system | Vista /admin/settings/permissions, syncPermissions por rol
 - [ ] #010 | Helper TimezoneDisplay service | core | medium | timezone-config | display(Carbon $date, string $format): string con timezone del usuario activo
@@ -34,3 +31,6 @@
 - [x] #017 | Crear system_user automático al crear tenant | landlord | high | user-impersonation | TenantSystemUserSeeder en setupDefaultSettings() post RolesAndPermissionsSeeder
 - [x] #018 | Acción "Acceder al Tenant" en lista de tenants | landlord | high | user-impersonation | TenantAccessController + ListAction target=_blank + verificación superadmin
 - [x] #019 | Endpoint /system-login en tenant | core | high | user-impersonation | SystemLoginController, valida HMAC+exp+one-time-use+is_system_user, Auth::loginUsingId
+- [x] #020 | Vista selección de usuario para suplantar | core | high | user-impersonation | Acción Suplantar en UserAdmin con condition callable, solo visible para system_user
+- [x] #021 | Impersonation start/stop en tenant | core | high | user-impersonation | ImpersonationController + StopImpersonationController, session system_impersonator_id
+- [x] #022 | Banner visual de suplantación activa | core | medium | user-impersonation | Banner rojo en layout con route dinámico via ProjectManager
