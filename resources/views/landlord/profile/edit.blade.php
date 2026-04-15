@@ -1,12 +1,12 @@
 @extends('layouts.layout_menu_sidebar')
 
-@section('title', 'Mi Perfil')
+@section('title', __('profile.title'))
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="h3 mb-1 fw-bold">Mi Perfil</h2>
-            <p class="text-muted mb-0">Actualiza tus datos personales</p>
+            <h2 class="h3 mb-1 fw-bold">{{ __('profile.title') }}</h2>
+            <p class="text-muted mb-0">{{ __('profile.subtitle') }}</p>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
     @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="bi bi-exclamation-triangle me-2"></i>
-            <strong>Hay errores en el formulario:</strong>
+            <strong>{{ __('profile.errors_title') }}</strong>
             <ul class="mb-0 mt-2">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -44,7 +44,7 @@
 
             <div class="d-flex gap-2 mt-4">
                 <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-circle me-2"></i>Guardar cambios
+                    <i class="bi bi-check-circle me-2"></i>{{ __('profile.save') }}
                 </button>
             </div>
         </form>

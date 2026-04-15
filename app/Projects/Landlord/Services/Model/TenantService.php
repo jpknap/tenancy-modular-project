@@ -27,12 +27,14 @@ class TenantService
         $subdomain = $data['subdomain'];
 
         $tenantData = [
-            'name' => $data['name'],
-            'identifier' => $identifier,
+            'name'            => $data['name'],
+            'identifier'      => $identifier,
             'current_project' => $data['current_project'] ?? null,
-            'data' => [
-                'email' => $data['email'] ?? null,
-                'status' => $data['status'] ?? 'pending',
+            'timezone'        => $data['timezone'] ?? 'UTC',
+            'locale'          => $data['locale'] ?? 'es',
+            'data'            => [
+                'email'       => $data['email'] ?? null,
+                'status'      => $data['status'] ?? 'pending',
                 'description' => $data['description'] ?? null,
             ],
         ];
@@ -58,11 +60,13 @@ class TenantService
             $currentData = $tenant->data ?? [];
 
             $tenantData = [
-                'name' => $data['name'],
+                'name'            => $data['name'],
                 'current_project' => $data['current_project'] ?? $tenant->current_project,
-                'data' => array_merge($currentData, [
-                    'email' => $data['email'] ?? null,
-                    'status' => $data['status'] ?? 'pending',
+                'timezone'        => $data['timezone'] ?? $tenant->timezone,
+                'locale'          => $data['locale'] ?? $tenant->locale,
+                'data'            => array_merge($currentData, [
+                    'email'       => $data['email'] ?? null,
+                    'status'      => $data['status'] ?? 'pending',
                     'description' => $data['description'] ?? null,
                 ]),
             ];

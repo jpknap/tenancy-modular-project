@@ -36,10 +36,15 @@ abstract class ProfileController extends Controller
     {
         $user = Auth::guard($this->guard())->user();
 
-        $user->update($request->only('name', 'email'));
+        $data = $request->only('name', 'email', 'locale');
+        $user->update($data);
+
+        if (! empty($data['locale'])) {
+            session(['locale' => $data['locale']]);
+        }
 
         return redirect()
             ->route($this->profileRoute())
-            ->with('success', 'Perfil actualizado correctamente.');
+            ->with('success', __('profile.updated'));
     }
 }

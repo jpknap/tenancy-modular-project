@@ -22,6 +22,7 @@ class SportCompetitionProject implements ProjectInterface
     {
         $this->registerServiceProvider();
         $this->initMenu();
+        $this->registerTranslations();
     }
 
     /**
@@ -78,5 +79,15 @@ class SportCompetitionProject implements ProjectInterface
     public function getPathMigration(): string
     {
         return "SportCompetition";
+    }
+
+    public function getLangPath(): string
+    {
+        return lang_path('projects/sport-competition');
+    }
+
+    private function registerTranslations(): void
+    {
+        app('translator')->addNamespace(static::$prefix, $this->getLangPath());
     }
 }

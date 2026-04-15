@@ -1,10 +1,16 @@
 <?php
 
 // Rutas de Tenants (subdominios de tenant)
+use App\Common\Http\Controller\LocaleSwitchController;
 use App\Http\Middleware\ProjectInitialized;
 use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+
+// Cambio de idioma de sesión (disponible en subdominios tenant)
+Route::middleware(['web', InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+    ->post('/locale/switch', [LocaleSwitchController::class, 'switch'])
+    ->name('tenant.locale.switch');
 
 Route::middleware([
     'web',

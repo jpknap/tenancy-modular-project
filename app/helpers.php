@@ -1,6 +1,21 @@
 <?php
 
+use App\ProjectManager;
 use Carbon\Carbon;
+
+if (! function_exists('p__')) {
+    /**
+     * Traduce una clave usando el namespace del proyecto activo.
+     * Uso: p__('messages.tenant.created')  →  __('landlord::messages.tenant.created')
+     */
+    function p__(string $key, array $replace = [], ?string $locale = null): string
+    {
+        $project = ProjectManager::getCurrentProject();
+        $namespace = $project ? $project::getPrefix() : 'common';
+
+        return __("{$namespace}::{$key}", $replace, $locale);
+    }
+}
 
 if (! function_exists('display_date')) {
     /**

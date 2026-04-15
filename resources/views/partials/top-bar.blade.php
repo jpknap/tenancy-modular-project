@@ -11,6 +11,32 @@
     
     {{-- User Actions --}}
     <div class="topbar-right d-flex align-items-center gap-3">
+        {{-- Language Switcher --}}
+        @php
+            $localeLabels = ['es' => '🇪🇸 ES', 'en' => '🇬🇧 EN', 'pt' => '🇧🇷 PT'];
+            $currentLocale = app()->getLocale();
+            $localeSwitchRoute = Route::has('tenant.locale.switch') ? 'tenant.locale.switch' : 'locale.switch';
+        @endphp
+        <div class="dropdown">
+            <button class="btn btn-light btn-sm d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown">
+                <span>{{ $localeLabels[$currentLocale] ?? strtoupper($currentLocale) }}</span>
+                <i class="bi bi-chevron-down small"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                @foreach($localeLabels as $code => $label)
+                    <li>
+                        <form method="POST" action="{{ route($localeSwitchRoute) }}">
+                            @csrf
+                            <input type="hidden" name="locale" value="{{ $code }}">
+                            <button type="submit"
+                                class="dropdown-item {{ $currentLocale === $code ? 'active' : '' }}">
+                                {{ $label }}
+                            </button>
+                        </form>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
         @if(isset($topbarData['notifications']) && count($topbarData['notifications']) > 0)
             <div class="dropdown">
                 <button class="btn btn-light position-relative" type="button" data-bs-toggle="dropdown">

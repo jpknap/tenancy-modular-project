@@ -62,7 +62,7 @@ abstract class BaseAuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Las credenciales no son correctas.',
+            'email' => __('auth.failed'),
         ])->onlyInput('email');
     }
 

@@ -10,8 +10,8 @@ enum FormContextEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::CREATE => 'Crear',
-            self::EDIT   => 'Editar',
+            self::CREATE => __('common.create'),
+            self::EDIT   => __('common.edit'),
         };
     }
 
