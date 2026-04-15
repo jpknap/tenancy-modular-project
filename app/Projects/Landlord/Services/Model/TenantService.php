@@ -200,6 +200,7 @@ class TenantService
     {
         $tenant->run(function () {
             (new \Database\Seeders\RolesAndPermissionsSeeder())->run();
+            (new \Database\Seeders\TenantSystemUserSeeder())->run();
         });
     }
 
