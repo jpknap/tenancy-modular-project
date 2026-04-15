@@ -14,11 +14,14 @@ class TenantSystemUserSeeder extends Seeder
         $user = User::firstOrCreate(
             ['email' => 'system@system.internal'],
             [
-                'name'           => 'System',
-                'password'       => Hash::make(Str::random(32)),
-                'is_system_user' => true,
+                'name'     => 'System',
+                'password' => Hash::make(Str::random(32)),
             ]
         );
+
+        if (! $user->is_system_user) {
+            $user->forceFill(['is_system_user' => true])->save();
+        }
 
         $user->assignRole('superadmin');
     }
