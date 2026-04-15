@@ -25,9 +25,12 @@ class SystemLoginController extends Controller
 
         abort_unless(hash_equals($expected, (string) $sig), 403);
 
-        // Token one-time use: rechazar si ya fue consumido
+        // Token one-time use via store 'database' — el driver file no soporta tags
+        // que CacheTenancyBootstrapper requiere. La tabla cache existe en cada tenant
+        // gracias a las migraciones Common.
         $tokenKey = 'system_login_used:' . hash('sha256', $sig);
-        abort_if(Cache::has($tokenKey), 403);
+        $cache = Cache::store('database');
+        abort_if($cache->has($tokenKey), 403);
 
         $user = User::find((int) $uid);
 
@@ -35,7 +38,7 @@ class SystemLoginController extends Controller
 
         // Marcar token como usado (TTL = tiempo restante hasta expiración)
         $ttl = max(1, (int) $exp - now()->timestamp);
-        Cache::put($tokenKey, true, $ttl);
+        $cache->put($tokenKey, true, $ttl);
 
         Auth::guard('web')->loginUsingId((int) $uid);
 
