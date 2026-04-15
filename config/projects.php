@@ -13,6 +13,8 @@ use App\Projects\SportCompetition\Http\Controller\Auth\AuthController as SportCo
 use App\Projects\SportCompetition\Http\Controller\Admin\ImpersonationController as SportCompetitionImpersonationController;
 use App\Projects\Landlord\Http\Controller\Admin\ImpersonationController as LandlordImpersonationController;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAccessController as LandlordTenantAccessController;
+use App\Projects\ActivitiesBoard\Http\Controller\Admin\ImpersonationController as ActivitiesBoardImpersonationController;
+use App\Projects\ActivitiesBoard\Http\Controller\Admin\StopImpersonationController as ActivitiesBoardStopImpersonationController;
 
 return [
     'landlord' => [
@@ -25,6 +27,6 @@ return [
     ],
     'activities-board' => [
         'admins' => [ActivityAdmin::class, ActivitiesBoardUserAdmin::class],
-        'controllers' => [AuthControllerAct::class, ActivitiesBoardProfileController::class],
+        'controllers' => [AuthControllerAct::class, ActivitiesBoardProfileController::class, ActivitiesBoardImpersonationController::class, ActivitiesBoardStopImpersonationController::class],
     ],
 ];

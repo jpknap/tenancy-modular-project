@@ -19,10 +19,12 @@ enum Routes: string
     case ActivityDelete = 'activities-board.admin.activities.delete';
 
     // Users
-    case UserList   = 'activities-board.admin.users.list';
-    case UserCreate = 'activities-board.admin.users.create';
-    case UserEdit   = 'activities-board.admin.users.edit';
-    case UserDelete = 'activities-board.admin.users.delete';
+    case UserList            = 'activities-board.admin.users.list';
+    case UserCreate          = 'activities-board.admin.users.create';
+    case UserEdit            = 'activities-board.admin.users.edit';
+    case UserDelete          = 'activities-board.admin.users.delete';
+    case UserImpersonate     = 'activities-board.admin.users.impersonate';
+    case UserStopImpersonate = 'activities-board.admin.users.stop-impersonation';
 
     public function route(mixed ...$parameters): string
     {
