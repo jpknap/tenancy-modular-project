@@ -15,10 +15,14 @@ class TenantUsersSeeder extends Seeder
         $tenants
             ->each(function (Tenant $tenant, int $key): void {
                 $tenant->run(function (): void {
-                    User::factory()->create([
+                    (new RolesAndPermissionsSeeder())->run();
+
+                    $testUser = User::factory()->create([
                         'name' => 'Test User',
                         'email' => 'test@example.com',
                     ]);
+                    $testUser->assignRole('superadmin');
+
                     User::factory()->count(8)->create();
                 });
             });

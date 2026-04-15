@@ -79,36 +79,41 @@
                                 <td class="text-end">
                                     <div class="d-flex gap-2 justify-content-end">
                                         @foreach($config->getActions() as $action)
-                                            @if($action->getType() === 'form')
-                                                <form
-                                                    method="POST"
-                                                    action="{{ $action->getUrl($item) }}"
-                                                    style="display: inline;"
-                                                    @if($action->requiresConfirmation())
-                                                        onsubmit="return confirm('{{ $action->getConfirmMessage() }}')"
-                                                    @endif
-                                                >
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button
-                                                        type="submit"
-                                                        class="btn btn-link p-0 text-decoration-none"
+                                            @php $adminUser = auth('landlord')->user() ?? auth()->user(); @endphp
+                                            @if(!$action->hasPermission() || $adminUser?->can($action->getPermission()))
+                                                @if($action->getType() === 'form')
+                                                    <form
+                                                        method="POST"
+                                                        action="{{ $action->getUrl($item) }}"
+                                                        style="display: inline;"
+                                                        @if($action->requiresConfirmation())
+                                                            onsubmit="return confirm('{{ $action->getConfirmMessage() }}')"
+                                                        @endif
+                                                    >
+                                                        @csrf
+                                                        @if($action->getFormMethod() !== 'POST')
+                                                            @method($action->getFormMethod())
+                                                        @endif
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-link p-0 text-decoration-none"
+                                                            title="{{ $action->getLabel() }}"
+                                                        >
+                                                            <i class="{{ $action->getIcon() }} fs-5"></i>
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <a
+                                                        href="{{ $action->getUrl($item) }}"
+                                                        class="text-decoration-none"
                                                         title="{{ $action->getLabel() }}"
+                                                        @if($action->requiresConfirmation())
+                                                            onclick="return confirm('{{ $action->getConfirmMessage() }}')"
+                                                        @endif
                                                     >
                                                         <i class="{{ $action->getIcon() }} fs-5"></i>
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <a
-                                                    href="{{ $action->getUrl($item) }}"
-                                                    class="text-decoration-none"
-                                                    title="{{ $action->getLabel() }}"
-                                                    @if($action->requiresConfirmation())
-                                                        onclick="return confirm('{{ $action->getConfirmMessage() }}')"
-                                                    @endif
-                                                >
-                                                    <i class="{{ $action->getIcon() }} fs-5"></i>
-                                                </a>
+                                                    </a>
+                                                @endif
                                             @endif
                                         @endforeach
                                     </div>

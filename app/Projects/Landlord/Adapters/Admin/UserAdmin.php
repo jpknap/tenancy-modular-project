@@ -100,6 +100,16 @@ class UserAdmin extends AdminBaseAdapter
             ],
         ]);
 
+        $config->addAction('Suplantar', $this->getUrlName('impersonate'), [
+            'icon' => 'bi-person-fill-gear text-warning',
+            'type' => 'form',
+            'form_method' => 'POST',
+            'route_params' => ['id' => 'id'],
+            'permission' => 'users:impersonate',
+            'confirm' => true,
+            'confirm_message' => '¿Deseas iniciar sesión como este usuario?',
+        ]);
+
         $config->addAction('Eliminar', $this->getUrlName('delete'), [
             'icon' => 'bi-trash text-danger',
             'route_params' => [

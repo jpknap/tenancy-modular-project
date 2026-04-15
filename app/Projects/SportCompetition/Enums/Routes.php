@@ -10,10 +10,12 @@ enum Routes: string
     case Logout    = 'sport-competition.auth.logout';
 
     // Users
-    case UserList   = 'sport-competition.admin.users.list';
-    case UserCreate = 'sport-competition.admin.users.create';
-    case UserEdit   = 'sport-competition.admin.users.edit';
-    case UserDelete = 'sport-competition.admin.users.delete';
+    case UserList            = 'sport-competition.admin.users.list';
+    case UserCreate          = 'sport-competition.admin.users.create';
+    case UserEdit            = 'sport-competition.admin.users.edit';
+    case UserDelete          = 'sport-competition.admin.users.delete';
+    case UserImpersonate     = 'sport-competition.admin.users.impersonate';
+    case UserStopImpersonate = 'sport-competition.admin.users.stop-impersonation';
 
     public function route(mixed ...$parameters): string
     {

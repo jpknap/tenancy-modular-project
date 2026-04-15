@@ -19,10 +19,12 @@ enum Routes: string
     case TenantDelete = 'landlord.admin.tenants.delete';
 
     // Users
-    case UserList   = 'landlord.admin.users.list';
-    case UserCreate = 'landlord.admin.users.create';
-    case UserEdit   = 'landlord.admin.users.edit';
-    case UserDelete = 'landlord.admin.users.delete';
+    case UserList            = 'landlord.admin.users.list';
+    case UserCreate          = 'landlord.admin.users.create';
+    case UserEdit            = 'landlord.admin.users.edit';
+    case UserDelete          = 'landlord.admin.users.delete';
+    case UserImpersonate     = 'landlord.admin.users.impersonate';
+    case UserStopImpersonate = 'landlord.admin.users.stop-impersonation';
 
     public function route(mixed ...$parameters): string
     {

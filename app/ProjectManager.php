@@ -5,6 +5,7 @@ namespace App;
 use App\Contracts\ProjectInterface;
 use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use App\Projects\Landlord\LandlordProject;
+use App\Projects\SportCompetition\SportCompetitionProject;
 use Exception;
 
 class ProjectManager
@@ -17,6 +18,7 @@ class ProjectManager
     private static array $projects = [
         LandlordProject::class,
         ActivitiesBoardProject::class,
+        SportCompetitionProject::class,
     ];
 
     public static function getProjects(): array
