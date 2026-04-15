@@ -7,6 +7,11 @@ use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
+// Acceso como system_user desde landlord
+Route::middleware(['web', InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+    ->get('/system-login', [\App\Common\Http\Controller\SystemLoginController::class, 'login'])
+    ->name('tenant.system-login');
+
 // Cambio de idioma de sesión (disponible en subdominios tenant)
 Route::middleware(['web', InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
     ->post('/locale/switch', [LocaleSwitchController::class, 'switch'])
