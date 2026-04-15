@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 #[RoutePrefix('admin')]
-#[Middleware(['auth.landlord'])]
+#[Middleware(['auth.web'])]
 abstract class AdminController extends Controller
 {
     public function __construct(

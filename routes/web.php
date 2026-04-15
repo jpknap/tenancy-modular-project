@@ -14,7 +14,7 @@ Route::middleware(['web', EnsureIsCentralDomain::class])
 
 // Rutas del Landlord (dominios centrales: localhost, admin.localhost, etc.)
 Route::middleware(['web', EnsureIsCentralDomain::class, ProjectInitialized::class])->group(function () {
-    $routes = [...LandlordProject::getEndpoints(), ...SportCompetitionProject::getEndpoints()];
+    $routes = [...LandlordProject::getEndpoints()];
 
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();

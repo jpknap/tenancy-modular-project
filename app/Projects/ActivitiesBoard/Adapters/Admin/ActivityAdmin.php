@@ -47,7 +47,8 @@ class ActivityAdmin extends AdminBaseAdapter
         $config->addStatCard(__('activities-board::messages.activity.stat_cards.today'), 0, [
             'icon' => 'bi-calendar-check',
             'color' => 'success',
-            'value_resolver' => fn ($items) => $items->filter(fn ($item) => $item->created_at->isToday())->count(),
+            'value_resolver' => fn ($items) => $items->filter(fn ($item) => $item->created_at->isToday())
+                ->count(),
         ]);
 
         $config->columns([

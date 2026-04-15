@@ -2,13 +2,15 @@
 
 // Rutas de Tenants (subdominios de tenant)
 use App\Common\Http\Controller\LocaleSwitchController;
+use App\Http\Middleware\LogTenancyState;
 use App\Http\Middleware\ProjectInitialized;
 use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
+use App\Projects\SportCompetition\SportCompetitionProject;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 // Acceso como system_user desde landlord
-Route::middleware(['web', InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+Route::middleware(['web', LogTenancyState::class, InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
     ->get('/system-login', [\App\Common\Http\Controller\SystemLoginController::class, 'login'])
     ->name('tenant.system-login');
 
@@ -19,11 +21,12 @@ Route::middleware(['web', InitializeTenancyByDomain::class, PreventAccessFromCen
 
 Route::middleware([
     'web',
+    LogTenancyState::class,
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
     ProjectInitialized::class,
 ])->group(function () {
-    $routes = [...ActivitiesBoardProject::getEndpoints()];
+    $routes = [...SportCompetitionProject::getEndpoints()];
 
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
