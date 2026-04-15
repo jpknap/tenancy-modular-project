@@ -1,12 +1,7 @@
 ## backlog
-- [ ] #015 | Migración is_system_user en users tenant | core | high | user-impersonation | Campo boolean + scope para excluir de queries normales
-- [ ] #016 | Migración tenant_system_accounts en BD central | landlord | high | user-impersonation | Tabla central con credenciales encriptadas del system_user
-- [ ] #017 | Crear system_user automático al crear tenant | landlord | high | user-impersonation | Hook en TenantService::create() post-migraciones
-- [ ] #018 | Botón "Acceder al Tenant" en lista de tenants | landlord | high | user-impersonation | Genera token un solo uso TTL 60s, redirige al tenant
-- [ ] #019 | Endpoint consumo de token en Tenant | core | high | user-impersonation | GET /system-access/{token}, valida cross-connection, login como system_user
 - [ ] #020 | Vista selección de usuario para suplantar | core | high | user-impersonation | SystemImpersonationController protegido por EnsureIsSystemUser
-- [ ] #021 | Instalar lab404 + canImpersonate en User model | core | high | user-impersonation | lab404/laravel-impersonate, start/stop via trait
-- [ ] #022 | Banner visual + Headers HTTP de suplantación | core | medium | user-impersonation | Banner naranja, directiva @impersonating, headers X-Impersonating
+- [ ] #021 | Impersonation service start/stop en tenant | core | high | user-impersonation | start/stop sin paquete, sesión, BaseImpersonationController en Common
+- [ ] #022 | Banner visual de suplantación activa | core | medium | user-impersonation | Banner naranja, directiva @impersonating
 - [ ] #023 | Log de auditoría de suplantaciones | landlord | low | user-impersonation | Tabla central impersonation_logs, vista en landlord admin
 - [ ] #029 | UI permisos extra al rol admin (fase 2) | core | low | permission-system | Vista /admin/settings/permissions, syncPermissions por rol
 - [ ] #010 | Helper TimezoneDisplay service | core | medium | timezone-config | display(Carbon $date, string $format): string con timezone del usuario activo
@@ -34,3 +29,8 @@
 - [x] #007 | Campo locale en formulario de usuario | core | medium | language-config | Select es/en en UserFormRequest de cada proyecto
 - [x] #008 | Archivos de traducción es/en | core | high | language-config | lang/es/ y lang/en/ para validation, auth, pagination y app.php
 - [x] #009 | Migración campo timezone en users y tenants | core | high | timezone-config | timezone VARCHAR(50) en migraciones existentes centrales y tenant
+- [x] #015 | Campo is_system_user en create_users_table | core | high | user-impersonation | Agregado directamente en la migración de creación + fillable en User models
+- [x] #016 | Token HMAC para acceso cross-domain al tenant | landlord | high | user-impersonation | HMAC-SHA256 firmado con app.key, TTL 2min, one-time use via Cache
+- [x] #017 | Crear system_user automático al crear tenant | landlord | high | user-impersonation | TenantSystemUserSeeder en setupDefaultSettings() post RolesAndPermissionsSeeder
+- [x] #018 | Acción "Acceder al Tenant" en lista de tenants | landlord | high | user-impersonation | TenantAccessController + ListAction target=_blank + verificación superadmin
+- [x] #019 | Endpoint /system-login en tenant | core | high | user-impersonation | SystemLoginController, valida HMAC+exp+one-time-use+is_system_user, Auth::loginUsingId
