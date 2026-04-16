@@ -59,7 +59,6 @@ class UserFormRequest extends BaseFormRequest
             ])
             ->select('timezone', __('fields.timezone'), timezone_options(withBlank: true), [
                 'help' => __('fields.help.timezone_inherit'),
-            ]);
             ])
             ->select('role', 'Rol', UserRole::options(), ['required' => false, 'can' => 'roles:assign']);
     }

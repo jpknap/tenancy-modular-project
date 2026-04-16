@@ -6,6 +6,16 @@
 - [ ] #012 | Campo timezone en formularios de usuario | core | medium | timezone-config | Select con timezone_identifiers_list() en UserFormRequest
 - [ ] #013 | Sección Configuración General admin (timezone) | core | medium | timezone-config | Compartida con language-config, campo timezone de tenant
 - [ ] #014 | Input UTC en entidades con fechas | activities-board | medium | timezone-config | Conversión UTC en ActivityFormRequest y similares
+- [ ] #030 | Instalar owen-it/laravel-auditing + config | core | high | audit-system | composer require, config/audit.php, connection=null para stancl/tenancy
+- [ ] #031 | UserResolver con guard dinámico | core | high | audit-system | app/Common/Audit/UserResolver.php, detecta guard landlord vs web
+- [ ] #032 | Migration tabla audits en schemas tenant | core | high | audit-system | database/migrations/projects/Common/, índices compuestos
+- [ ] #033 | Migration tabla audits en DB central | landlord | high | audit-system | database/migrations/ raíz, para auditar modelo Tenant
+- [ ] #034 | Trait Auditable en modelos centrales | core | high | audit-system | User.php + Tenant.php con $auditExclude password
+- [ ] #035 | Trait Auditable en modelos tenant | all | high | audit-system | Activity.php, User tenant, sin $auditConnection
+- [ ] #036 | Crear modelos SportCompetition | sport-competition | medium | audit-system | Competition, Team, Player, GameMatch con Auditable + fillable
+- [ ] #037 | UI Audit panel tenant | all | medium | audit-system | AuditController read-only, vistas list/show con diff old/new
+- [ ] #038 | UI Audit cross-tenant landlord | landlord | medium | audit-system | $tenant->run() para consultar audits por tenant
+- [ ] #039 | Comando audit:prune + schedule | core | low | audit-system | Hard delete audits > N días en todos los tenants
 
 ## todo
 

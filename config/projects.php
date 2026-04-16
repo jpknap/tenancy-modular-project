@@ -8,6 +8,7 @@ use App\Projects\ActivitiesBoard\Http\Controller\Auth\AuthController as AuthCont
 use App\Projects\ActivitiesBoard\Http\Controller\ProfileController as ActivitiesBoardProfileController;
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
 use App\Projects\Landlord\Adapters\Admin\UserAdmin;
+use App\Projects\Landlord\Http\Controller\Admin\AuditController;
 use App\Projects\Landlord\Http\Controller\Admin\ImpersonationController as LandlordImpersonationController;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAccessController as LandlordTenantAccessController;
 use App\Projects\Landlord\Http\Controller\Auth\AuthController;
@@ -24,6 +25,7 @@ return [
             LandlordProfileController::class,
             LandlordImpersonationController::class,
             LandlordTenantAccessController::class,
+            AuditController::class
         ],
     ],
     'sport-competition' => [
