@@ -5,21 +5,22 @@ namespace App\Projects\ActivitiesBoard\Services;
 use App\DTO\Menu\MenuBuilder;
 use App\DTO\Menu\MenuItem;
 use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
+use App\Projects\ActivitiesBoard\Enums\Routes;
 
 class MenuBuilderService
 {
     protected static array $items = [
-        'activities' => [
-            'label' => 'Actividades',
-            'alias_route' => 'activities-board.admin.activities.list',
-            'icon' => 'bi-list-check',
+        'users' => [
+            'label' => 'Usuarios',
+            'alias_route' => Routes::UserList->value,
+            'icon' => 'bi-people',
             'permissions' => [],
             'children' => [],
         ],
-        'users' => [
-            'label' => 'Usuarios',
-            'alias_route' => 'activities-board.admin.users.list',
-            'icon' => 'bi-people',
+        'activities' => [
+            'label' => 'Actividades',
+            'alias_route' => Routes::ActivityList->value,
+            'icon' => 'bi-list-check',
             'permissions' => [],
             'children' => [],
         ],

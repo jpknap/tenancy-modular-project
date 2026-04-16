@@ -26,7 +26,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
     ProjectInitialized::class,
 ])->group(function () {
-    $routes = [...SportCompetitionProject::getEndpoints()];
+    $routes = [...SportCompetitionProject::getEndpoints(), ...ActivitiesBoardProject::getEndpoints()];
 
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
