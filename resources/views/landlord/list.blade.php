@@ -64,24 +64,29 @@
                             <th scope="col" class="fw-semibold text-end">Acciones</th>
                         @endif
                     </tr>
-                    <tr class="border-top">
-                        @foreach($config->getColumns() as $column)
-                            @if($column->isVisible())
-                                <td class="p-2">
-                                    @if($column->hasFilter())
-                                        <div class="d-flex">
-                                            {!! $column->getFilter()->render($column->getKey(), request()->input("filters.{$column->getKey()}")) !!}
-                                        </div>
-                                    @else
-                                        <input type="text" class="form-control form-control-sm" placeholder="—" disabled>
-                                    @endif
-                                </td>
+                    @php
+                        $hasAnyFilters = collect($config->getColumns())
+                            ->filter(fn($col) => $col->isVisible() && $col->hasFilter())
+                            ->count() > 0;
+                    @endphp
+                    @if($hasAnyFilters)
+                        <tr class="border-top">
+                            @foreach($config->getColumns() as $column)
+                                @if($column->isVisible())
+                                    <td class="p-2">
+                                        @if($column->hasFilter())
+                                            <div class="d-flex">
+                                                {!! $column->getFilter()->render($column->getKey(), request()->input("filters.{$column->getKey()}")) !!}
+                                            </div>
+                                        @endif
+                                    </td>
+                                @endif
+                            @endforeach
+                            @if(count($config->getActions()) > 0)
+                                <td></td>
                             @endif
-                        @endforeach
-                        @if(count($config->getActions()) > 0)
-                            <td></td>
-                        @endif
-                    </tr>
+                        </tr>
+                    @endif
                 </thead>
                 <tbody>
                     @forelse($items as $item)
