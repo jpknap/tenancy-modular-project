@@ -64,6 +64,24 @@
                             <th scope="col" class="fw-semibold text-end">Acciones</th>
                         @endif
                     </tr>
+                    <tr class="border-top">
+                        @foreach($config->getColumns() as $column)
+                            @if($column->isVisible())
+                                <td class="p-2">
+                                    @if($column->hasFilter())
+                                        <div class="d-flex">
+                                            {!! $column->getFilter()->render($column->getKey(), request()->input("filters.{$column->getKey()}")) !!}
+                                        </div>
+                                    @else
+                                        <input type="text" class="form-control form-control-sm" placeholder="—" disabled>
+                                    @endif
+                                </td>
+                            @endif
+                        @endforeach
+                        @if(count($config->getActions()) > 0)
+                            <td></td>
+                        @endif
+                    </tr>
                 </thead>
                 <tbody>
                     @forelse($items as $item)
@@ -145,4 +163,34 @@
             </div>
         @endif
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterInputs = document.querySelectorAll('.column-filter-text');
+            let debounceTimer;
+
+            filterInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    clearTimeout(debounceTimer);
+
+                    debounceTimer = setTimeout(() => {
+                        const filterValue = this.value.trim();
+                        const columnName = this.dataset.column;
+
+                        const url = new URL(window.location.href);
+                        const searchParams = new URLSearchParams(url.search);
+
+                        if (filterValue.length >= 3) {
+                            searchParams.set(`filters[${columnName}]`, filterValue);
+                        } else {
+                            searchParams.delete(`filters[${columnName}]`);
+                        }
+
+                        url.search = searchParams.toString();
+                        window.location.href = url.toString();
+                    }, 300);
+                });
+            });
+        });
+    </script>
 @endsection

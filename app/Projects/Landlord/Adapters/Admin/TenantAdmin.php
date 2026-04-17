@@ -6,6 +6,7 @@ use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Common\Admin\Config\CreateViewConfig;
 use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
+use App\Common\Admin\Services\Filters\TextFilterStrategy;
 use App\Contracts\ProjectInterface;
 use App\Models\Tenant;
 use App\ProjectManager;
@@ -122,6 +123,8 @@ class TenantAdmin extends AdminBaseAdapter
                 'sortable' => true,
             ],
         ]);
+
+        $config->getColumn('name')?->setFilter(TextFilterStrategy::class);
 
         $config->addAction('Acceder', 'landlord.admin.tenants.system-access', [
             'icon' => 'bi-box-arrow-in-right text-success',

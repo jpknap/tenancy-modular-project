@@ -25,6 +25,8 @@ class ListColumn
 
     private bool $visible;
 
+    private ?string $filterStrategy = null;
+
     public function __construct(string $key, string $label, array $options = [])
     {
         $this->key = $key;
@@ -97,6 +99,31 @@ class ListColumn
     public function isVisible(): bool
     {
         return $this->visible;
+    }
+
+    public function setFilter(string $strategyClass): self
+    {
+        $this->filterStrategy = $strategyClass;
+        return $this;
+    }
+
+    public function hasFilter(): bool
+    {
+        return $this->filterStrategy !== null;
+    }
+
+    public function getFilter(): ?object
+    {
+        if ($this->filterStrategy === null) {
+            return null;
+        }
+
+        return new $this->filterStrategy();
+    }
+
+    public function getFilterStrategy(): ?string
+    {
+        return $this->filterStrategy;
     }
 
     private function formatBadge($value): string

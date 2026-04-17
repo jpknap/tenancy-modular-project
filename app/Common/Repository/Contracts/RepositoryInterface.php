@@ -25,4 +25,6 @@ interface RepositoryInterface
     public function delete(int $id): bool;
 
     public function paginate(int $perPage = 15): LengthAwarePaginator;
+
+    public function getQueryBuilder(): \Illuminate\Database\Eloquent\Builder;
 }

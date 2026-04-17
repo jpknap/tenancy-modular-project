@@ -143,6 +143,14 @@ abstract class AdminBaseAdapter implements AdminAdapterInterface
             ->paginate($perPage);
     }
 
+    public function paginateWithFilters(ListViewConfig $config, array $filters, int $perPage = 15)
+    {
+        $query = $this->getRepository()->getQueryBuilder();
+        $query = $config->applyFilters($query, $filters);
+
+        return $query->paginate($perPage);
+    }
+
     public function find($id)
     {
         return $this->getRepository()

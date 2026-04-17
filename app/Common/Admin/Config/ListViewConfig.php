@@ -36,6 +36,17 @@ class ListViewConfig
         return $this;
     }
 
+    public function getColumn(string $key): ?ListColumn
+    {
+        foreach ($this->columns as $column) {
+            if ($column->getKey() === $key) {
+                return $column;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Agrega múltiples columnas
      */
@@ -105,5 +116,29 @@ class ListViewConfig
     public function getEmptyMessage(): string
     {
         return $this->emptyMessage;
+    }
+
+    public function applyFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): \Illuminate\Database\Eloquent\Builder
+    {
+        foreach ($filters as $columnName => $filterValue) {
+            $column = $this->findColumn($columnName);
+            if ($column && $column->hasFilter()) {
+                $strategy = $column->getFilter();
+                $query = $strategy->applyFilter($query, $column->getKey(), $filterValue);
+            }
+        }
+
+        return $query;
+    }
+
+    private function findColumn(string $name): ?ListColumn
+    {
+        foreach ($this->columns as $column) {
+            if ($column->getKey() === $name) {
+                return $column;
+            }
+        }
+
+        return null;
     }
 }

@@ -87,6 +87,11 @@ abstract class BaseRepository implements RepositoryInterface
         return $this->model;
     }
 
+    public function getQueryBuilder(): \Illuminate\Database\Eloquent\Builder
+    {
+        return $this->model->query();
+    }
+
     /**
      * Especifica el modelo a usar
      */

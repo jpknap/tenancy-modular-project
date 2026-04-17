@@ -21,10 +21,11 @@ abstract class AdminController extends Controller
     }
 
     #[Route('list', methods: ['GET'], name: 'list')]
-    public function list()
+    public function list(Request $request)
     {
         $config = $this->admin->getListViewConfig();
-        $items = $this->admin->paginate($config->getPerPage());
+        $filters = $request->input('filters', []);
+        $items = $this->admin->paginateWithFilters($config, $filters, $config->getPerPage());
 
         return view('landlord.list', [
             'admin' => $this->admin,
