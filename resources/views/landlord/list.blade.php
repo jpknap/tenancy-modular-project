@@ -172,6 +172,7 @@
             filterInputs.forEach(input => {
                 input.addEventListener('input', function() {
                     clearTimeout(debounceTimer);
+                    const focusedInput = this;
 
                     debounceTimer = setTimeout(() => {
                         const filterValue = this.value.trim();
@@ -187,7 +188,33 @@
                         }
 
                         url.search = searchParams.toString();
-                        window.location.href = url.toString();
+
+                        fetch(url.toString(), {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const newDoc = parser.parseFromString(html, 'text/html');
+
+                            const newTbody = newDoc.querySelector('tbody');
+                            const newPagination = newDoc.querySelector('.mt-3');
+                            const currentTbody = document.querySelector('tbody');
+                            const currentPagination = document.querySelector('.mt-3');
+
+                            if (newTbody) {
+                                currentTbody.innerHTML = newTbody.innerHTML;
+                            }
+
+                            if (newPagination && currentPagination) {
+                                currentPagination.innerHTML = newPagination.innerHTML;
+                            }
+
+                            window.history.replaceState({}, '', url.toString());
+                            focusedInput.focus();
+                        });
                     }, 300);
                 });
             });
