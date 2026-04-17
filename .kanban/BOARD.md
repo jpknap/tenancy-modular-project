@@ -1,4 +1,9 @@
 ## backlog
+- [ ] #040 | Servicio abstracto de filtros para modelos | core | high | admin-list-column-filters | Interface + estrategias por tipo (text, número, select, boolean)
+- [ ] #041 | Filtro texto con trigger a 3 caracteres | all | high | admin-list-column-filters | Input bajo columna, debounce, LIKE query, persiste en URL
+- [ ] #042 | Filtro números (=, >, <, >=, <=, entre) | all | medium | admin-list-column-filters | Dropdown operador + inputs dinámicos, WHERE query
+- [ ] #043 | Filtro select para relaciones | all | high | admin-list-column-filters | Endpoint /filter-options, whereHas(), soporte enums
+- [ ] #044 | Filtro boolean (Sí/No/Todos) | all | medium | admin-list-column-filters | Radio buttons/select, trigger inmediato, WHERE clause
 - [ ] #023 | Log de auditoría de suplantaciones | landlord | low | user-impersonation | Tabla central impersonation_logs, vista en landlord admin
 - [ ] #029 | UI permisos extra al rol admin (fase 2) | core | low | permission-system | Vista /admin/settings/permissions, syncPermissions por rol
 - [ ] #010 | Helper TimezoneDisplay service | core | medium | timezone-config | display(Carbon $date, string $format): string con timezone del usuario activo

@@ -141,7 +141,7 @@
                     a <strong>{{ $items->lastItem() ?? 0 }}</strong>
                     de <strong>{{ $items->total() }}</strong> resultados
                 </p>
-                {{ $items->links() }}
+                {{ $items->links('pagination::bootstrap-5') }}
             </div>
         @endif
     </div>
