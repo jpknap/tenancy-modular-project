@@ -5,6 +5,9 @@ namespace App\Projects\Landlord\Adapters\Admin;
 use App\Common\Admin\Adapter\AdminBaseAdapter;
 use App\Common\Admin\Config\EditViewConfig;
 use App\Common\Admin\Config\ListViewConfig;
+use App\Common\Admin\Services\Filters\BooleanFilterStrategy;
+use App\Common\Admin\Services\Filters\DateFilterStrategy;
+use App\Common\Admin\Services\Filters\NumberFilterStrategy;
 use App\Common\Admin\Services\Filters\TextFilterStrategy;
 use App\Models\User;
 use App\Projects\Landlord\FormRequests\UserFormRequest;
@@ -93,11 +96,11 @@ class UserAdmin extends AdminBaseAdapter
             ],
         ]);
 
-        $config->getColumn('id')?->setFilter(TextFilterStrategy::class);
+        $config->getColumn('id')?->setFilter(NumberFilterStrategy::class);
         $config->getColumn('name')?->setFilter(TextFilterStrategy::class);
         $config->getColumn('email')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('enabled')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('created_at')?->setFilter(TextFilterStrategy::class);
+        $config->getColumn('enabled')?->setFilter(BooleanFilterStrategy::class);
+        $config->getColumn('created_at')?->setFilter(DateFilterStrategy::class);
 
         $config->addAction(__('admin.actions.edit'), $this->getUrlName('edit'), [
             'icon' => 'bi-pencil text-primary',
