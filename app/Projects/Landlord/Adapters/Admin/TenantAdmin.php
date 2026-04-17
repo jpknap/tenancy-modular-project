@@ -124,7 +124,13 @@ class TenantAdmin extends AdminBaseAdapter
             ],
         ]);
 
+        $config->getColumn('id')?->setFilter(TextFilterStrategy::class);
         $config->getColumn('name')?->setFilter(TextFilterStrategy::class);
+        $config->getColumn('domains.0.subdomain')?->setFilter(TextFilterStrategy::class);
+        $config->getColumn('data.email')?->setFilter(TextFilterStrategy::class);
+        $config->getColumn('current_project')?->setFilter(TextFilterStrategy::class);
+        $config->getColumn('data.status')?->setFilter(TextFilterStrategy::class);
+        $config->getColumn('created_at')?->setFilter(TextFilterStrategy::class);
 
         $config->addAction('Acceder', 'landlord.admin.tenants.system-access', [
             'icon' => 'bi-box-arrow-in-right text-success',
