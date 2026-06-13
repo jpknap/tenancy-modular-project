@@ -12,7 +12,7 @@ class ExampleTest extends TestCase
      */
     public function testTheApplicationReturnsASuccessfulResponse(): void
     {
-        $response = $this->get('/app');
+        $response = $this->get('/landlord/auth/login');
         $response->assertStatus(200);
     }
 }

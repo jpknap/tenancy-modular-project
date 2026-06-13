@@ -18,7 +18,6 @@ class LandlordAuthControllerTest extends TestCase
         parent::setUp();
         \Artisan::call('migrate');
 
-        // Crear un usuario de prueba
         $this->user = User::create([
             'name' => 'Admin Landlord',
             'email' => 'admin@landlord.test',
@@ -29,7 +28,7 @@ class LandlordAuthControllerTest extends TestCase
     #[Test]
     public function itShowsLoginPage(): void
     {
-        $response = $this->get('/landlord/login');
+        $response = $this->get('/landlord/auth/login');
         $response->assertStatus(200)
             ->assertViewIs('landlord.auth.login');
     }
@@ -37,34 +36,34 @@ class LandlordAuthControllerTest extends TestCase
     #[Test]
     public function userCanLoginWithValidCredentials()
     {
-        $response = $this->post('/landlord/login', [
+        $response = $this->post('/landlord/auth/login', [
             'email' => 'admin@landlord.test',
             'password' => 'secret',
         ]);
 
-        $this->assertAuthenticated('web');
-        $response->assertRedirect('/landlord/dashboard');
+        $this->assertAuthenticated('landlord');
+        $response->assertRedirect(route('landlord.admin.tenants.list'));
     }
 
     #[Test]
     public function userCannotLoginWithInvalidCredentials()
     {
-        $response = $this->post('/landlord/login', [
+        $response = $this->post('/landlord/auth/login', [
             'email' => 'admin@landlord.test',
             'password' => 'wrong-password',
         ]);
 
-        $this->assertGuest('web');
+        $this->assertGuest('landlord');
         $response->assertSessionHasErrors('email');
     }
 
     #[Test]
     public function userCanLogout()
     {
-        $response = $this->actingAs($this->user, 'web')
-            ->post('/landlord/logout');
+        $response = $this->actingAs($this->user, 'landlord')
+            ->post('/landlord/auth/logout');
 
-        $this->assertGuest('web');
-        $response->assertRedirect('/landlord/login');
+        $this->assertGuest('landlord');
+        $response->assertRedirect(route('landlord.auth.login'));
     }
 }

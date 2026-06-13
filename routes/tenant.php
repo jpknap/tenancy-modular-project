@@ -25,6 +25,7 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
     ProjectInitialized::class,
+    'cache.user.roles',
 ])->group(function () {
     $routes = [...SportCompetitionProject::getEndpoints(), ...ActivitiesBoardProject::getEndpoints()];
 
