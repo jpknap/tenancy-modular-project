@@ -4,13 +4,14 @@ namespace Database\Seeders;
 
 use App\Models\Tenant;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class TenantUsersSeeder extends Seeder
 {
     public function run(): void
     {
-        /** @var \Illuminate\Database\Eloquent\Collection<int, Tenant> $tenants */
+        /** @var Collection<int, Tenant> $tenants */
         $tenants = Tenant::query()->get();
         $tenants
             ->each(function (Tenant $tenant, int $key): void {

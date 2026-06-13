@@ -1,4 +1,16 @@
 ## backlog
+- [ ] #045 | Setup Restify + Sanctum | core | high | restify-api | Instalar laravel-restify y sanctum, routes/api.php, HasApiTokens en User
+- [ ] #046 | Middleware ApiProjectContext | core | high | restify-api | Resuelve proyecto desde URL path {project}, reemplaza ProjectInitialized para API
+- [ ] #047 | Auth API Login/Logout Sanctum | core | high | restify-api | BaseAuthApiController, login retorna token, logout revoca, GET /me
+- [ ] #048 | RestifyBaseRepository base | core | high | restify-api | Clase abstracta integra Restify con RepositoryManager, fields() y rules() abstractos
+- [ ] #049 | CRUD Users Landlord | landlord | high | restify-api | Primer CRUD completo de referencia, acciones activate/deactivate
+- [ ] #050 | CRUD Tenants Landlord | landlord | high | restify-api | CRUD tenants con domains eager loading, acciones switch-project/activate/deactivate
+- [ ] #051 | CRUD Users + Activities ActivitiesBoard | activities-board | medium | restify-api | Dos repositories, rules delegando a FormRequests existentes
+- [ ] #052 | Eloquent Relationships SportCompetition | sport-competition | medium | restify-api | hasMany/belongsTo en Competition, Team, Player, GameMatch (prerequisito F9)
+- [ ] #053 | CRUD SportCompetition 4 modelos | sport-competition | medium | restify-api | Competition, Team, Player, GameMatch con acciones record-score/start/finish
+- [ ] #054 | Authorization Policies + Spatie | core | high | restify-api | Policies por modelo, Gate::policy(), permisos Spatie, seeder de permisos
+- [ ] #055 | OpenAPI Documentación automática | core | low | restify-api | Swagger habilitado en Restify, spec accesible por proyecto
+- [ ] #056 | Feature Tests API | core | high | restify-api | AuthApiTest, UserApiTest, ActivityApiTest, SportCompetitionApiTest, TenantBleedingTest
 - [ ] #040 | Servicio abstracto de filtros para modelos | core | high | admin-list-column-filters | Interface + estrategias por tipo (text, número, select, boolean)
 - [ ] #041 | Filtro texto con trigger a 3 caracteres | all | high | admin-list-column-filters | Input bajo columna, debounce, LIKE query, persiste en URL
 - [ ] #042 | Filtro números (=, >, <, >=, <=, entre) | all | medium | admin-list-column-filters | Dropdown operador + inputs dinámicos, WHERE query
