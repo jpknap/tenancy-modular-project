@@ -1,10 +1,10 @@
 <?php
 
+use App\Projects\ActivitiesBoard\Http\Controller\Auth\AuthController as AuthControllerAct;
 use App\Projects\ActivitiesBoard\Adapters\Admin\ActivityAdmin;
 use App\Projects\ActivitiesBoard\Adapters\Admin\UserAdmin as ActivitiesBoardUserAdmin;
 use App\Projects\ActivitiesBoard\Http\Controller\Admin\ImpersonationController as ActivitiesBoardImpersonationController;
 use App\Projects\ActivitiesBoard\Http\Controller\Admin\StopImpersonationController as ActivitiesBoardStopImpersonationController;
-use App\Projects\ActivitiesBoard\Http\Controller\Auth\AuthController as AuthControllerAct;
 use App\Projects\ActivitiesBoard\Http\Controller\ProfileController as ActivitiesBoardProfileController;
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
 use App\Projects\Landlord\Adapters\Admin\UserAdmin;

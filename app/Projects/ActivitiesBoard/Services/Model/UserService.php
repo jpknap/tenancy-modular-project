@@ -4,6 +4,7 @@ namespace App\Projects\ActivitiesBoard\Services\Model;
 
 use App\Common\Repository\Service\TransactionService;
 use App\Projects\ActivitiesBoard\Repositories\UserRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -14,48 +15,49 @@ class UserService
     ) {
     }
 
-    public function create(array $data)
+    public function create(array $data): Model
     {
         return $this->transactionService->execute(function () use ($data) {
-            // Hash password
             if (isset($data['password'])) {
                 $data['password'] = Hash::make($data['password']);
             }
 
-            // Remove password_confirmation
-            unset($data['password_confirmation']);
+            $role = $data['role'] ?? null;
+            unset($data['role'], $data['password_confirmation']);
 
-            return $this->userRepository->create($data);
+            $user = $this->userRepository->create($data);
+
+            if ($role !== null) {
+                $user->syncRoles([$role]);
+            }
+
+            return $user;
         });
     }
 
-    public function update(int $id, array $data)
+    public function update(int $id, array $data): Model
     {
         return $this->transactionService->execute(function () use ($id, $data) {
-            // Si no se proporciona contraseña, eliminarla del array
             if (empty($data['password'])) {
                 unset($data['password']);
             } else {
                 $data['password'] = Hash::make($data['password']);
             }
 
-            // Remove password_confirmation
-            unset($data['password_confirmation']);
+            $role = $data['role'] ?? null;
+            unset($data['role'], $data['password_confirmation']);
 
-            if (isset($data['role'])) {
-                $role = $data['role'];
-                unset($data['role']);
-                $user = $this->userRepository->update($id, $data);
-                // No permitir que superadmin se cambie el rol a sí mismo
-                $currentUser = auth()
-                    ->user();
+            $this->userRepository->update($id, $data);
+            $user = $this->userRepository->find($id);
+
+            if ($role !== null) {
+                $currentUser = auth()->user();
                 if (! $currentUser || $currentUser->id !== $user->id) {
                     $user->syncRoles([$role]);
                 }
-                return $user;
             }
 
-            return $this->userRepository->update($id, $data);
+            return $user;
         });
     }
 
@@ -66,7 +68,7 @@ class UserService
         });
     }
 
-    public function find(int $id)
+    public function find(int $id): ?Model
     {
         return $this->userRepository->find($id);
     }

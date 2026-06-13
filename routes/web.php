@@ -3,6 +3,7 @@
 use App\Common\Http\Controller\LocaleSwitchController;
 use App\Http\Middleware\EnsureIsCentralDomain;
 use App\Http\Middleware\ProjectInitialized;
+use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use App\Projects\Landlord\LandlordProject;
 use App\Projects\SportCompetition\SportCompetitionProject;
 use Illuminate\Support\Facades\Route;
@@ -12,9 +13,17 @@ Route::middleware(['web', EnsureIsCentralDomain::class])
     ->post('/locale/switch', [LocaleSwitchController::class, 'switch'])
     ->name('locale.switch');
 
-// Rutas del Landlord (dominios centrales: localhost, admin.localhost, etc.)
-Route::middleware(['web', EnsureIsCentralDomain::class, ProjectInitialized::class])->group(function () {
-    $routes = [...LandlordProject::getEndpoints()];
+// Rutas del Landlord y SportCompetition (dominios centrales)
+Route::middleware([
+    'web',
+    EnsureIsCentralDomain::class,
+    ProjectInitialized::class,
+])->group(function () {
+    $routes = [
+        ...LandlordProject::getEndpoints(),
+        ...SportCompetitionProject::getEndpoints(),
+        ...ActivitiesBoardProject::getEndpoints()
+    ];
 
     foreach ($routes as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
@@ -33,3 +42,4 @@ Route::middleware(['web', EnsureIsCentralDomain::class, ProjectInitialized::clas
         }
     }
 });
+

@@ -7,10 +7,14 @@ use App\Common\Repository\Service\TransactionService;
 use App\Common\Services\AlertManager;
 use App\Http\View\Composers\SidebarComposer;
 use App\Http\View\Composers\TopbarComposer;
-use Illuminate\Support\Facades\Blade;
+use App\Listeners\InvalidateUserRolesCache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Permission\Events\RoleAttachedEvent;
+use Spatie\Permission\Events\RoleDetachedEvent;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('partials.sidebar-menu', SidebarComposer::class);
         View::composer('partials.top-bar', TopbarComposer::class);
-
         Blade::directive('displayDate', fn ($expression) => "<?= display_date({$expression}) ?>");
+        Event::listen([RoleAttachedEvent::class, RoleDetachedEvent::class], InvalidateUserRolesCache::class);
     }
 }

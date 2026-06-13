@@ -28,7 +28,6 @@ class SportCompetitionServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
     }
 
     /**

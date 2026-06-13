@@ -48,8 +48,7 @@ if (! function_exists('resolve_display_timezone')) {
         }
 
         try {
-            $tenant = tenancy()
-                ->tenant;
+            $tenant = tenancy()->tenant;
             if ($tenant?->timezone) {
                 return $tenant->timezone;
             }
@@ -91,9 +90,7 @@ if (! function_exists('timezone_options')) {
      */
     function timezone_options(bool $withBlank = false): array
     {
-        $options = $withBlank ? [
-            '' => '— Predeterminado —',
-        ] : [];
+        $options = $withBlank ? ['' => '— Predeterminado —'] : [];
 
         $grouped = collect(timezone_identifiers_list())
             ->groupBy(fn ($tz) => str_contains($tz, '/') ? explode('/', $tz)[0] : 'Otros');

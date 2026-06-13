@@ -1,7 +1,9 @@
 <?php
 
 return [
+
     'models' => [
+
         /*
          * When using the "HasPermissions" trait from this package, we need to know which
          * Eloquent model should be used to retrieve your permissions. Of course, it
@@ -23,9 +25,11 @@ return [
          */
 
         'role' => Spatie\Permission\Models\Role::class,
+
     ],
 
     'table_names' => [
+
         /*
          * When using the "HasRoles" trait from this package, we need to know which
          * table should be used to retrieve your roles. We have chosen a basic
@@ -115,7 +119,7 @@ return [
      *
      * To enable, set to true, and then create listeners to watch these events.
      */
-    'events_enabled' => false,
+    'events_enabled' => true,
 
     /*
      * Teams Feature.
@@ -173,6 +177,7 @@ return [
     /* Cache-specific settings */
 
     'cache' => [
+
         /*
          * By default all permissions are cached for 24 hours to speed up performance.
          * When permissions or roles are updated the cache is flushed automatically.

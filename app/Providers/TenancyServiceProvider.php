@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Jobs\MigrateProjectDatabase;
+use App\Listeners\FlushPermissionCache;
 use App\Listeners\ProjectInitializedListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +76,7 @@ class TenancyServiceProvider extends ServiceProvider
             Events\TenancyInitialized::class => [
                 Listeners\BootstrapTenancy::class,
                 ProjectInitializedListener::class,
+                FlushPermissionCache::class,
             ],
 
             Events\EndingTenancy::class => [],

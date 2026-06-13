@@ -4,6 +4,7 @@ namespace App\Projects\SportCompetition\Services\Model;
 
 use App\Common\Repository\Service\TransactionService;
 use App\Projects\SportCompetition\Repositories\UserRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -14,56 +15,50 @@ class UserService
     ) {
     }
 
-    /**
-     * Crea un usuario (usado desde AdminController)
-     */
-    public function create(array $data)
+    public function create(array $data): Model
     {
         return $this->transactionService->execute(function () use ($data) {
-            // Hash de password si existe
             if (isset($data['password'])) {
                 $data['password'] = Hash::make($data['password']);
             }
 
-            // Crear usuario
+            $role = $data['role'] ?? null;
+            unset($data['role'], $data['password_confirmation']);
+
             $user = $this->userRepository->create($data);
 
-            // Asignar rol por defecto si existe
-            if (isset($data['role'])) {
-                $this->assignRole($user, $data['role']);
+            if ($role !== null) {
+                $user->syncRoles([$role]);
             }
 
             return $user;
         });
     }
 
-    /**
-     * Actualiza un usuario
-     */
-    public function update(int $userId, array $data)
+    public function update(int $userId, array $data): Model
     {
         return $this->transactionService->execute(function () use ($userId, $data) {
-            // Hash de password si existe
             if (isset($data['password'])) {
                 $data['password'] = Hash::make($data['password']);
             }
 
-            // Actualizar usuario
-            $updated = $this->userRepository->update($userId, $data);
+            $role = $data['role'] ?? null;
+            unset($data['role'], $data['password_confirmation']);
 
-            // Actualizar rol si cambió
-            if (isset($data['role'])) {
-                $user = $this->userRepository->find($userId);
-                $this->assignRole($user, $data['role']);
+            $this->userRepository->update($userId, $data);
+            $user = $this->userRepository->find($userId);
+
+            if ($role !== null) {
+                $currentUser = auth()->user();
+                if (! $currentUser || $currentUser->id !== $user->id) {
+                    $user->syncRoles([$role]);
+                }
             }
 
-            return $updated;
+            return $user;
         });
     }
 
-    /**
-     * Elimina un usuario
-     */
     public function delete(int $userId): bool
     {
         return $this->transactionService->execute(function () use ($userId) {
@@ -73,27 +68,11 @@ class UserService
                 throw new \Exception('User not found');
             }
 
-            // Lógica adicional antes de eliminar
             $this->beforeDelete($user);
 
             return $this->userRepository->delete($userId);
         });
     }
 
-    /**
-     * Asigna rol al usuario
-     */
-    private function assignRole($user, string $role): void
-    {
-        // Implementar lógica de roles
-        // Ejemplo: $user->syncRoles([$role]);
-    }
-
-    /**
-     * Lógica antes de eliminar
-     */
-    private function beforeDelete($user): void
-    {
-        // Ejemplo: eliminar archivos, notificaciones, etc.
-    }
+    protected function beforeDelete(Model $user): void {}
 }
