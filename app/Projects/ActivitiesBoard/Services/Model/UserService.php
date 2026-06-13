@@ -54,7 +54,6 @@ class UserService
                 $currentUser = auth()->user();
                 if (! $currentUser || $currentUser->id !== $user->id) {
                     $user->syncRoles([$role]);
-                    $this->forgetUserRolesCache($user);
                 }
             }
 
@@ -77,11 +76,5 @@ class UserService
     public function paginate(int $perPage = 15)
     {
         return $this->userRepository->paginate($perPage);
-    }
-
-    private function forgetUserRolesCache(Model $user): void
-    {
-        $tenantKey = tenancy()->tenant->getTenantKey();
-        cache()->forget("user.{$user->id}.roles.tenant.{$tenantKey}");
     }
 }

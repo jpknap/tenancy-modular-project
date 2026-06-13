@@ -52,7 +52,6 @@ class UserService
                 $currentUser = auth()->user();
                 if (! $currentUser || $currentUser->id !== $user->id) {
                     $user->syncRoles([$role]);
-                    $this->forgetUserRolesCache($user);
                 }
             }
 
@@ -76,10 +75,4 @@ class UserService
     }
 
     protected function beforeDelete(Model $user): void {}
-
-    private function forgetUserRolesCache(Model $user): void
-    {
-        $tenantKey = tenancy()->tenant->getTenantKey();
-        cache()->forget("user.{$user->id}.roles.tenant.{$tenantKey}");
-    }
 }
