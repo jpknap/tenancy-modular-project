@@ -21,22 +21,8 @@ class BooleanFilterStrategy implements FilterStrategyInterface
         return $query->where($column, '=', $boolValue ? 1 : 0);
     }
 
-    public function render(string $columnName, mixed $currentValue = null): string
+    public function getType(): string
     {
-        $value = htmlspecialchars($currentValue ?? '', ENT_QUOTES, 'UTF-8');
-        $id = 'filter_' . str_replace(['.', '-'], '_', $columnName);
-
-        return <<<HTML
-<select
-    class="form-select form-select-sm column-filter-text"
-    id="$id"
-    name="filters[$columnName]"
-    data-column="$columnName"
->
-    <option value="">— Todos —</option>
-    <option value="1" @selected($value === '1')>Sí</option>
-    <option value="0" @selected($value === '0')>No</option>
-</select>
-HTML;
+        return 'boolean';
     }
 }

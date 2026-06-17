@@ -108,7 +108,6 @@ class UserAdmin extends AdminBaseAdapter
                 'id' => 'id',
             ],
         ]);
-
         $config->addAction('Suplantar', $this->getUrlName('impersonate'), [
             'icon' => 'bi-person-fill-gear text-warning',
             'type' => 'form',
@@ -120,7 +119,6 @@ class UserAdmin extends AdminBaseAdapter
             'confirm' => true,
             'confirm_message' => '¿Deseas iniciar sesión como este usuario?',
         ]);
-
         $config->addAction(__('admin.actions.delete'), $this->getUrlName('delete'), [
             'icon' => 'bi-trash text-danger',
             'route_params' => [

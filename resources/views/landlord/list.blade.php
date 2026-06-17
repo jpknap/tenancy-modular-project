@@ -76,7 +76,10 @@
                                     <td class="p-2">
                                         @if($column->hasFilter())
                                             <div class="d-flex">
-                                                {!! $column->getFilter()->render($column->getKey(), request()->input("filters.{$column->getKey()}")) !!}
+                                                @include('components.admin.filters.' . $column->getFilterType(), [
+                                                    'columnName' => $column->getKey(),
+                                                    'currentValue' => request()->input("filters.{$column->getKey()}"),
+                                                ])
                                             </div>
                                         @endif
                                     </td>

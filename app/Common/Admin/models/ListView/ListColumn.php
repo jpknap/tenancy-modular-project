@@ -126,6 +126,11 @@ class ListColumn
         return $this->filterStrategy;
     }
 
+    public function getFilterType(): ?string
+    {
+        return $this->getFilter()?->getType();
+    }
+
     private function formatBadge($value): string
     {
         $badges = [

@@ -8,5 +8,5 @@ interface FilterStrategyInterface
 {
     public function applyFilter(Builder $query, string $column, mixed $value): Builder;
 
-    public function render(string $columnName, mixed $currentValue = null): string;
+    public function getType(): string;
 }

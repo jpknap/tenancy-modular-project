@@ -2,36 +2,31 @@
 
 namespace Tests\Unit;
 
+use App\Common\Admin\Services\Filters\BooleanFilterStrategy;
+use App\Common\Admin\Services\Filters\DateFilterStrategy;
+use App\Common\Admin\Services\Filters\NumberFilterStrategy;
 use App\Common\Admin\Services\Filters\TextFilterStrategy;
 use PHPUnit\Framework\TestCase;
 
 class TextFilterStrategyTest extends TestCase
 {
-    public function testFilterRenderReturnsInputWithCorrectAttributes(): void
+    public function testTextFilterStrategyReturnsCorrectType(): void
     {
-        $strategy = new TextFilterStrategy();
-        $html = $strategy->render('name', 'test value');
-
-        $this->assertStringContainsString('class="form-control form-control-sm column-filter-text"', $html);
-        $this->assertStringContainsString('data-column="name"', $html);
-        $this->assertStringContainsString('value="test value"', $html);
-        $this->assertStringContainsString('name="filters[name]"', $html);
+        $this->assertSame('text', (new TextFilterStrategy())->getType());
     }
 
-    public function testFilterRenderEscapesSpecialCharacters(): void
+    public function testNumberFilterStrategyReturnsCorrectType(): void
     {
-        $strategy = new TextFilterStrategy();
-        $html = $strategy->render('name', '<script>alert("xss")</script>');
-
-        $this->assertStringNotContainsString('<script>', $html);
-        $this->assertStringContainsString('&lt;script&gt;', $html);
+        $this->assertSame('number', (new NumberFilterStrategy())->getType());
     }
 
-    public function testFilterRenderHandlesAccents(): void
+    public function testDateFilterStrategyReturnsCorrectType(): void
     {
-        $strategy = new TextFilterStrategy();
-        $html = $strategy->render('name', 'José María');
+        $this->assertSame('date', (new DateFilterStrategy())->getType());
+    }
 
-        $this->assertStringContainsString('value="José María"', $html);
+    public function testBooleanFilterStrategyReturnsCorrectType(): void
+    {
+        $this->assertSame('boolean', (new BooleanFilterStrategy())->getType());
     }
 }
