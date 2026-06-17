@@ -79,6 +79,7 @@
                                                 @include('components.admin.filters.' . $column->getFilterType(), [
                                                     'columnName' => $column->getKey(),
                                                     'currentValue' => request()->input("filters.{$column->getKey()}"),
+                                                    'minLength' => $column->getFilterMinLength(),
                                                 ])
                                             </div>
                                         @endif
@@ -178,7 +179,10 @@
             let debounceTimer;
 
             filterInputs.forEach(input => {
-                input.addEventListener('input', function() {
+                const eventName = input.dataset.event ?? 'input';
+                const minLength = parseInt(input.dataset.minLength ?? '1', 10);
+
+                input.addEventListener(eventName, function() {
                     clearTimeout(debounceTimer);
                     const focusedInput = this;
 
@@ -189,7 +193,7 @@
                         const url = new URL(window.location.href);
                         const searchParams = new URLSearchParams(url.search);
 
-                        if (filterValue.length >= 3) {
+                        if (filterValue.length >= minLength) {
                             searchParams.set(`filters[${columnName}]`, filterValue);
                         } else {
                             searchParams.delete(`filters[${columnName}]`);

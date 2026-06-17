@@ -4,6 +4,8 @@
     id="{{ $filterId }}"
     name="filters[{{ $columnName }}]"
     data-column="{{ $columnName }}"
+    data-event="change"
+    data-min-length="{{ $minLength }}"
 >
     <option value="">— Todos —</option>
     <option value="1" @selected(($currentValue ?? '') === '1')>Sí</option>

@@ -96,11 +96,11 @@ class UserAdmin extends AdminBaseAdapter
             ],
         ]);
 
-        $config->getColumn('id')?->setFilter(NumberFilterStrategy::class);
-        $config->getColumn('name')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('email')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('enabled')?->setFilter(BooleanFilterStrategy::class);
-        $config->getColumn('created_at')?->setFilter(DateFilterStrategy::class);
+        $config->getColumn('id')?->setFilter(NumberFilterStrategy::class, minLength: 1);
+        $config->getColumn('name')?->setFilter(TextFilterStrategy::class, minLength: 3);
+        $config->getColumn('email')?->setFilter(TextFilterStrategy::class, minLength: 3);
+        $config->getColumn('enabled')?->setFilter(BooleanFilterStrategy::class, minLength: 1);
+        $config->getColumn('created_at')?->setFilter(DateFilterStrategy::class, minLength: 10);
 
         $config->addAction(__('admin.actions.edit'), $this->getUrlName('edit'), [
             'icon' => 'bi-pencil text-primary',

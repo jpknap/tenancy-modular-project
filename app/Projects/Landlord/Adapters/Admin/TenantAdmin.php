@@ -126,13 +126,13 @@ class TenantAdmin extends AdminBaseAdapter
             ],
         ]);
 
-        $config->getColumn('id')?->setFilter(NumberFilterStrategy::class);
-        $config->getColumn('name')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('domains.0.subdomain')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('data.email')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('current_project')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('data.status')?->setFilter(TextFilterStrategy::class);
-        $config->getColumn('created_at')?->setFilter(DateFilterStrategy::class);
+        $config->getColumn('id')?->setFilter(NumberFilterStrategy::class, minLength: 1);
+        $config->getColumn('name')?->setFilter(TextFilterStrategy::class, minLength: 3);
+        $config->getColumn('domains.0.subdomain')?->setFilter(TextFilterStrategy::class, minLength: 3);
+        $config->getColumn('data.email')?->setFilter(TextFilterStrategy::class, minLength: 3);
+        $config->getColumn('current_project')?->setFilter(TextFilterStrategy::class, minLength: 3);
+        $config->getColumn('data.status')?->setFilter(TextFilterStrategy::class, minLength: 3);
+        $config->getColumn('created_at')?->setFilter(DateFilterStrategy::class, minLength: 10);
 
         $config->addAction('Acceder', 'landlord.admin.tenants.system-access', [
             'icon' => 'bi-box-arrow-in-right text-success',

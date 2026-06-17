@@ -13,12 +13,12 @@ class DateFilterStrategy implements FilterStrategyInterface
         }
 
         try {
-            $date = \DateTime::createFromFormat('Y-m-d', $value);
+            $date = \DateTime::createFromFormat('d/m/Y', $value);
             if ($date === false) {
                 return $query;
             }
 
-            return $query->whereDate($column, '=', $value);
+            return $query->whereDate($column, '=', $date->format('Y-m-d'));
         } catch (\Exception) {
             return $query;
         }

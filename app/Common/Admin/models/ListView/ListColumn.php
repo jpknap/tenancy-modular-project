@@ -27,6 +27,8 @@ class ListColumn
 
     private ?string $filterStrategy = null;
 
+    private int $filterMinLength = 1;
+
     public function __construct(string $key, string $label, array $options = [])
     {
         $this->key = $key;
@@ -101,10 +103,16 @@ class ListColumn
         return $this->visible;
     }
 
-    public function setFilter(string $strategyClass): self
+    public function setFilter(string $strategyClass, int $minLength = 1): self
     {
         $this->filterStrategy = $strategyClass;
+        $this->filterMinLength = $minLength;
         return $this;
+    }
+
+    public function getFilterMinLength(): int
+    {
+        return $this->filterMinLength;
     }
 
     public function hasFilter(): bool

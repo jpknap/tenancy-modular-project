@@ -7,5 +7,7 @@
     value="{{ $currentValue ?? '' }}"
     placeholder="Filtrar..."
     data-column="{{ $columnName }}"
+    data-event="input"
+    data-min-length="{{ $minLength }}"
     autocomplete="off"
 >
