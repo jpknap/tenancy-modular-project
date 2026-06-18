@@ -72,7 +72,6 @@
         "analyze": [
             "@check-style",
             "@test-phpstan"
-
         ],
         "check-style": "ecs check",
         "fix-style": "ecs check --fix",
