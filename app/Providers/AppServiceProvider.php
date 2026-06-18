@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Common\Admin\Services\Filters\BooleanFilterStrategy;
+use App\Common\Admin\Services\Filters\DateFilterStrategy;
+use App\Common\Admin\Services\Filters\NumberFilterStrategy;
+use App\Common\Admin\Services\Filters\TextFilterStrategy;
 use App\Common\Repository\RepositoryManager;
 use App\Common\Repository\Service\TransactionService;
 use App\Common\Services\AlertManager;
@@ -31,6 +35,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(TransactionService::class);
 
         $this->app->singleton(AlertManager::class);
+
+        $this->app->bind(TextFilterStrategy::class);
+        $this->app->bind(NumberFilterStrategy::class);
+        $this->app->bind(DateFilterStrategy::class);
+        $this->app->bind(BooleanFilterStrategy::class);
 
         // Los repositorios y servicios específicos de cada proyecto
         // se registran en sus propios ServiceProviders cuando el proyecto se inicializa

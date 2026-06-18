@@ -126,7 +126,7 @@ class ListColumn
             return null;
         }
 
-        return new $this->filterStrategy();
+        return app($this->filterStrategy);
     }
 
     public function getFilterStrategy(): ?string
