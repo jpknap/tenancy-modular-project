@@ -4,7 +4,7 @@ namespace App\Common\Admin\Services\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class TextFilterStrategy implements FilterStrategyInterface
+class SqliteTextFilterStrategy implements FilterStrategyInterface
 {
     public function applyFilter(Builder $query, string $column, mixed $value): Builder
     {
@@ -13,8 +13,8 @@ class TextFilterStrategy implements FilterStrategyInterface
         }
 
         return $query->whereRaw(
-            "unaccent(LOWER({$column})) LIKE unaccent(LOWER(?))",
-            ['%' . $value . '%']
+            "LOWER({$column}) LIKE ?",
+            ['%' . mb_strtolower($value) . '%']
         );
     }
 
