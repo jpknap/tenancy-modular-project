@@ -24,6 +24,7 @@ kanban_v2/
 | `permission-system` | 🔄 in-progress | `progress/permission-system/` |
 | `audit-system` | ⏳ pending | `pending/audit-system/` |
 | `restify-api` | ⏳ pending | `pending/restify-api/` |
+| `file-upload-service` | ⚠️ parcial (back done) | `done/` + `pending/file-upload-service/` |
 
 ## Convención de nombres de features
 

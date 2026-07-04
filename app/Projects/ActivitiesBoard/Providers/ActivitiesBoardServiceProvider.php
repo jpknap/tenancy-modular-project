@@ -4,10 +4,12 @@ namespace App\Projects\ActivitiesBoard\Providers;
 
 use App\Common\Repository\RepositoryManager;
 use App\Common\Repository\Service\TransactionService;
+use App\Common\Services\FileUpload\Contracts\FileUploaderInterface;
 use App\Projects\ActivitiesBoard\Models\Activity;
 use App\Projects\ActivitiesBoard\Models\User;
 use App\Projects\ActivitiesBoard\Repositories\ActivityRepository;
 use App\Projects\ActivitiesBoard\Repositories\UserRepository;
+use App\Projects\ActivitiesBoard\Services\FileUpload\AttachmentUploadService;
 use App\Projects\ActivitiesBoard\Services\Model\ActivityService;
 use App\Projects\ActivitiesBoard\Services\Model\UserService;
 use Illuminate\Support\ServiceProvider;
@@ -58,5 +60,8 @@ class ActivitiesBoardServiceProvider extends ServiceProvider
         $this->app->bind(UserService::class, function ($app) {
             return new UserService($app->make(UserRepository::class), $app->make(TransactionService::class));
         });
+
+        // DIP: los consumidores dependen de la interfaz, no de la clase concreta
+        $this->app->bind(FileUploaderInterface::class, AttachmentUploadService::class);
     }
 }

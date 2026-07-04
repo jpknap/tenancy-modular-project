@@ -16,6 +16,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Upload Disk
+    |--------------------------------------------------------------------------
+    |
+    | Disco usado por el sistema de subida de archivos (FileUploadService).
+    | Cambiar local → s3 es solo cuestión de entorno, sin tocar código.
+    |
+    */
+
+    'upload_disk' => env('UPLOAD_DISK', 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |
