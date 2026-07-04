@@ -47,7 +47,8 @@ class UserAdmin extends AdminBaseAdapter
         $config->addStatCard(__('activities-board::messages.user.stat_cards.active'), 0, [
             'icon' => 'bi-person-check',
             'color' => 'success',
-            'value_resolver' => fn ($items) => $items->total(),
+            'value_resolver' => fn ($items) => $items->where('enabled', true)
+                ->count(),
         ]);
 
         $config->columns([
@@ -71,6 +72,11 @@ class UserAdmin extends AdminBaseAdapter
                 'sortable' => false,
                 'value_resolver' => fn ($user) => $user->getRoleNames()
                     ->first() ?? 'Sin rol',
+            ],
+            'enabled' => [
+                'label' => __('admin.columns.active'),
+                'format' => 'boolean',
+                'class' => 'text-center',
             ],
             'created_at' => [
                 'label' => __('admin.columns.registered_at'),

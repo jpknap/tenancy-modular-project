@@ -1,5 +1,6 @@
 <?php
 
+use App\Common\Services\LocaleService;
 use App\ProjectManager;
 use Carbon\Carbon;
 
@@ -48,7 +49,8 @@ if (! function_exists('resolve_display_timezone')) {
         }
 
         try {
-            $tenant = tenancy()->tenant;
+            $tenant = tenancy()
+                ->tenant;
             if ($tenant?->timezone) {
                 return $tenant->timezone;
             }
@@ -81,6 +83,23 @@ if (! function_exists('resolve_tenant_timezone')) {
     }
 }
 
+if (! function_exists('locale_options')) {
+    /**
+     * Retorna los idiomas soportados para usar como opciones en un select.
+     * Con blank, el valor vacío significa heredar el idioma del tenant.
+     *
+     * @return array<string, string>
+     */
+    function locale_options(bool $withBlank = false): array
+    {
+        $options = $withBlank ? [
+            '' => '— Predeterminado —',
+        ] : [];
+
+        return $options + LocaleService::options();
+    }
+}
+
 if (! function_exists('timezone_options')) {
     /**
      * Retorna las zonas horarias disponibles agrupadas por región,
@@ -90,7 +109,9 @@ if (! function_exists('timezone_options')) {
      */
     function timezone_options(bool $withBlank = false): array
     {
-        $options = $withBlank ? ['' => '— Predeterminado —'] : [];
+        $options = $withBlank ? [
+            '' => '— Predeterminado —',
+        ] : [];
 
         $grouped = collect(timezone_identifiers_list())
             ->groupBy(fn ($tz) => str_contains($tz, '/') ? explode('/', $tz)[0] : 'Otros');

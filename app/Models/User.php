@@ -23,7 +23,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = ['name', 'email', 'password', 'timezone', 'locale'];
+    protected $fillable = ['name', 'email', 'password', 'timezone', 'locale', 'enabled'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -50,7 +50,7 @@ class User extends Authenticatable
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'email', 'timezone', 'locale', 'is_system_user'])
+            ->logOnly(['name', 'email', 'timezone', 'locale', 'enabled', 'is_system_user'])
             ->logOnlyDirty();
     }
 
@@ -64,6 +64,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'enabled' => 'boolean',
             'is_system_user' => 'boolean',
         ];
     }
