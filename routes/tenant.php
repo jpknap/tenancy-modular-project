@@ -19,17 +19,17 @@ Route::middleware(['web', InitializeTenancyByDomain::class, PreventAccessFromCen
     ->post('/locale/switch', [LocaleSwitchController::class, 'switch'])
     ->name('tenant.locale.switch');
 
-Route::middleware([
-    'web',
-    LogTenancyState::class,
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-    ProjectInitialized::class,
-    'cache.user.roles',
-])->group(function () {
-    $routes = [...SportCompetitionProject::getEndpoints(), ...ActivitiesBoardProject::getEndpoints()];
+$allTenantEndpoints = [...SportCompetitionProject::getEndpoints(), ...ActivitiesBoardProject::getEndpoints()];
 
-    foreach ($routes as $endpoint) {
+// Igual que en web.php: separamos los endpoints 'api/*' para que no pasen
+// por el middleware 'web' (sesión/cookies/CSRF) y la API de auth sea
+// stateless también en subdominios de tenant.
+$isApiEndpoint = fn ($endpoint) => str_contains($endpoint->path, '/api/');
+$webTenantEndpoints = array_values(array_filter($allTenantEndpoints, fn ($endpoint) => ! $isApiEndpoint($endpoint)));
+$apiTenantEndpoints = array_values(array_filter($allTenantEndpoints, $isApiEndpoint));
+
+$registerTenantEndpoints = function (array $endpoints): void {
+    foreach ($endpoints as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
         $route = Route::$httpMethod($endpoint->path, [$endpoint->controller, $endpoint->method]);
 
@@ -45,4 +45,27 @@ Route::middleware([
             $route->where($endpoint->where);
         }
     }
+};
+
+Route::middleware([
+    'web',
+    LogTenancyState::class,
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ProjectInitialized::class,
+    'cache.user.roles',
+])->group(function () use ($registerTenantEndpoints, $webTenantEndpoints) {
+    $registerTenantEndpoints($webTenantEndpoints);
+});
+
+// Grupo API stateless para tenants: InitializeTenancyByDomain va PRIMERO
+// (resuelve la conexión a la DB del tenant antes de que auth:sanctum, ya
+// aplicado por-endpoint, busque el token) y sin middleware 'web', para no
+// arrancar sesión/cookies/CSRF.
+Route::middleware([
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ProjectInitialized::class,
+])->group(function () use ($registerTenantEndpoints, $apiTenantEndpoints) {
+    $registerTenantEndpoints($apiTenantEndpoints);
 });

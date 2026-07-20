@@ -1,5 +1,6 @@
 <?php
 
+use App\Projects\ActivitiesBoard\Http\Controller\Api\AuthController as ActivitiesBoardApiAuthController;
 use App\Projects\ActivitiesBoard\Http\Controller\Auth\AuthController as AuthControllerAct;
 use App\Projects\ActivitiesBoard\Adapters\Admin\ActivityAdmin;
 use App\Projects\ActivitiesBoard\Adapters\Admin\UserAdmin as ActivitiesBoardUserAdmin;
@@ -8,6 +9,7 @@ use App\Projects\ActivitiesBoard\Http\Controller\Admin\StopImpersonationControll
 use App\Projects\ActivitiesBoard\Http\Controller\ProfileController as ActivitiesBoardProfileController;
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
 use App\Projects\Landlord\Adapters\Admin\UserAdmin;
+use App\Projects\Landlord\Http\Controller\Api\AuthController as LandlordApiAuthController;
 use App\Projects\Landlord\Http\Controller\Admin\AuditController;
 use App\Projects\Landlord\Http\Controller\Admin\ImpersonationController as LandlordImpersonationController;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAccessController as LandlordTenantAccessController;
@@ -22,6 +24,7 @@ return [
         'admins' => [UserAdmin::class, TenantAdmin::class],
         'controllers' => [
             AuthController::class,
+            LandlordApiAuthController::class,
             LandlordProfileController::class,
             LandlordImpersonationController::class,
             LandlordTenantAccessController::class,
@@ -36,6 +39,7 @@ return [
         'admins' => [ActivityAdmin::class, ActivitiesBoardUserAdmin::class],
         'controllers' => [
             AuthControllerAct::class,
+            ActivitiesBoardApiAuthController::class,
             ActivitiesBoardProfileController::class,
             ActivitiesBoardImpersonationController::class,
             ActivitiesBoardStopImpersonationController::class,
