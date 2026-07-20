@@ -47,9 +47,12 @@ trait CreatesTenants
         ]);
 
         if ($domain !== null) {
+            // 'subdomain' es NOT NULL en la tabla domains (ver
+            // TenantService::createDomain, que siempre la envía junto a 'domain').
             $tenant->domains()
                 ->create([
                     'domain' => $domain,
+                    'subdomain' => explode('.', $domain)[0],
                 ]);
         }
 
