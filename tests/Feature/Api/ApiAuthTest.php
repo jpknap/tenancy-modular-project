@@ -38,7 +38,10 @@ class ApiAuthTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-            ->assertJsonStructure(['token', 'user' => ['id', 'email']]);
+            ->assertJsonStructure([
+                'token',
+                'user' => ['id', 'email'],
+            ]);
 
         $token = $response->json('token');
 
@@ -46,7 +49,9 @@ class ApiAuthTest extends TestCase
             ->getJson('/landlord/api/auth/me');
 
         $me->assertStatus(200)
-            ->assertJsonFragment(['email' => 'admin@landlord.test']);
+            ->assertJsonFragment([
+                'email' => 'admin@landlord.test',
+            ]);
     }
 
     #[Test]
@@ -144,7 +149,9 @@ class ApiAuthTest extends TestCase
         $this->withHeader('Authorization', "Bearer {$token}")
             ->getJson('http://acme.localhost/activities-board/api/auth/me')
             ->assertStatus(200)
-            ->assertJsonFragment(['email' => 'user@acme.test']);
+            ->assertJsonFragment([
+                'email' => 'user@acme.test',
+            ]);
 
         // Ver comentario equivalente en el test de logout sobre forgetGuards().
         // Además, withHeader() deja el header seteado para todos los

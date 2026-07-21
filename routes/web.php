@@ -16,7 +16,7 @@ Route::middleware(['web', EnsureIsCentralDomain::class])
 $allEndpoints = [
     ...LandlordProject::getEndpoints(),
     ...SportCompetitionProject::getEndpoints(),
-    ...ActivitiesBoardProject::getEndpoints()
+    ...ActivitiesBoardProject::getEndpoints(),
 ];
 
 // Los endpoints 'api/*' (ver feature rest-api) NO se registran acá: este
