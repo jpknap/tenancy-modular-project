@@ -4,7 +4,10 @@ use App\Projects\ActivitiesBoard\Adapters\Admin\ActivityAdmin;
 use App\Projects\ActivitiesBoard\Adapters\Admin\UserAdmin as ActivitiesBoardUserAdmin;
 use App\Projects\ActivitiesBoard\Http\Controller\Admin\ImpersonationController as ActivitiesBoardImpersonationController;
 use App\Projects\ActivitiesBoard\Http\Controller\Admin\StopImpersonationController as ActivitiesBoardStopImpersonationController;
+use App\Projects\ActivitiesBoard\Http\Controller\Api\ActivityController as ActivitiesBoardApiActivityController;
+use App\Projects\ActivitiesBoard\Http\Controller\Api\ActivityLogController as ActivitiesBoardApiActivityLogController;
 use App\Projects\ActivitiesBoard\Http\Controller\Api\AuthController as ActivitiesBoardApiAuthController;
+use App\Projects\ActivitiesBoard\Http\Controller\Api\CategoryController as ActivitiesBoardApiCategoryController;
 use App\Projects\ActivitiesBoard\Http\Controller\Auth\AuthController as AuthControllerAct;
 use App\Projects\ActivitiesBoard\Http\Controller\ProfileController as ActivitiesBoardProfileController;
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
@@ -40,6 +43,9 @@ return [
         'controllers' => [
             AuthControllerAct::class,
             ActivitiesBoardApiAuthController::class,
+            ActivitiesBoardApiActivityController::class,
+            ActivitiesBoardApiActivityLogController::class,
+            ActivitiesBoardApiCategoryController::class,
             ActivitiesBoardProfileController::class,
             ActivitiesBoardImpersonationController::class,
             ActivitiesBoardStopImpersonationController::class,

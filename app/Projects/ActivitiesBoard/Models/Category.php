@@ -5,11 +5,10 @@ namespace App\Projects\ActivitiesBoard\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Activity extends Model
+class Category extends Model
 {
     use LogsActivity;
 
@@ -20,14 +19,13 @@ class Activity extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function logs(): HasMany
+    /**
+     * Nombrada `activityItems()` (no `activities()`) por la misma razón que
+     * `User::activityItems()`: LogsActivity ya define `activities()`.
+     */
+    public function activityItems(): BelongsToMany
     {
-        return $this->hasMany(ActivityLog::class);
-    }
-
-    public function categories(): BelongsToMany
-    {
-        return $this->belongsToMany(Category::class, 'category_activity');
+        return $this->belongsToMany(Activity::class, 'category_activity');
     }
 
     public function getActivitylogOptions(): LogOptions

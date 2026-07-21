@@ -3,7 +3,10 @@
 namespace App\Projects\ActivitiesBoard\Services\Model;
 
 use App\Common\Repository\Service\TransactionService;
+use App\Projects\ActivitiesBoard\Models\Activity;
 use App\Projects\ActivitiesBoard\Repositories\ActivityRepository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 
 class ActivityService
 {
@@ -11,6 +14,75 @@ class ActivityService
         private ActivityRepository $activityRepository,
         private TransactionService $transactionService
     ) {
+    }
+
+    /**
+     * Actividades del usuario autenticado (API, sin filtros ni paginación).
+     */
+    public function allForUser(int $userId): Collection
+    {
+        return $this->activityRepository->getQueryBuilder()
+            ->where('user_id', $userId)
+            ->orderBy('position')
+            ->get();
+    }
+
+    public function findForUser(int $id, int $userId): Activity
+    {
+        /** @var Activity $activity */
+        $activity = $this->activityRepository->getQueryBuilder()
+            ->where('user_id', $userId)
+            ->with('categories')
+            ->findOrFail($id);
+
+        return $activity;
+    }
+
+    public function createForUser(array $data, int $userId): Activity
+    {
+        return $this->transactionService->execute(function () use ($data, $userId) {
+            $categoryIds = Arr::pull($data, 'category_ids');
+
+            // user_id no es mass-assignable (no está en $fillable) a propósito,
+            // para que nunca pueda llegar desde el payload del cliente.
+            /** @var Activity $activity */
+            $activity = $this->activityRepository->getModel()
+                ->newInstance($data);
+            $activity->user_id = $userId;
+            $activity->save();
+
+            if ($categoryIds !== null) {
+                $activity->categories()
+                    ->sync($categoryIds);
+            }
+
+            return $activity->load('categories');
+        });
+    }
+
+    public function updateForUser(int $id, array $data, int $userId): Activity
+    {
+        return $this->transactionService->execute(function () use ($id, $data, $userId) {
+            $categoryIds = Arr::pull($data, 'category_ids');
+
+            $activity = $this->findForUser($id, $userId);
+            $activity->update($data);
+
+            if ($categoryIds !== null) {
+                $activity->categories()
+                    ->sync($categoryIds);
+            }
+
+            return $activity->load('categories');
+        });
+    }
+
+    public function deleteForUser(int $id, int $userId): void
+    {
+        $this->transactionService->execute(function () use ($id, $userId) {
+            $this->findForUser($id, $userId)
+                ->delete();
+        });
     }
 
     public function create(array $data)
