@@ -10,21 +10,15 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::create('activities', function (Blueprint $table) {
+        Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('activity_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('name');
-            $table->text('description')
-                ->nullable();
-            $table->string('color', 7)
-                ->nullable();
-            $table->string('icon')
-                ->nullable();
-            $table->integer('position')
-                ->default(0);
-            $table->timestamp('archived_at')
+            $table->uuid('client_uuid')
+                ->unique();
+            $table->timestamp('occurred_at');
+            $table->text('note')
                 ->nullable();
             $table->timestamps();
         });
@@ -35,6 +29,6 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('activities');
+        Schema::dropIfExists('activity_logs');
     }
 };
