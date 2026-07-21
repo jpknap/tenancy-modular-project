@@ -19,15 +19,23 @@ $allEndpoints = [
     ...ActivitiesBoardProject::getEndpoints()
 ];
 
-// Los endpoints 'api/*' (ver feature rest-api) se registran aparte, sin el
-// middleware 'web' (arranca sesión/cookies/CSRF), para que la API de auth
-// sea stateless. El resto de las rutas sigue igual que antes.
+// Los endpoints 'api/*' (ver feature rest-api) NO se registran acá: este
+// archivo lo envuelve el framework en el middleware 'web' de forma
+// automática e ineludible (ver ApplicationBuilder::withRouting -> siempre
+// hace Route::middleware('web')->group($web)), así que ningún grupo interno
+// anidado puede evitar sesión/cookies/CSRF. Se registran, sin ese problema,
+// en routes/api-auth.php vía el callback `then` de withRouting() en
+// bootstrap/app.php.
 $isApiEndpoint = fn ($endpoint) => str_contains($endpoint->path, '/api/');
 $webEndpoints = array_values(array_filter($allEndpoints, fn ($endpoint) => ! $isApiEndpoint($endpoint)));
-$apiEndpoints = array_values(array_filter($allEndpoints, $isApiEndpoint));
 
-$registerEndpoints = function (array $endpoints): void {
-    foreach ($endpoints as $endpoint) {
+// Rutas del Landlord y SportCompetition (dominios centrales)
+Route::middleware([
+    'web',
+    EnsureIsCentralDomain::class,
+    ProjectInitialized::class,
+])->group(function () use ($webEndpoints) {
+    foreach ($webEndpoints as $endpoint) {
         $httpMethod = $endpoint->getPrimaryHttpMethod();
         $route = Route::$httpMethod($endpoint->path, [$endpoint->controller, $endpoint->method]);
 
@@ -43,24 +51,4 @@ $registerEndpoints = function (array $endpoints): void {
             $route->where($endpoint->where);
         }
     }
-};
-
-// Rutas del Landlord y SportCompetition (dominios centrales)
-Route::middleware([
-    'web',
-    EnsureIsCentralDomain::class,
-    ProjectInitialized::class,
-])->group(function () use ($registerEndpoints, $webEndpoints) {
-    $registerEndpoints($webEndpoints);
 });
-
-// Grupo API stateless (dominio central): sin middleware 'web', por lo tanto
-// sin sesión/cookies/CSRF. auth:sanctum se aplica por-endpoint (login es
-// público, logout/me lo exigen vía #[Middleware] en el controller).
-Route::middleware([
-    EnsureIsCentralDomain::class,
-    ProjectInitialized::class,
-])->group(function () use ($registerEndpoints, $apiEndpoints) {
-    $registerEndpoints($apiEndpoints);
-});
-

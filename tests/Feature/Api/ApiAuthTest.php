@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\Support\CreatesTenants;
@@ -107,6 +108,13 @@ class ApiAuthTest extends TestCase
 
         $this->assertDatabaseCount('personal_access_tokens', 0);
 
+        // El guard 'sanctum' (RequestGuard) cachea el usuario resuelto en la
+        // primera llamada dentro de un mismo test y no se resetea solo entre
+        // requests simulados (setRequest() no limpia $this->user). Sin este
+        // forgetGuards(), el request siguiente reusaría al usuario ya
+        // autenticado en vez de volver a validar el token contra la DB.
+        Auth::forgetGuards();
+
         $this->withHeader('Authorization', "Bearer {$token}")
             ->getJson('/landlord/api/auth/me')
             ->assertStatus(401);
@@ -138,7 +146,14 @@ class ApiAuthTest extends TestCase
             ->assertStatus(200)
             ->assertJsonFragment(['email' => 'user@acme.test']);
 
-        $this->getJson('http://acme.localhost/activities-board/api/auth/me')
+        // Ver comentario equivalente en el test de logout sobre forgetGuards().
+        // Además, withHeader() deja el header seteado para todos los
+        // requests siguientes del test (no es "de una sola vez"), así que
+        // hay que sacarlo explícitamente para simular un request sin token.
+        Auth::forgetGuards();
+
+        $this->withoutHeader('Authorization')
+            ->getJson('http://acme.localhost/activities-board/api/auth/me')
             ->assertStatus(401);
     }
 

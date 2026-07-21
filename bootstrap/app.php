@@ -9,6 +9,13 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__ . '/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        // Se registra después de web.php, fuera del Route::middleware('web')
+        // con el que el framework envuelve incondicionalmente ese archivo,
+        // para que api-auth.php quede realmente stateless (ver el comentario
+        // al inicio de routes/api-auth.php).
+        then: function (): void {
+            require __DIR__ . '/../routes/api-auth.php';
+        },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
