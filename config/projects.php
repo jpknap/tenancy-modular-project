@@ -1,16 +1,21 @@
 <?php
 
-use App\Projects\ActivitiesBoard\Http\Controller\Auth\AuthController as AuthControllerAct;
 use App\Projects\ActivitiesBoard\Adapters\Admin\ActivityAdmin;
 use App\Projects\ActivitiesBoard\Adapters\Admin\UserAdmin as ActivitiesBoardUserAdmin;
 use App\Projects\ActivitiesBoard\Http\Controller\Admin\ImpersonationController as ActivitiesBoardImpersonationController;
 use App\Projects\ActivitiesBoard\Http\Controller\Admin\StopImpersonationController as ActivitiesBoardStopImpersonationController;
+use App\Projects\ActivitiesBoard\Http\Controller\Api\ActivityController as ActivitiesBoardApiActivityController;
+use App\Projects\ActivitiesBoard\Http\Controller\Api\ActivityLogController as ActivitiesBoardApiActivityLogController;
+use App\Projects\ActivitiesBoard\Http\Controller\Api\AuthController as ActivitiesBoardApiAuthController;
+use App\Projects\ActivitiesBoard\Http\Controller\Api\CategoryController as ActivitiesBoardApiCategoryController;
+use App\Projects\ActivitiesBoard\Http\Controller\Auth\AuthController as AuthControllerAct;
 use App\Projects\ActivitiesBoard\Http\Controller\ProfileController as ActivitiesBoardProfileController;
 use App\Projects\Landlord\Adapters\Admin\TenantAdmin;
 use App\Projects\Landlord\Adapters\Admin\UserAdmin;
 use App\Projects\Landlord\Http\Controller\Admin\AuditController;
 use App\Projects\Landlord\Http\Controller\Admin\ImpersonationController as LandlordImpersonationController;
 use App\Projects\Landlord\Http\Controller\Admin\TenantAccessController as LandlordTenantAccessController;
+use App\Projects\Landlord\Http\Controller\Api\AuthController as LandlordApiAuthController;
 use App\Projects\Landlord\Http\Controller\Auth\AuthController;
 use App\Projects\Landlord\Http\Controller\ProfileController as LandlordProfileController;
 use App\Projects\SportCompetition\Adapters\Admin\UserAdmin as SportCompetitionUserAdmin;
@@ -22,10 +27,11 @@ return [
         'admins' => [UserAdmin::class, TenantAdmin::class],
         'controllers' => [
             AuthController::class,
+            LandlordApiAuthController::class,
             LandlordProfileController::class,
             LandlordImpersonationController::class,
             LandlordTenantAccessController::class,
-            AuditController::class
+            AuditController::class,
         ],
     ],
     'sport-competition' => [
@@ -36,6 +42,10 @@ return [
         'admins' => [ActivityAdmin::class, ActivitiesBoardUserAdmin::class],
         'controllers' => [
             AuthControllerAct::class,
+            ActivitiesBoardApiAuthController::class,
+            ActivitiesBoardApiActivityController::class,
+            ActivitiesBoardApiActivityLogController::class,
+            ActivitiesBoardApiCategoryController::class,
             ActivitiesBoardProfileController::class,
             ActivitiesBoardImpersonationController::class,
             ActivitiesBoardStopImpersonationController::class,

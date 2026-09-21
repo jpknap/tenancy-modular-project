@@ -1,0 +1,641 @@
+{
+	"info": {
+		"_postman_id": "a1e6f2a0-4b8e-4c3e-9b4a-activities-board-api",
+		"name": "ActivitiesBoard API",
+		"description": "API REST de ActivitiesBoard (Sanctum, nivel de usuario, multi-tenant).\n\n**Antes de correr:**\n1. Seteá la variable de colección `email` / `password` con un usuario que exista en el tenant `pong.localhost`.\n2. Corré la colección con el Collection Runner de arriba hacia abajo (Auth → Categories → Activities → Activity Logs → Errores → Cleanup): cada request encadena el `token`/`id` que necesita el siguiente vía variables de colección.\n3. La carpeta `Cleanup` borra todo lo creado durante la corrida (logs, activity, categorías) y cierra sesión, para poder re-correr la colección las veces que hagan falta sin acumular basura.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{ "key": "base_url", "value": "http://pong.localhost", "type": "string" },
+		{ "key": "email", "value": "owner@pong.test", "type": "string" },
+		{ "key": "password", "value": "secret123", "type": "string" },
+		{ "key": "token", "value": "", "type": "string" },
+		{ "key": "category_id", "value": "", "type": "string" },
+		{ "key": "category_id_2", "value": "", "type": "string" },
+		{ "key": "activity_id", "value": "", "type": "string" },
+		{ "key": "log_id", "value": "", "type": "string" },
+		{ "key": "client_uuid", "value": "", "type": "string" }
+	],
+	"item": [
+		{
+			"name": "1. Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('login ok', () => pm.response.to.have.status(200));",
+									"const json = pm.response.json();",
+									"pm.test('token presente', () => pm.expect(json.token).to.be.a('string'));",
+									"pm.collectionVariables.set('token', json.token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/auth/login"
+					}
+				},
+				{
+					"name": "Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('me ok', () => pm.response.to.have.status(200));",
+									"pm.test('trae email', () => pm.expect(pm.response.json().email).to.eql(pm.collectionVariables.get('email')));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/auth/me"
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Categories",
+			"item": [
+				{
+					"name": "Create Category - Salud",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('created', () => pm.response.to.have.status(201));",
+									"pm.collectionVariables.set('category_id', pm.response.json().id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Salud\",\n  \"description\": \"Actividades de bienestar\",\n  \"color\": \"#22c55e\"\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/categories"
+					}
+				},
+				{
+					"name": "Create Category - Trabajo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('created', () => pm.response.to.have.status(201));",
+									"pm.collectionVariables.set('category_id_2', pm.response.json().id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Trabajo\",\n  \"color\": \"#3b82f6\"\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/categories"
+					}
+				},
+				{
+					"name": "List Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));",
+									"pm.test('sin paginar (array)', () => pm.expect(Array.isArray(pm.response.json())).to.be.true);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/categories"
+					}
+				},
+				{
+					"name": "Show Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/categories/{{category_id}}"
+					}
+				},
+				{
+					"name": "Update Category (PATCH parcial)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));",
+									"pm.test('solo cambio color', () => pm.expect(pm.response.json().color).to.eql('#16a34a'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"color\": \"#16a34a\"\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/categories/{{category_id}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Activities",
+			"item": [
+				{
+					"name": "Create Activity (con category_ids)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('created', () => pm.response.to.have.status(201));",
+									"const json = pm.response.json();",
+									"pm.collectionVariables.set('activity_id', json.id);",
+									"pm.test('2 categorias asignadas', () => pm.expect(json.categories.length).to.eql(2));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Leer\",\n  \"description\": \"Leer 20 minutos\",\n  \"color\": \"#ff0000\",\n  \"category_ids\": [{{category_id}}, {{category_id_2}}]\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/activities"
+					}
+				},
+				{
+					"name": "List Activities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));",
+									"pm.test('sin paginar (array)', () => pm.expect(Array.isArray(pm.response.json())).to.be.true);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/activities"
+					}
+				},
+				{
+					"name": "Show Activity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));",
+									"pm.test('trae categories', () => pm.expect(pm.response.json().categories).to.not.be.undefined);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}"
+					}
+				},
+				{
+					"name": "Update Activity (PATCH parcial, cualquier atributo)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));",
+									"const json = pm.response.json();",
+									"pm.test('solo cambio lo enviado', () => {",
+									"  pm.expect(json.position).to.eql(2);",
+									"  pm.expect(json.name).to.eql('Leer');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"position\": 2\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}"
+					}
+				},
+				{
+					"name": "Update Activity - reasignar categorias (sync)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));",
+									"pm.test('queda 1 sola categoria', () => pm.expect(pm.response.json().categories.length).to.eql(1));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"category_ids\": [{{category_id}}]\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Activity Logs (tiempos)",
+			"item": [
+				{
+					"name": "Create Log",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('created', () => pm.response.to.have.status(201));",
+									"const json = pm.response.json();",
+									"pm.collectionVariables.set('log_id', json.id);",
+									"pm.collectionVariables.set('client_uuid', json.client_uuid);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"client_uuid\": \"{{$guid}}\",\n  \"occurred_at\": \"{{$isoTimestamp}}\",\n  \"note\": \"30 minutos\"\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}/logs"
+					}
+				},
+				{
+					"name": "Create Log - reintento mismo client_uuid (idempotente)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('no duplica (200, no 201)', () => pm.response.to.have.status(200));",
+									"pm.test('mismo id que el original', () => {",
+									"  pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get('log_id'));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"client_uuid\": \"{{client_uuid}}\",\n  \"occurred_at\": \"{{$isoTimestamp}}\",\n  \"note\": \"reintento offline, no deberia duplicar\"\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}/logs"
+					}
+				},
+				{
+					"name": "List Logs (paginado)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));",
+									"const json = pm.response.json();",
+									"pm.test('shape de paginacion Laravel', () => {",
+									"  pm.expect(json).to.have.property('data');",
+									"  pm.expect(json).to.have.property('current_page');",
+									"  pm.expect(json).to.have.property('per_page');",
+									"  pm.expect(json).to.have.property('total');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}/logs"
+					}
+				},
+				{
+					"name": "Show Log",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}/logs/{{log_id}}"
+					}
+				},
+				{
+					"name": "Update Log (PATCH note)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('ok', () => pm.response.to.have.status(200));",
+									"pm.test('note actualizada', () => pm.expect(pm.response.json().note).to.eql('actualizado desde Postman'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"note\": \"actualizado desde Postman\"\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}/logs/{{log_id}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Errores esperados",
+			"item": [
+				{
+					"name": "Sin token -> 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('401 sin token', () => pm.response.to.have.status(401));"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/activities"
+					}
+				},
+				{
+					"name": "Crear Activity sin name -> 422",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('422', () => pm.response.to.have.status(422));",
+									"pm.test('error en name', () => pm.expect(pm.response.json().errors).to.have.property('name'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{}" },
+						"url": "{{base_url}}/activities-board/api/activities"
+					}
+				},
+				{
+					"name": "Asignar categoria inexistente -> 422",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('422', () => pm.response.to.have.status(422));",
+									"pm.test('error en category_ids.0', () => pm.expect(pm.response.json().errors).to.have.property('category_ids.0'));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Actividad invalida\",\n  \"category_ids\": [999999]\n}"
+						},
+						"url": "{{base_url}}/activities-board/api/activities"
+					}
+				},
+				{
+					"name": "Activity inexistente -> 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('404', () => pm.response.to.have.status(404));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/activities/999999"
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Cleanup",
+			"item": [
+				{
+					"name": "Delete Log",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('204', () => pm.response.to.have.status(204));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}/logs/{{log_id}}"
+					}
+				},
+				{
+					"name": "Delete Activity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('204', () => pm.response.to.have.status(204));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"url": "{{base_url}}/activities-board/api/activities/{{activity_id}}"
+					}
+				},
+				{
+					"name": "Delete Category - Trabajo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('204', () => pm.response.to.have.status(204));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"url": "{{base_url}}/activities-board/api/categories/{{category_id_2}}"
+					}
+				},
+				{
+					"name": "Delete Category - Salud",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('204', () => pm.response.to.have.status(204));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"url": "{{base_url}}/activities-board/api/categories/{{category_id}}"
+					}
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('200', () => pm.response.to.have.status(200));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"url": "{{base_url}}/activities-board/api/auth/logout"
+					}
+				},
+				{
+					"name": "Me despues de logout -> 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('401', () => pm.response.to.have.status(401));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"url": "{{base_url}}/activities-board/api/auth/me"
+					}
+				}
+			]
+		}
+	]
+}

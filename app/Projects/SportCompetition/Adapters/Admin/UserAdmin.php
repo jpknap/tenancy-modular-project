@@ -45,7 +45,7 @@ class UserAdmin extends AdminBaseAdapter
         $config->addStatCard(__('sport-competition::messages.user.stat_cards.active'), 0, [
             'icon' => 'bi-check-circle',
             'color' => 'success',
-            'value_resolver' => fn ($items) => $items->where('is_active', true)
+            'value_resolver' => fn ($items) => $items->where('enabled', true)
                 ->count(),
         ]);
 
@@ -59,7 +59,7 @@ class UserAdmin extends AdminBaseAdapter
         $config->addStatCard(__('sport-competition::messages.user.stat_cards.inactive'), 0, [
             'icon' => 'bi-x-circle',
             'color' => 'danger',
-            'value_resolver' => fn ($items) => $items->where('is_active', false)
+            'value_resolver' => fn ($items) => $items->where('enabled', false)
                 ->count(),
         ]);
 

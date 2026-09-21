@@ -4,6 +4,7 @@ namespace App\Projects\Landlord\FormRequests;
 
 use App\Common\Admin\Form\BaseFormRequest;
 use App\Common\Admin\Form\FormBuilder;
+use App\Common\Services\LocaleService;
 
 class UserFormRequest extends BaseFormRequest
 {
@@ -33,6 +34,9 @@ class UserFormRequest extends BaseFormRequest
             ])
             ->select('timezone', __('fields.timezone'), timezone_options(withBlank: true), [
                 'help' => __('fields.help.timezone_inherit'),
+            ])
+            ->select('locale', __('fields.locale'), locale_options(withBlank: true), [
+                'help' => __('fields.help.locale'),
             ]);
     }
 
@@ -52,6 +56,9 @@ class UserFormRequest extends BaseFormRequest
             ->checkbox('enabled', __('fields.enabled'))
             ->select('timezone', __('fields.timezone'), timezone_options(withBlank: true), [
                 'help' => __('fields.help.timezone_inherit'),
+            ])
+            ->select('locale', __('fields.locale'), locale_options(withBlank: true), [
+                'help' => __('fields.help.locale'),
             ]);
     }
 
@@ -69,6 +76,7 @@ class UserFormRequest extends BaseFormRequest
             ],
             'enabled' => ['nullable', 'boolean'],
             'timezone' => ['nullable', 'string', 'timezone:all'],
+            'locale' => ['nullable', 'string', 'in:' . implode(',', LocaleService::SUPPORTED)],
         ];
 
         if ($this->isCreating()) {
@@ -97,7 +105,15 @@ class UserFormRequest extends BaseFormRequest
             'email' => __('fields.email'),
             'password' => __('fields.password'),
             'timezone' => __('fields.timezone'),
+            'locale' => __('fields.locale'),
             'enabled' => __('fields.enabled'),
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'enabled' => $this->boolean('enabled'),
+        ]);
     }
 }
