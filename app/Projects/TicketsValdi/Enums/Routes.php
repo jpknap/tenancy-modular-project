@@ -15,6 +15,12 @@ enum Routes: string
     case UserEdit = 'tickets-valdi.admin.users.edit';
     case UserDelete = 'tickets-valdi.admin.users.delete';
 
+    // Institutions
+    case InstitutionList = 'tickets-valdi.admin.institutions.list';
+    case InstitutionCreate = 'tickets-valdi.admin.institutions.create';
+    case InstitutionEdit = 'tickets-valdi.admin.institutions.edit';
+    case InstitutionDelete = 'tickets-valdi.admin.institutions.delete';
+
     public function route(mixed ...$parameters): string
     {
         return route($this->value, $parameters);

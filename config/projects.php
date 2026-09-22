@@ -21,6 +21,7 @@ use App\Projects\Landlord\Http\Controller\ProfileController as LandlordProfileCo
 use App\Projects\SportCompetition\Adapters\Admin\UserAdmin as SportCompetitionUserAdmin;
 use App\Projects\SportCompetition\Http\Controller\Admin\ImpersonationController as SportCompetitionImpersonationController;
 use App\Projects\SportCompetition\Http\Controller\Auth\AuthController as SportCompetitionAuthController;
+use App\Projects\TicketsValdi\Adapters\Admin\InstitutionAdmin as TicketsValdiInstitutionAdmin;
 use App\Projects\TicketsValdi\Adapters\Admin\UserAdmin as TicketsValdiUserAdmin;
 use App\Projects\TicketsValdi\Http\Controller\Auth\AuthController as TicketsValdiAuthController;
 
@@ -54,7 +55,7 @@ return [
         ],
     ],
     'tickets-valdi' => [
-        'admins' => [TicketsValdiUserAdmin::class],
+        'admins' => [TicketsValdiUserAdmin::class, TicketsValdiInstitutionAdmin::class],
         'controllers' => [TicketsValdiAuthController::class],
     ],
 ];

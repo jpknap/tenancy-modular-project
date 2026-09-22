@@ -17,6 +17,13 @@ class MenuBuilderService
             'permissions' => [],
             'children' => [],
         ],
+        'institutions' => [
+            'label' => 'Instituciones',
+            'alias_route' => Routes::InstitutionList->value,
+            'icon' => 'bi-building',
+            'permissions' => [],
+            'children' => [],
+        ],
     ];
 
     public static function buildMenu(): MenuBuilder

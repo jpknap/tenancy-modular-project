@@ -4,8 +4,11 @@ namespace App\Projects\TicketsValdi\Providers;
 
 use App\Common\Repository\RepositoryManager;
 use App\Common\Repository\Service\TransactionService;
+use App\Projects\TicketsValdi\Models\Institution;
 use App\Projects\TicketsValdi\Models\User;
+use App\Projects\TicketsValdi\Repositories\InstitutionRepository;
 use App\Projects\TicketsValdi\Repositories\UserRepository;
+use App\Projects\TicketsValdi\Services\Model\InstitutionService;
 use App\Projects\TicketsValdi\Services\Model\UserService;
 use Illuminate\Support\ServiceProvider;
 
@@ -37,6 +40,7 @@ class TicketsValdiServiceProvider extends ServiceProvider
     {
         $manager = $this->app->make(RepositoryManager::class);
         $manager->register(User::class, UserRepository::class);
+        $manager->register(Institution::class, InstitutionRepository::class);
     }
 
     /**
@@ -46,6 +50,12 @@ class TicketsValdiServiceProvider extends ServiceProvider
     {
         $this->app->bind(UserService::class, function ($app) {
             return new UserService($app->make(TransactionService::class), $app->make(UserRepository::class));
+        });
+
+        $this->app->bind(InstitutionService::class, function ($app) {
+            return new InstitutionService($app->make(TransactionService::class), $app->make(
+                InstitutionRepository::class
+            ));
         });
     }
 }
