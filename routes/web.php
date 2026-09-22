@@ -6,6 +6,7 @@ use App\Http\Middleware\ProjectInitialized;
 use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use App\Projects\Landlord\LandlordProject;
 use App\Projects\SportCompetition\SportCompetitionProject;
+use App\Projects\TicketsValdi\TicketsValdiProject;
 use Illuminate\Support\Facades\Route;
 
 // Cambio de idioma de sesión (disponible en dominio central)
@@ -17,6 +18,7 @@ $allEndpoints = [
     ...LandlordProject::getEndpoints(),
     ...SportCompetitionProject::getEndpoints(),
     ...ActivitiesBoardProject::getEndpoints(),
+    ...TicketsValdiProject::getEndpoints(),
 ];
 
 // Los endpoints 'api/*' (ver feature rest-api) NO se registran acá: este

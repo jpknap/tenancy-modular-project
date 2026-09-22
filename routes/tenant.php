@@ -6,6 +6,7 @@ use App\Http\Middleware\LogTenancyState;
 use App\Http\Middleware\ProjectInitialized;
 use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use App\Projects\SportCompetition\SportCompetitionProject;
+use App\Projects\TicketsValdi\TicketsValdiProject;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -24,7 +25,11 @@ Route::middleware(['web', InitializeTenancyByDomain::class, PreventAccessFromCen
     ->post('/locale/switch', [LocaleSwitchController::class, 'switch'])
     ->name('tenant.locale.switch');
 
-$allTenantEndpoints = [...SportCompetitionProject::getEndpoints(), ...ActivitiesBoardProject::getEndpoints()];
+$allTenantEndpoints = [
+    ...SportCompetitionProject::getEndpoints(),
+    ...ActivitiesBoardProject::getEndpoints(),
+    ...TicketsValdiProject::getEndpoints(),
+];
 
 // Igual que en web.php: separamos los endpoints 'api/*' para que no pasen
 // por el middleware 'web' (sesión/cookies/CSRF) y la API de auth sea

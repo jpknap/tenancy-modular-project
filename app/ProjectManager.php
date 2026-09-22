@@ -6,6 +6,7 @@ use App\Contracts\ProjectInterface;
 use App\Projects\ActivitiesBoard\ActivitiesBoardProject;
 use App\Projects\Landlord\LandlordProject;
 use App\Projects\SportCompetition\SportCompetitionProject;
+use App\Projects\TicketsValdi\TicketsValdiProject;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -20,6 +21,7 @@ class ProjectManager
         LandlordProject::class,
         ActivitiesBoardProject::class,
         SportCompetitionProject::class,
+        TicketsValdiProject::class,
     ];
 
     public static function getProjects(): array
